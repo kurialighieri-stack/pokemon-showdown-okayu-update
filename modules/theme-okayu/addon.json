@@ -61,7 +61,7 @@
     {
       "path": "app/main.cjs",
       "find": "const appTitle = 'Pokémon Showdown Pro';",
-      "replace": "const appTitle = 'Pokemon Showdown: Okayu Update';\nif(process.platform==='linux')app.commandLine.appendSwitch('class','pokemon-showdown-okayu-update');"
+      "replace": "const appTitle = 'Pokemon Showdown: Okayu Update';\nif(process.platform==='linux'){app.setDesktopName('pokemon-showdown-okayu-update.desktop');app.commandLine.appendSwitch('class','pokemon-showdown-okayu-update');}"
     }
   ],
   "rebuildShowdex": true,
