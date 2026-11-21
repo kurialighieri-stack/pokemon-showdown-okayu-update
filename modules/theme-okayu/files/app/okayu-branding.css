@@ -1,0 +1,6 @@
+/* Module branding preserves the native header geometry. */
+:is(.header,.header-vertical) img.logo, .minilogo img {
+ content:url("showdown-pro://assets/icons/icon.png") !important;
+ object-fit:contain !important;
+ filter:none !important;
+}
