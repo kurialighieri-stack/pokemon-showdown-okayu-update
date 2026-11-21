@@ -3,7 +3,7 @@ from __future__ import annotations
 import hashlib,json,os,shutil,subprocess,tempfile,time,uuid,zipfile,stat,fcntl,functools
 from pathlib import Path,PurePosixPath
 
-VERSION='0.1.0-alpha.1'
+VERSION='0.1.0-alpha.2'
 ROOT=Path(__file__).resolve().parents[1]
 class ModError(Exception):pass
 
@@ -44,6 +44,7 @@ def unpack(archive,destination):
 
 def app_root(path):
     path=Path(path).expanduser().resolve()
+    if any(part.startswith('.mount_') for part in path.parts):raise ModError('Esa carpeta es un montaje temporal. Selecciona el archivo AppImage para preparar una instalación fija.')
     if (path/'resources/app/package.json').is_file():return path/'resources/app'
     if (path/'package.json').is_file() and (path/'app/main.cjs').is_file():return path
     raise ModError('Elige una instalación extraída que contenga resources/app/package.json')
@@ -188,7 +189,10 @@ class Manager:
         if load(source/'package.json')['version']!=compat['showdexVersion']:raise ModError('Versión de Showdex inesperada')
         if not (source/'node_modules/webpack').exists():
             print('Instalando dependencias de Showdex (primera compilación)…',flush=True)
-            subprocess.run([str(node),str(self.root/'node_modules/pnpm/bin/pnpm.cjs'),'install','--frozen-lockfile','--ignore-scripts'],cwd=source,env=env,check=True)
+            dependency_log=self.directory/'last-dependencies.log'
+            with dependency_log.open('w') as output:
+                try:subprocess.run([str(node),str(self.root/'node_modules/pnpm/bin/pnpm.cjs'),'install','--frozen-lockfile','--ignore-scripts'],cwd=source,env=env,stdout=output,stderr=subprocess.STDOUT,check=True)
+                except subprocess.CalledProcessError:raise ModError('No se pudieron preparar las dependencias de Calcdex. Consulta last-dependencies.log; la instalación sigue intacta.')
         with tempfile.TemporaryDirectory(prefix='okayu-build-',dir=self.directory) as tmp:
             stage=Path(tmp)/'app';shutil.copytree(self.root,stage,ignore=shutil.ignore_patterns('test-results','okayu-update-showdex'),copy_function=shutil.copy2)
             for name,data in files.items():
