@@ -22,24 +22,34 @@ La conexión común de módulos se instala automáticamente. Showdown+ usa el cl
 
 ## Inicio rápido
 
-Requisitos: Linux, Python 3.10 o posterior y una instalación **original extraída** de Pokémon Showdown Pro 1.2.0. Para los diálogos gráficos instala Zenity mediante tu distribución. La primera compilación de Calcdex necesita conexión para obtener sus dependencias. Se utiliza el runtime Node que incluye Pro.
+Requisitos: Linux, Python 3.10 o posterior y el **AppImage original o una distribución extraída** de Pokémon Showdown Pro 1.2.0. Para los diálogos gráficos instala Zenity mediante tu distribución. La primera compilación de Calcdex necesita conexión para obtener sus dependencias. Se utiliza el runtime Node que incluye Pro.
 
 1. Descarga el proyecto y descomprímelo en una carpeta propia.
 2. Cierra la instalación de Showdown que vas a modificar.
 3. Ejecuta `sh Okayu-Update.sh`.
-4. Selecciona **Instalar / cambiar módulos** y la carpeta que contiene `AppRun` y `resources`.
-5. Elige los módulos. Showdown+ se selecciona por separado y solicita su XPI oficial 1.4.
-6. Espera a que termine la compilación e instalación. Después abre la misma aplicación original.
+4. Selecciona **Instalar / cambiar módulos**. El gestor detecta Showdown Pro mediante sus accesos del menú, procesos principales y ubicaciones habituales. Si encuentra una única opción, no pide buscar carpetas.
+5. Si usas AppImage, confirma **Preparar**. El gestor crea automáticamente una instalación fija y conserva el archivo original. Si no detecta ninguna aplicación, puedes elegir directamente el AppImage que descargaste.
+6. Elige los módulos. Showdown+ se selecciona por separado y solicita su XPI oficial 1.4.
+7. Espera a que termine la compilación e instalación; se muestra una ventana de progreso. Abre **Pokemon Showdown: Okayu Update** desde el menú de aplicaciones.
 
-La distribución `.tar.gz` extraída de Pro se modifica directamente. Si tienes un AppImage, la opción **Extraer AppImage** prepara una instalación extraída en una carpeta elegida por ti; conserva el AppImage intacto. Esta alfa **no vuelve a empaquetar ni modifica el AppImage comprimido**. Usa `AppRun` dentro de la carpeta extraída que seleccionaste para instalar los módulos.
+La distribución `.tar.gz` extraída de Pro se modifica directamente. Si tienes un AppImage, **Instalar / cambiar módulos** prepara automáticamente una distribución en `$XDG_DATA_HOME/pokemon-showdown-okayu-update/managed/` (por defecto, `~/.local/share/pokemon-showdown-okayu-update/managed/`). No necesitas saber dónde están los archivos internos. Se conserva el AppImage intacto. Esta alfa **no vuelve a empaquetar ni modifica el AppImage comprimido**. Después de instalar, el acceso **Pokemon Showdown: Okayu Update** abre la distribución modificada. El acceso anterior del AppImage sigue abriendo el original. También puedes elegir **Abrir aplicación** en el gestor.
 
 No selecciones nuestra antigua copia experimental ni una instalación modificada manualmente: las huellas deben coincidir con la base original. El gestor conserva el perfil normal de la aplicación. Los módulos no copian perfiles, equipos, cookies ni credenciales.
 
 El tema Okayu aparece en las opciones de tema de Showdown después de reiniciar. El botón «Textos» aparece junto a los controles de combate. Los idiomas de Calcdex siguen las preferencias de Showdown.
 
+La búsqueda evita listar procesos de Electron o recorrer todo el disco. Ignora los montajes temporales `/tmp/.mount_…` y la antigua copia experimental. Recuerda la instalación preparada para las próximas veces. Los detalles extensos de extracción y dependencias se guardan en registros locales en lugar de imprimirse en la terminal.
+
 ## Línea de comandos
 
 Desde cualquier carpeta, usando la ruta al script:
+
+```sh
+sh ./Okayu-Update.sh discover
+sh ./Okayu-Update.sh prepare /ruta/a/PokemonShowdownPro.AppImage
+```
+
+La interfaz gráfica realiza estos pasos sin comandos adicionales. Para operaciones avanzadas sobre una distribución ya preparada:
 
 ```sh
 sh ./Okayu-Update.sh status /ruta/a/ShowdownPro
