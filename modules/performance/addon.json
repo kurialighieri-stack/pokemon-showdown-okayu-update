@@ -1,0 +1,14 @@
+{
+  "id": "performance",
+  "name": "Modo cine optimizado",
+  "version": "0.1.0",
+  "order": 10,
+  "appVersions": [
+    "1.2.0"
+  ],
+  "files": {
+    "app/theater-mode.js": "9bf6126b78138748357a65b77538c36f94e52538c65f3afba55028a2384a8f71",
+    "app/theater-mode.css": "ef24365698be1305e5c3a96238385d95bcecb6df7b8b65cef23781c4fc5fbf5f"
+  },
+  "edits": []
+}
