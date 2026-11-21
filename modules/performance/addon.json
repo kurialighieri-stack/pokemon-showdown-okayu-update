@@ -1,14 +1,21 @@
 {
   "id": "performance",
-  "name": "Modo cine optimizado",
-  "version": "0.1.0",
+  "name": "Mejoras de optimización",
+  "version": "0.2.0",
   "order": 10,
   "appVersions": [
     "1.2.0"
   ],
   "files": {
     "app/theater-mode.js": "9bf6126b78138748357a65b77538c36f94e52538c65f3afba55028a2384a8f71",
-    "app/theater-mode.css": "ef24365698be1305e5c3a96238385d95bcecb6df7b8b65cef23781c4fc5fbf5f"
+    "app/theater-mode.css": "ef24365698be1305e5c3a96238385d95bcecb6df7b8b65cef23781c4fc5fbf5f",
+    "app/streamer-mode.cjs": "ec445f7d0081ed53eedb9e8eeb846870006bc756dae2e305dcf180f49cf0bb09"
   },
-  "edits": []
+  "edits": [
+    {
+      "path": "app/main.cjs",
+      "find": "hub:()=>{const [width,height]=window.getContentSize(),bounds=client.getBounds();return {contents:window.webContents,x:bounds.width,width:width-bounds.width,height};},",
+      "replace": "hub:()=>{const [width,height]=window.getContentSize(),hubWidth=Math.min(width,preferences.sidebarCollapsed?48:SIDEBAR_WIDTH);return {contents:window.webContents,x:width-hubWidth,width:hubWidth,height};},"
+    }
+  ]
 }
