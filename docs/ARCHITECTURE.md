@@ -66,3 +66,9 @@ La preparación crea una instalación persistente por SHA-256 dentro de la carpe
 Después de instalar se crea un acceso propio en el menú. No se sobrescribe el acceso original ni un acceso Okayu personalizado. La reversión retira únicamente el acceso administrado que apunte a esa instalación.
 
 La extracción de AppImage conserva el archivo original y no vuelve a empaquetarlo.
+
+## Identidad gráfica del módulo Okayu
+
+El PNG del módulo sustituye el icono nativo en `app/assets/icons/icon.png`, ya utilizado por la ventana y el Battle Hub. El cliente usa ese mismo recurso en las cabeceras conservando su geometría. Los bytes originales del icono se respaldan como cualquier otro archivo, y la imagen nueva se incluye en las huellas del módulo.
+
+El tema registra una clase de ventana Linux propia que coincide con el acceso del gestor. La conexión común evita la actualización automática de accesos globales de Pro en la copia modificada; el gestor crea y retira únicamente su acceso. Así el original mantiene su lanzador y su icono. La marca pertenece a la instalación del módulo y no a la selección momentánea de paleta.

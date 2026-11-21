@@ -61,8 +61,14 @@ Los informes deben aportar resultados observados y versiones precisas. El objeti
 
 ## Actualización alpha.2: detección y preparación guiada
 
-Se añadieron 15 pruebas de descubrimiento y selección, para un total de **30 pruebas automatizadas aprobadas**. Cubren rutas con espacios, lectura de accesos sin ejecutarlos, proceso principal frente a renderers/terminales, ubicaciones de descargas, descarte de montajes temporales/experimental, preparación de un AppImage sin permiso de ejecución, reutilización, detección de una imagen cambiada, fallo de extracción, accesos de menú y recorrido sin selector de carpeta cuando hay una única instalación.
+Se añadieron 17 pruebas de descubrimiento, selección e identidad gráfica, para un total de **32 pruebas automatizadas aprobadas**. Cubren rutas con espacios, lectura de accesos sin ejecutarlos, proceso principal frente a renderers/terminales, ubicaciones de descargas, descarte de montajes temporales/experimental, preparación de un AppImage sin permiso de ejecución, reutilización, detección de una imagen cambiada, fallo de extracción, accesos de menú y recorrido sin selector de carpeta cuando hay una única instalación.
 
 Además se preparó el AppImage original 1.2.0 real en una carpeta de prueba. Se verificó su SHA-256 sin cambios, la validación de los originales y que la siguiente detección devolviera una sola instalación persistente en lugar de su montaje temporal o de varios procesos. La salida extensa de extracción se guardó en un registro.
 
 Los módulos de combate no cambiaron en alpha.2; las pruebas de Electron descritas arriba corresponden a alpha.1 y no se repitieron las mediciones del combate. La selección guiada y los diálogos se probaron mediante dobles de prueba; no se realizó una auditoría visual completa de Zenity.
+
+### Logo de Okayu
+
+Se incorporó el PNG del mantenedor sin alterar sus bytes. La prueba en Electron verificó la lectura del icono nativo (1402 × 1122), la clase de ventana de Okayu, el mismo recurso servido al cliente y su logo por CSS, y el logo del Battle Hub. Se inspeccionaron las capturas del cliente y del Hub. Los accesos se probaron en una carpeta de menú aislada, verificando la ruta del icono y la clase de ventana; no se sustituyó el acceso original.
+
+Después de la prueba se revirtió el conjunto: los 826 archivos de programa volvieron a coincidir con los originales, incluido el PNG del icono. Se retiró el acceso administrado de prueba. Los módulos de combate no cambiaron. No se midió el comportamiento de todos los entornos de escritorio ni se cambió el icono del archivo AppImage comprimido.
