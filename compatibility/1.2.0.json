@@ -17,7 +17,8 @@
     "app/theater-mode.css": "8e7121ffae315450e23644cd8977bd3f7137b998580dc0c28497cd80169ad51f",
     "app/theater-mode.js": "fd072d52c16db74f6fe1edc040cbbfa4cf1917a5cb4be69b6b32ffcfdce3859f",
     "scripts/showdex-pro-css.cjs": "1ba14b9a4ccdd7daf5db29a683ef878581d2f3879c16a4e2586836f211b3c22d",
-    "scripts/showdex-pro-source.cjs": "6827adbe935196823273acef678a9989ab043302bea27d42ea867e53e4e6d0f5"
+    "scripts/showdex-pro-source.cjs": "6827adbe935196823273acef678a9989ab043302bea27d42ea867e53e4e6d0f5",
+    "app/assets/icons/icon.png": "0b555e7960d189d7b5f111732802fc6b3c630a6028cc23c7c26bb0b507d3d4ca"
   },
   "showdexVersion": "1.4.2"
 }
