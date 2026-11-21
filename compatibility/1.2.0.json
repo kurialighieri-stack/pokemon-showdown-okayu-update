@@ -1,0 +1,23 @@
+{
+  "appVersion": "1.2.0",
+  "files": {
+    "app/addon-catalog.cjs": "4261fbe65c9cf28fe869a09c2e72e2517d4763884a2c881d722fa000eb6b5cf7",
+    "app/addons/history.js": "0af77774b16e97fe76252c4ee7ab0f9b0478de3eee69de6eaf81a65caad24ff3",
+    "app/addons/tera-settings.js": "190e8b75f6615eb0a9a0f4192a20b60129faafd80d99bf14ee7bccb73b46658d",
+    "app/browser-addons.cjs": "4e9ed823320eb0907cd77c1f81309753e9ea321a93dfdc5b63d56b4bcd8cfae3",
+    "app/client-preload.cjs": "8f2b33df4d32ed502d7c90ef132f4ffa1a92197a0ac27ec8e9c5bb7090cf3ee9",
+    "app/client-startup.cjs": "ffadb4b71d8520d7c7fee461471e40b341d00d15551aa651952d508581cadd34",
+    "app/client-theme-css.cjs": "9776887683d095df11656516c9eb8ab0f59cc2b3c158786204c3dc2ebc54ea8e",
+    "app/client-theme.js": "fe2b1a73a29f29c375d1f6105aea3af98207ab367e190dca0b38d542ea7e3088",
+    "app/hub-tooltip.cjs": "fba121f810f6a63f7c9f56bb122d73e6261dbd99019936bd7650d2f862539c21",
+    "app/main.cjs": "83109d017288fde29132fa17187b3c9bdaa88e9db62ff6661d459ede30b90df0",
+    "app/panel/panel.js": "22add688c6b122aa4be8e0f8a82939a0c5955ffec94f5d3d07cabbe20ababc57",
+    "app/stream/stream.js": "dbad911006cfcff5d1717c16670cf0388d8d9e825eff79767e6b28c7b146e156",
+    "app/streamer-mode.cjs": "f55e1810b190f242fcc8bea034938c4c5910dee3c2b15770612c332c3080a43d",
+    "app/theater-mode.css": "8e7121ffae315450e23644cd8977bd3f7137b998580dc0c28497cd80169ad51f",
+    "app/theater-mode.js": "fd072d52c16db74f6fe1edc040cbbfa4cf1917a5cb4be69b6b32ffcfdce3859f",
+    "scripts/showdex-pro-css.cjs": "1ba14b9a4ccdd7daf5db29a683ef878581d2f3879c16a4e2586836f211b3c22d",
+    "scripts/showdex-pro-source.cjs": "6827adbe935196823273acef678a9989ab043302bea27d42ea867e53e4e6d0f5"
+  },
+  "showdexVersion": "1.4.2"
+}
