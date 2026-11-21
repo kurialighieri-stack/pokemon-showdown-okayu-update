@@ -1,0 +1,46 @@
+{
+  "id": "glass",
+  "name": "Glass para Linux (experimental)",
+  "version": "0.1.0",
+  "order": 60,
+  "appVersions": [
+    "1.2.0"
+  ],
+  "files": {
+    "app/okayu-glass.cjs": "78fb1c13466fc485405a7a05b6d879ee0b675f9963681e7b49bb961533e58d59",
+    "app/okayu-glass-panel.js": "d7b653747e4e79973a94bffbf0817de637bbbe9567a71602a136e86c44749e5d",
+    "app/okayu-glass.css": "c848e1915fc8a3ad240c0c1ef3fbcffed687288d5550da9b997853f47316bee6"
+  },
+  "edits": [
+    {
+      "path": "app/main.cjs",
+      "find": "const SIDEBAR_WIDTH = 360;",
+      "replace": "const okayuGlass=require('./okayu-glass.cjs');\nconst SIDEBAR_WIDTH = 360;"
+    },
+    {
+      "path": "app/main.cjs",
+      "find": "return { appVersion, theme, showdexStatus,",
+      "replace": "return { okayuGlass:okayuGlass.snapshot(theme), appVersion, theme, showdexStatus,"
+    },
+    {
+      "path": "app/main.cjs",
+      "find": "function setSetting(key, value) {",
+      "replace": "function setSetting(key, value) {\n  if(key==='okayuGlass'){okayuGlass.set(value);streamerStream?.invalidate();publish();return state();}"
+    },
+    {
+      "path": "app/main.cjs",
+      "find": "function publish() { if (window",
+      "replace": "function publish() { okayuGlass.sync(theme);if (window"
+    },
+    {
+      "path": "app/main.cjs",
+      "find": "window = new BrowserWindow({ title: appTitle,",
+      "replace": "window = new BrowserWindow({ ...okayuGlass.windowOptions(), title: appTitle,"
+    },
+    {
+      "path": "app/main.cjs",
+      "find": "  client.setVisible(true);",
+      "replace": "  client.setVisible(true);\n  await okayuGlass.attach({window,client,getTheme:()=>theme,publish});"
+    }
+  ]
+}
