@@ -172,8 +172,12 @@ def create_shortcut(target,application_dir=None):
     marker='X-Okayu-Update-Managed=true'
     if shortcut.exists() and marker not in shortcut.read_text():raise ModError('Ya existe un acceso Okayu personalizado; no se reemplazará.')
     quote=lambda value:'"'+str(value).replace('\\','\\\\').replace('"','\\"').replace('`','\\`').replace('$','\\$').replace('%','%%')+'"'
-    icon=target/'pokemon-showdown-pro.png'
-    text='\n'.join(['[Desktop Entry]','Type=Application','Name=Pokemon Showdown: Okayu Update','Comment=Pokémon Showdown Pro con los módulos instalados por Okayu Update','Exec='+quote(launch),'Icon='+(str(icon) if icon.is_file() else 'applications-games'),'Terminal=false','Categories=Game;','StartupWMClass=pokemon-showdown-pro',marker,''])
+    native_icon=target/'resources/app/app/assets/icons/icon.png'
+    icon=native_icon if native_icon.is_file() else target/'pokemon-showdown-pro.png'
+    try:modules=json.loads((target/'resources/app/app/okayu-update-installed.json').read_text()).get('modules',[])
+    except (OSError,ValueError):modules=[]
+    app_class='pokemon-showdown-okayu-update' if 'theme-okayu' in modules else 'pokemon-showdown-pro'
+    text='\n'.join(['[Desktop Entry]','Type=Application','Name=Pokemon Showdown: Okayu Update','Comment=Pokémon Showdown Pro con los módulos instalados por Okayu Update','Exec='+quote(launch),'Icon='+(str(icon) if icon.is_file() else 'applications-games'),'Terminal=false','Categories=Game;','StartupWMClass='+app_class,marker,''])
     atomic(shortcut,text.encode());return shortcut
 
 def remove_shortcut(target,application_dir=None):
