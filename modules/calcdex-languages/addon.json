@@ -1,0 +1,22 @@
+{
+  "id": "calcdex-languages",
+  "name": "Calcdex — idiomas de Showdown",
+  "version": "0.1.0",
+  "order": 50,
+  "appVersions": [
+    "1.2.0"
+  ],
+  "files": {
+    "app/showdex-language-runtime.cjs": "d0b1cd5cf472beb3450b6be7eef7db83bd7b92aad9f3b47b08add60cb0b6fa33",
+    "app/i18n/es.json": "ef57ff6268618b95344b5844e3da6e38125dd771b174a0e1a5b95f610124fa5d",
+    "scripts/showdex-language-source.cjs": "56e0f186f17c7bc59f2913f6e861358ad042095df4ab05ae77e45e9dd3902279"
+  },
+  "edits": [
+    {
+      "path": "scripts/showdex-pro-source.cjs",
+      "find": "  return require('./showdex-theater.cjs').transform(require('./showdex-battle-controls.cjs').transform(source, file), file);",
+      "replace": "  return require('./showdex-language-source.cjs').transform(require('./showdex-theater.cjs').transform(require('./showdex-battle-controls.cjs').transform(source, file), file), file);"
+    }
+  ],
+  "rebuildShowdex": true
+}
