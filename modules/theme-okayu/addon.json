@@ -1,7 +1,7 @@
 {
   "id": "theme-okayu",
   "name": "Tema Okayu",
-  "version": "0.1.1",
+  "version": "0.1.3",
   "order": 30,
   "appVersions": [
     "1.2.0"
@@ -14,13 +14,12 @@
     "app/hub-tooltip.cjs": "3d0b5e8d363757a0ce3a20dee6eafe8f3fd07c467436ac9162455de128a78f9f",
     "app/addons/history.js": "99979a5969c9d03a390c436a5c9b150e3cbed24976971b1d64f496cfe209d62d",
     "app/addons/tera-settings.js": "9ea0133ec43ea8e2efe5ec37d1b9379f47b6d348e20fad4f56769f0fbfd9215b",
-    "app/streamer-mode.cjs": "ff90591f27cb63a5acd22c1d656f273dff187ed56d734e83aa87285fdbb1be9f",
-    "app/stream/stream.js": "e3f99fbf234689e9b861554440d58486cad9c0a056eee1df885d5cd9862e88ab",
     "scripts/showdex-pro-css.cjs": "cd97fc22a1cc7750212bff3910eeb804d48c0bc13c6be7107bffcdf0612ee661",
     "app/client-preload.cjs": "645074e56898f4b2a638a1bd65147ea69e60cbd2b401976b242df9a585a688cf",
     "scripts/showdex-pro-source.cjs": "5bf5534d5b4ccb0823260c3a124b6f7ea4f5837df410f2733fa25f7ab6cc41fd",
-    "app/assets/icons/icon.png": "2dfa7ee17c4a71df7e2c39da24a98bdf755dbbf52089ffe06a9033099c0239e7",
-    "app/okayu-branding.css": "d004b482ec063baa1f2f66aee5456983af5477edb13d65f843e0eebfd74b329b"
+    "app/assets/icons/icon.png": "c714b51225730e1b9375437bae57876025515f8a8e6152cc6dca79035814cc4e",
+    "app/okayu-branding.css": "d004b482ec063baa1f2f66aee5456983af5477edb13d65f843e0eebfd74b329b",
+    "app/assets/icons/okayu-icon-512.png": "c714b51225730e1b9375437bae57876025515f8a8e6152cc6dca79035814cc4e"
   },
   "edits": [
     {
@@ -62,6 +61,16 @@
       "path": "app/main.cjs",
       "find": "const appTitle = 'Pokémon Showdown Pro';",
       "replace": "const appTitle = 'Pokemon Showdown: Okayu Update';\nif(process.platform==='linux'){app.setDesktopName('pokemon-showdown-okayu-update.desktop');app.commandLine.appendSwitch('class','pokemon-showdown-okayu-update');}"
+    },
+    {
+      "path": "app/streamer-mode.cjs",
+      "find": "const colors={pro:[20,40,56,255],dark:[32,35,41,255],light:[240,243,247,255]};",
+      "replace": "const colors={okayu:[33,29,44,255],pro:[20,40,56,255],dark:[32,35,41,255],light:[240,243,247,255]};"
+    },
+    {
+      "path": "app/stream/stream.js",
+      "find": "const color={pro:[20/255,40/255,56/255],light:[240/255,243/255,247/255],dark:[32/255,35/255,41/255]}[frame.theme]||[20/255,40/255,56/255];",
+      "replace": "const color={okayu:[33/255,29/255,44/255],pro:[20/255,40/255,56/255],light:[240/255,243/255,247/255],dark:[32/255,35/255,41/255]}[frame.theme]||[20/255,40/255,56/255];"
     }
   ],
   "rebuildShowdex": true,
