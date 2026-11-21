@@ -1,0 +1,17 @@
+/* Pixel alpha on surfaces, never opacity on text/Pokémon/the whole window. */
+html:root[data-okayu-glass="on"]:is(.showdown-pro,[data-theme="pro"],.showdown-okayu,[data-theme="okayu"]) {
+ --okayu-glass-color:#142838;
+ background:transparent !important;
+}
+html:root[data-okayu-glass="on"]:is(.showdown-okayu,[data-theme="okayu"]){--okayu-glass-color:#211d2c;}
+html:root[data-okayu-glass="on"]:is(.showdown-pro,[data-theme="pro"],.showdown-okayu,[data-theme="okayu"]) body,
+html:root[data-okayu-glass="on"]:is(.showdown-pro,.showdown-okayu) :is(.ps-room,.ps-header,#header){background:transparent !important;}
+html:root[data-okayu-glass="on"]:is(.showdown-pro,[data-theme="pro"],.showdown-okayu,[data-theme="okayu"]) :is(.sidebar,.battle-log,.battle-controls,[data-showdex-module="calcdex"]) {
+ background:color-mix(in srgb,var(--okayu-glass-color) calc(var(--okayu-glass-alpha,.85)*100%),transparent) !important;
+ backdrop-filter:blur(var(--okayu-glass-blur,0px)) !important;
+}
+html:root[data-okayu-glass="on"]:is(.showdown-pro,.showdown-okayu) .battle {background-color:#0c1f2c !important;}
+.okayu-glass-slider {display:block;margin:14px 0;font-size:12px;}
+.okayu-glass-slider output {float:right;font-variant-numeric:tabular-nums;}
+.okayu-glass-slider input {display:block;width:100%;margin-top:8px;accent-color:var(--blue,#f18abf);}
+#okayu-glass-card input:disabled {opacity:.5;}
