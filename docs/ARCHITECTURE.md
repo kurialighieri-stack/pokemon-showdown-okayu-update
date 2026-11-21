@@ -59,4 +59,10 @@ La caché de compilación permanece fuera de la instalación. Esta alfa no empaq
 
 ## Interfaz
 
-La interfaz gráfica utiliza diálogos de Zenity y comparte el mismo motor que la CLI. Incluye selección de instalación/módulos, importación de XPI, reversión, recuperación, diagnóstico y apertura de la aplicación. La extracción de AppImage crea una distribución extraída; no modifica el archivo AppImage original ni vuelve a empaquetarlo.
+La interfaz gráfica utiliza diálogos de Zenity y comparte el mismo motor que la CLI. Incluye selección de instalación/módulos, importación de XPI, reversión, recuperación, diagnóstico y apertura de la aplicación. Desde alpha.2, el gestor detecta accesos del menú, el proceso principal y ubicaciones habituales; no busca por texto de terminal ni enumera procesos hijos. Reconoce el archivo AppImage de origen y excluye los montajes temporales.
+
+La preparación crea una instalación persistente por SHA-256 dentro de la carpeta de datos del gestor. Reutiliza una preparación existente, recuerda la selección y distingue un AppImage actualizado. Si el archivo no tiene permiso de ejecución, utiliza una copia temporal sin cambiar sus bytes ni sus permisos. La extracción y la compilación muestran progreso y guardan los registros extensos.
+
+Después de instalar se crea un acceso propio en el menú. No se sobrescribe el acceso original ni un acceso Okayu personalizado. La reversión retira únicamente el acceso administrado que apunte a esa instalación.
+
+La extracción de AppImage conserva el archivo original y no vuelve a empaquetarlo.

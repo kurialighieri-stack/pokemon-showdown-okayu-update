@@ -1,4 +1,4 @@
-# Validación de la primera alfa
+# Validación de las versiones alfa
 
 Fecha: 2026-11-21. Plataforma probada: Linux x86_64. Base: Pokémon Showdown Pro 1.2.0 extraído de la distribución original. Pruebas realizadas con asistencia de IA; no hay una auditoría independiente.
 
@@ -58,3 +58,11 @@ También se comprobó la planificación de cada uno de los cinco módulos por se
 - La extracción de AppImage conserva el paquete original; el gestor no lo reconstruye.
 
 Los informes deben aportar resultados observados y versiones precisas. El objetivo de las comprobaciones de compatibilidad es detenerse ante una base desconocida, no prometer que cualquier actualización seguirá funcionando.
+
+## Actualización alpha.2: detección y preparación guiada
+
+Se añadieron 15 pruebas de descubrimiento y selección, para un total de **30 pruebas automatizadas aprobadas**. Cubren rutas con espacios, lectura de accesos sin ejecutarlos, proceso principal frente a renderers/terminales, ubicaciones de descargas, descarte de montajes temporales/experimental, preparación de un AppImage sin permiso de ejecución, reutilización, detección de una imagen cambiada, fallo de extracción, accesos de menú y recorrido sin selector de carpeta cuando hay una única instalación.
+
+Además se preparó el AppImage original 1.2.0 real en una carpeta de prueba. Se verificó su SHA-256 sin cambios, la validación de los originales y que la siguiente detección devolviera una sola instalación persistente en lugar de su montaje temporal o de varios procesos. La salida extensa de extracción se guardó en un registro.
+
+Los módulos de combate no cambiaron en alpha.2; las pruebas de Electron descritas arriba corresponden a alpha.1 y no se repitieron las mediciones del combate. La selección guiada y los diálogos se probaron mediante dobles de prueba; no se realizó una auditoría visual completa de Zenity.
