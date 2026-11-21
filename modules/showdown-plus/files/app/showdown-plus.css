@@ -1,0 +1,11 @@
+/* Pro's user-origin Theater styles otherwise restore the native team bars
+   over Showdown+'s own party pills. Keep one set of team information. */
+html.pro-theater-active [data-pro-theater-part="battle"] .innerbattle.phd-on :is(.leftbar,.rightbar) {
+  display:none !important;
+  width:0 !important;
+  height:0 !important;
+}
+/* HD renders should interpolate when enlarged; party icons retain pixel art. */
+.innerbattle.phd-on img[src*="/sprites/ani"] {
+  image-rendering:auto !important;
+}
