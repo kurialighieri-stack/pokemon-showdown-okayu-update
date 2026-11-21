@@ -1,4 +1,4 @@
-import argparse,json,subprocess,sys,os,shutil
+import argparse,json,subprocess,sys,os,shutil,webbrowser
 from pathlib import Path
 from .manager import Manager,ModError,VERSION
 from .discovery import discover,inspect,prepare_image,remember,create_shortcut,data_directory,image_file,remove_shortcut
@@ -45,6 +45,33 @@ def choose_installation(for_install=False):
     else:target=selected.path
     remember(target);return target
 
+def choose_showdown_xpi(spec):
+    from .xpi import discover_xpis,validate_xpi,RELEASE_URL,MOZILLA_URL
+    found=progress('Buscando Showdown+ en los perfiles de Firefox, Flatpak y Snap…',lambda:discover_xpis(spec))
+    while True:
+        rows=[]
+        for index,item in enumerate(found):
+            rows.extend([item.browser+' · '+item.profile,item.origin+' · v'+item.version,str(item.path),'found:'+str(index)])
+        rows.extend(['Seleccionar XPI manualmente…','Mozilla o GitHub v1.4','Se verificará SHA-256 y compatibilidad','manual',
+                     'Descargar desde GitHub Releases','Oficial · v1.4',RELEASE_URL,'github',
+                     'Descargar desde Mozilla','Oficial · v1.4',MOZILLA_URL,'mozilla'])
+        choice=dialog('--list','--title=Importar Showdown+ 1.4',
+            '--text=Reutiliza una extensión instalada o selecciona un XPI descargado. Solo se lee el original; la adaptación se hace en una copia privada.\nSe admiten únicamente los dos paquetes oficiales verificados de la versión 1.4.',
+            '--column=Origen / perfil','--column=Paquete','--column=Archivo / enlace','--column=ID','--hide-column=4','--print-column=4','--width=1000','--height=380',*rows)
+        if choice in ('github','mozilla'):
+            webbrowser.open(RELEASE_URL if choice=='github' else MOZILLA_URL)
+            dialog('--info','--title=Descargar Showdown+',
+                '--text=Descarga el archivo .xpi oficial (en GitHub: pokemon-showdown-hd.xpi, en Assets). Cuando termine, continúa y selecciónalo. No necesitas instalarlo en Firefox.')
+            choice='manual'
+        if choice=='manual':
+            package=dialog('--file-selection','--title=Seleccionar XPI oficial Showdown+ 1.4','--file-filter=XPI | *.xpi')
+        else:
+            try:package=found[int(choice.split(':')[1])].path
+            except (ValueError,IndexError):raise ModError('Selecciona un archivo XPI o una de las opciones de descarga.')
+        # apply() validates a fresh private copy again, including on file changes.
+        progress('Verificando SHA-256 y compatibilidad del XPI…',lambda:validate_xpi(package,spec))
+        return str(package)
+
 def gui():
     if not shutil.which('zenity'):raise ModError('La interfaz gráfica necesita Zenity. También puedes utilizar los comandos indicados con --help.')
     title='Pokemon Showdown: Okayu Update'
@@ -54,11 +81,11 @@ def gui():
         options=[]
         for mod in m.catalog():
             if mod['id']=='core':continue
-            options.extend(['TRUE' if mod['id']!='showdown-plus' else 'FALSE',mod['id'],mod['name']])
+            options.extend(['TRUE' if mod['id'] not in ('showdown-plus','glass') else 'FALSE',mod['id'],mod['name']])
         selected=dialog('--list','--checklist','--title='+title,'--text=Elige los módulos. La primera compilación de Calcdex necesita conexión y puede tardar varios minutos.','--column=Instalar','--column=ID','--column=Módulo','--print-column=2','--separator=,','--width=760','--height=360',*options).split(',')
         if not selected or selected==['']:raise ModError('No seleccionaste módulos')
         xpi=None
-        if 'showdown-plus' in selected:xpi=dialog('--file-selection','--title=Importar XPI oficial Showdown+ 1.4','--file-filter=XPI | *.xpi')
+        if 'showdown-plus' in selected:xpi=choose_showdown_xpi(next(mod['import'] for mod in m.catalog() if mod['id']=='showdown-plus'))
         dialog('--question','--title='+title,'--text=Se respaldarán y modificarán los archivos compatibles. Tu perfil de Showdown se conserva.\n\nInstalación detectada: '+str(target)+'\n\n¿Instalar los módulos seleccionados?')
         result=progress('Instalando módulos. La compilación inicial de Calcdex puede tardar varios minutos…',lambda:m.apply(selected,xpi=xpi))
         try:create_shortcut(target);shortcut_note='Abre «Pokemon Showdown: Okayu Update» desde el menú de aplicaciones.'
@@ -84,16 +111,21 @@ def main():
     parser.add_argument('--version',action='version',version=VERSION)
     sub=parser.add_subparsers(dest='command')
     sub.add_parser('gui')
+    sub.add_parser('xpi-discover',help='Buscar XPI de Showdown+ compatibles en Firefox, Flatpak y Snap (solo lectura)')
     sub.add_parser('discover',help='Mostrar las instalaciones y AppImages detectados')
     prepare=sub.add_parser('prepare',help='Preparar un AppImage en una ubicación fija');prepare.add_argument('image');prepare.add_argument('--data')
     for name in ['status','diagnose','plan','apply','revert','recover']:
         p=sub.add_parser(name);p.add_argument('installation');p.add_argument('--data',help='Carpeta externa de respaldos y registros')
         if name in ('plan','apply'):
             p.add_argument('--modules',default='performance,battle-messages,theme-okayu,calcdex-languages',help='IDs separados por comas; Showdown+ se importa por separado')
-            p.add_argument('--xpi');p.add_argument('--showdex-source',help='Checkout verificado de Showdex para reutilizar dependencias de desarrollo')
+            p.add_argument('--xpi',help='XPI oficial de Mozilla o GitHub; omitir o usar auto para detectar Firefox');p.add_argument('--showdex-source',help='Checkout verificado de Showdex para reutilizar dependencias de desarrollo')
     args=parser.parse_args()
     try:
         if args.command in (None,'gui'):return gui()
+        if args.command=='xpi-discover':
+            from .xpi import discover_xpis
+            spec=json.loads((Path(__file__).resolve().parents[1]/'modules/showdown-plus/addon.json').read_text())['import']
+            print(json.dumps([{'path':str(c.path),'browser':c.browser,'profile':c.profile,'origin':c.origin,'version':c.version,'sha256':c.sha256} for c in discover_xpis(spec)],indent=2,ensure_ascii=False));return
         if args.command=='discover':
             print(json.dumps([{'path':str(c.path),'kind':c.kind,'version':c.version,'prepared':c.prepared} for c in discover()],indent=2,ensure_ascii=False));return
         if args.command=='prepare':

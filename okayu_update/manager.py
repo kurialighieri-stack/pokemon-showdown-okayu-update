@@ -3,7 +3,7 @@ from __future__ import annotations
 import hashlib,json,os,shutil,subprocess,tempfile,time,uuid,zipfile,stat,fcntl,functools
 from pathlib import Path,PurePosixPath
 
-VERSION='0.1.0-alpha.2'
+VERSION='0.1.0-alpha.3'
 ROOT=Path(__file__).resolve().parents[1]
 class ModError(Exception):pass
 
@@ -117,7 +117,7 @@ class Manager:
         compat=self.compatibility();previous,active,baseline=self._baseline(compat)
         selected=set(selected)|{'core'};catalog=self.catalog();known={m['id'] for m in catalog}
         if selected-known:raise ModError('Módulos desconocidos: '+', '.join(selected-known))
-        modules=[m for m in catalog if m['id'] in selected];files={}
+        modules=[m for m in catalog if m['id'] in selected];files={};imports={}
         def current(name):return files[name] if name in files else baseline(name)
         # Remove the previous set virtually, then compose the requested modules once.
         if previous:
@@ -130,14 +130,21 @@ class Manager:
             directory=self.repository/'modules'/module['id']
             if self.version not in module['appVersions']:raise ModError('Módulo incompatible: '+module['id'])
             if 'import' in module:
-                if not xpi:raise ModError('Showdown+ requiere importar su XPI oficial 1.4. Desmárcalo si no deseas instalarlo.')
-                package=Path(xpi)
-                if digest(package.read_bytes())!=module['import']['sha256']:raise ModError('El XPI no coincide con Showdown+ 1.4 verificado')
+                from .xpi import discover_xpis,validate_xpi
+                package=xpi
+                if not package or package=='auto':
+                    found=discover_xpis(module['import'])
+                    if not found:raise ModError('No se encontró un XPI compatible de Showdown+ en Firefox. Descarga el XPI oficial desde GitHub Releases v1.4 o Mozilla y selecciónalo manualmente.')
+                    package=found[0].path
                 with tempfile.TemporaryDirectory(prefix='okayu-xpi-') as tmp:
-                    unpack(package,Path(tmp))
+                    # Firefox may update an extension while the manager is open.
+                    # Verify our private snapshot, then extract that same snapshot.
+                    tmp=Path(tmp);snapshot=tmp/'package.xpi';shutil.copyfile(package,snapshot)
+                    verified=validate_xpi(snapshot,module['import']);imports[module['id']]={'origin':verified.origin,'sha256':verified.sha256,'version':verified.version}
+                    content=tmp/'content';unpack(snapshot,content)
                     prefix=module['import']['destination']
-                    for p in Path(tmp).rglob('*'):
-                        if p.is_file() and not p.relative_to(tmp).parts[0].startswith('META-INF'):files[prefix+'/'+p.relative_to(tmp).as_posix()]=p.read_bytes()
+                    for p in content.rglob('*'):
+                        if p.is_file() and not p.relative_to(content).parts[0].startswith('META-INF'):files[prefix+'/'+p.relative_to(content).as_posix()]=p.read_bytes()
                 for patch in module.get('importEdits',[]):
                     name=prefix+'/'+patch['path'];data=files[name]
                     if digest(data)!=patch['before']:raise ModError('Contenido de XPI inesperado: '+patch['path'])
@@ -170,7 +177,7 @@ class Manager:
             text=text.replace("addonUpdates.installed('showdex',path.join(root,'build/showdex'))","path.join(root,'build/okayu-update-showdex')")
             files[name]=text.encode()
             if build:self._build_showdex(files,showdex_source,compat)
-        files['app/okayu-update-installed.json']=(json.dumps({'version':VERSION,'appVersion':self.version,'modules':[m['id'] for m in modules]},indent=2)+'\n').encode()
+        files['app/okayu-update-installed.json']=(json.dumps({'version':VERSION,'appVersion':self.version,'modules':[m['id'] for m in modules],'imports':imports},indent=2)+'\n').encode()
         files={name:data for name,data in files.items() if data!=read(self.root,name)}
         # Unmanaged files must not be overwritten, including generated/imported paths.
         owned=(previous or {}).get('files',{})

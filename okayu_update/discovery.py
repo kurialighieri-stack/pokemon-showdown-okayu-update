@@ -176,6 +176,9 @@ def create_shortcut(target,application_dir=None):
     icon=native_icon if native_icon.is_file() else target/'pokemon-showdown-pro.png'
     try:modules=json.loads((target/'resources/app/app/okayu-update-installed.json').read_text()).get('modules',[])
     except (OSError,ValueError):modules=[]
+    # A new basename also avoids reusing KDE's cached rectangular alpha.2 icon.
+    square_icon=target/'resources/app/app/assets/icons/okayu-icon-512.png'
+    if 'theme-okayu' in modules and square_icon.is_file():icon=square_icon
     app_class='pokemon-showdown-okayu-update' if 'theme-okayu' in modules else 'pokemon-showdown-pro'
     text='\n'.join(['[Desktop Entry]','Type=Application','Name=Pokemon Showdown: Okayu Update','Comment=Pokémon Showdown Pro con los módulos instalados por Okayu Update','Exec='+quote(launch),'Icon='+(str(icon) if icon.is_file() else 'applications-games'),'Terminal=false','Categories=Game;','StartupWMClass='+app_class,marker,''])
     atomic(shortcut,text.encode());return shortcut
