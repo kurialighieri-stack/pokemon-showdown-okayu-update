@@ -1,0 +1,157 @@
+{
+  "id": "showdown-plus",
+  "name": "Showdown+ 1.4 — adaptación Electron",
+  "version": "0.1.0",
+  "order": 40,
+  "appVersions": [
+    "1.2.0"
+  ],
+  "files": {
+    "app/showdown-plus.cjs": "cf15f91841a1148c413766bb2b946f4f842ee1ad9037e1a16464551863ed7f53",
+    "app/showdown-plus.css": "5d6a672764c2e8dc8e86c092521912a681a1207aa79a153a2d4e48b7ab11f128",
+    "vendor/browser-addons/showdownPlus/electron-shim.js": "bc847ee06ab6ff553892832b43ed9289f92a8dd72a62202e0dd67edfc88ef814",
+    "vendor/browser-addons/showdownPlus/background-electron.js": "e62220b1959b843c55d5a4721e751d95a2dfce84065c108ed9ad9185d93d6e33"
+  },
+  "edits": [
+    {
+      "path": "app/addon-catalog.cjs",
+      "find": "const addons = [\n",
+      "replace": "const addons = [\n  {key:'showdownPlus', name:'Showdown+ 1.4 (Okayu Update)', description:'HD sprites and custom animations. New client only.', options:'ui/settings.html'},\n"
+    },
+    {
+      "path": "app/browser-addons.cjs",
+      "find": "const source=path.join(this.sourceRoot,key),target=",
+      "replace": "const source=key==='showdownPlus'?path.join(this.root,'vendor/browser-addons/showdownPlus'):path.join(this.sourceRoot,key),target="
+    },
+    {
+      "path": "app/browser-addons.cjs",
+      "find": "    delete manifest.update_url;\n",
+      "replace": "    delete manifest.update_url;\n    if(key==='showdownPlus') {\n      delete manifest.browser_specific_settings;\n      delete manifest.browser_action;\n      delete manifest.optional_permissions;\n      manifest.permissions=['storage'];\n      manifest.web_accessible_resources=[...new Set([...manifest.web_accessible_resources,'sprites.txt','render_metadata.json','doubles.json','move.json','ui/data.json','tera-bake.js'])];\n      manifest.background={scripts:['electron-shim.js','config.js','patch.js','background-electron.js']};\n      manifest.options_ui={page:'ui/settings.html',open_in_tab:true};\n      for(const entry of manifest.content_scripts) entry.js.unshift('electron-shim.js');\n      fs.writeFileSync(path.join(target,'integration.json'),JSON.stringify({upstream:'1.4',adapter:1}));\n    }\n"
+    },
+    {
+      "path": "app/client-preload.cjs",
+      "find": "if (location.origin === 'https://play.pokemonshowdown.com' && window.top === window) {",
+      "replace": "if (location.origin === 'https://play.pokemonshowdown.com' && window.top === window) {\n  document.addEventListener('phd-open-settings', () => ipcRenderer.send('showdown-plus:settings'));"
+    },
+    {
+      "path": "app/main.cjs",
+      "find": "let clientSession;",
+      "replace": "let clientSession;\nipcMain.on('showdown-plus:settings', event => {\n  if (event.sender !== client?.webContents || !browserAddons?.active.has('showdownPlus')) return;\n  void openAddonWindow(browserAddons.optionsUrl('showdownPlus')).catch(error=>console.error('Showdown+ settings:',error.message));\n});"
+    },
+    {
+      "path": "app/main.cjs",
+      "find": "  session.defaultSession.protocol.handle('showdown-pro', assets);",
+      "replace": "  require('./showdown-plus.cjs').installShowdownPlus({session:clientSession,\n    source:path.join(root,'vendor/browser-addons/showdownPlus'),\n    getExtension:()=>browserAddons?.active.get('showdownPlus')});\n  session.defaultSession.protocol.handle('showdown-pro', assets);"
+    }
+  ],
+  "import": {
+    "kind": "xpi",
+    "sha256": "d128d2e8703bbe8d6a38141ee8591a37acd26c99003d788f1ccfc019b876030c",
+    "destination": "vendor/browser-addons/showdownPlus",
+    "source": "https://addons.mozilla.org/firefox/addon/pokemon-showdown-plus/"
+  },
+  "styles": [
+    "app/showdown-plus.css"
+  ],
+  "importEdits": [
+    {
+      "path": "loader.js",
+      "before": "c49dc934eea5bb06b369648b2cade9861520c1839b2887b8c1ae7a25f361fcfc",
+      "changes": [
+        {
+          "start": 119,
+          "end": 119,
+          "text": ";\n  document.documentElement.dataset.phdLoaderStage = 'fetching'"
+        },
+        {
+          "start": 2651,
+          "end": 2651,
+          "text": ";\n  document.documentElement.dataset.phdLoaderStage = 'scripts'"
+        },
+        {
+          "start": 6563,
+          "end": 6563,
+          "text": "{document.documentElement.dataset.phdLoaderStage=file;"
+        },
+        {
+          "start": 6579,
+          "end": 6579,
+          "text": "};\n    script.onerror = () => console.error('Showdown+ script failed:', file);"
+        },
+        {
+          "start": 6588,
+          "end": 6588,
+          "text": ".catch(error => { document.documentElement.dataset.phdLoaderError = error.message; console.error('Showdown+ loader:',error.stack || String(error)); })"
+        }
+      ]
+    },
+    {
+      "path": "ui/settings.html",
+      "before": "7aa5828a081d927d4c7d840d78e1c408995b55a5ea555be3bcef630b2aa28ca5",
+      "changes": [
+        {
+          "start": 115,
+          "end": 123,
+          "text": ""
+        },
+        {
+          "start": 131,
+          "end": 131,
+          "text": "+"
+        },
+        {
+          "start": 132,
+          "end": 134,
+          "text": "—"
+        },
+        {
+          "start": 135,
+          "end": 136,
+          "text": "Exp"
+        },
+        {
+          "start": 137,
+          "end": 137,
+          "text": "rimen"
+        },
+        {
+          "start": 138,
+          "end": 138,
+          "text": "al Pro integra"
+        },
+        {
+          "start": 140,
+          "end": 140,
+          "text": "o"
+        },
+        {
+          "start": 141,
+          "end": 143,
+          "text": ""
+        },
+        {
+          "start": 2551,
+          "end": 2551,
+          "text": ">\n<p style=\"max-width:1000px;margin:0 auto 16px\">Showdown+ 1.4 · Integración experimental para Pro. Los cambios visuales se guardan automáticamente.</p"
+        },
+        {
+          "start": 5927,
+          "end": 5927,
+          "text": "../electron-shim.js\"></script>\n<script src=\""
+        }
+      ]
+    },
+    {
+      "path": "ui/settings.js",
+      "before": "e6f2916e0f05e7ed8fa85e70e7522d5bffafc631cf2174df6f9a52f6d0240ecd",
+      "changes": [
+        {
+          "start": 554,
+          "end": 554,
+          "text": "\n  // Local sprite servers and arbitrary custom domains are outside this adapter.\n  document.getElementById('localon').closest('.card').hidden = true;"
+        }
+      ]
+    }
+  ],
+  "generateConfigNode": true
+}
