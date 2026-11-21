@@ -1,0 +1,12 @@
+/* visibility preserves the message layout used by Showdown's animation queue. */
+html.pro-hide-battle-messages .battle :is(.messagebar,.abilityresult,pokemon-ability-panel) {
+ visibility:hidden !important;
+ pointer-events:none !important;
+}
+.pro-battle-messages-controls { display:inline-flex;margin-right:5px; }
+.pro-battle-messages-controls[data-docked="false"] {
+ position:absolute;right:6px;bottom:6px;z-index:10;margin:0;
+}
+.pro-battle-messages-controls > .button {
+ font-size:11px;line-height:16px;padding:2px 7px;cursor:pointer;
+}
