@@ -1,0 +1,38 @@
+name: Incompatibilidad tras actualizar
+description: Una versión nueva de Pro o Showdown cambió el comportamiento de un módulo.
+title: "[Compatibilidad] "
+body:
+  - type: input
+    id: app
+    attributes:
+      label: Versión de Pokémon Showdown Pro
+    validations:
+      required: true
+  - type: input
+    id: manager
+    attributes:
+      label: Versión de Okayu Update y distribución Linux
+    validations:
+      required: true
+  - type: checkboxes
+    id: modules
+    attributes:
+      label: Módulos afectados
+      options:
+        - label: Modo cine optimizado
+        - label: Ocultar avisos
+        - label: Tema Okayu
+        - label: Showdown+
+        - label: Idiomas de Calcdex
+  - type: textarea
+    id: behavior
+    attributes:
+      label: Qué ocurrió y cómo reproducirlo
+      description: Indica si sucede al instalar, abrir, jugar, ver una repetición o revertir.
+    validations:
+      required: true
+  - type: textarea
+    id: diagnostic
+    attributes:
+      label: Diagnóstico
+      description: Adjunta okayu-diagnostic.json generado por el gestor. No adjuntes perfiles ni registros sin revisar.

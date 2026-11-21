@@ -1,0 +1,15 @@
+name: Problema del gestor o un módulo
+description: Error de instalación, reversión o funcionamiento.
+body:
+  - type: textarea
+    id: description
+    attributes:
+      label: Descripción y pasos para reproducir
+    validations:
+      required: true
+  - type: textarea
+    id: versions
+    attributes:
+      label: Versiones y módulos seleccionados
+    validations:
+      required: true
