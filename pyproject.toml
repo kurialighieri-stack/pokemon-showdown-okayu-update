@@ -1,6 +1,6 @@
 [project]
 name = "pokemon-showdown-okayu-update"
-version = "0.1.0a2"
+version = "0.1.0a3"
 description = "Reversible mod manager for Pokemon Showdown Pro"
 requires-python = ">=3.10"
 license = "AGPL-3.0-or-later"
