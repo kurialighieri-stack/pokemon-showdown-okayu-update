@@ -1,0 +1,17 @@
+{
+  "id": "core",
+  "name": "Okayu Update — conexión de módulos",
+  "version": "0.1.0",
+  "order": 0,
+  "appVersions": [
+    "1.2.0"
+  ],
+  "files": {},
+  "edits": [
+    {
+      "path": "app/client-startup.cjs",
+      "find": "      if(theaterScript)await execute(theaterScript);",
+      "replace": "      const modCSS=fs.readFileSync(require('node:path').join(__dirname,'okayu-update.css'),'utf8');\n      await contents.insertCSS(modCSS,{cssOrigin:'user'});\n      await execute(fs.readFileSync(require('node:path').join(__dirname,'okayu-update-client.js'),'utf8'));\n      if(theaterScript)await execute(theaterScript);"
+    }
+  ]
+}
