@@ -1,7 +1,7 @@
 {
   "id": "core",
-  "name": "Okayu Update — conexión de módulos",
-  "version": "0.1.0",
+  "name": "Okayu Update \u2014 conexi\u00f3n de m\u00f3dulos",
+  "version": "0.1.1",
   "order": 0,
   "appVersions": [
     "1.2.0"
@@ -12,6 +12,11 @@
       "path": "app/client-startup.cjs",
       "find": "      if(theaterScript)await execute(theaterScript);",
       "replace": "      const modCSS=fs.readFileSync(require('node:path').join(__dirname,'okayu-update.css'),'utf8');\n      await contents.insertCSS(modCSS,{cssOrigin:'user'});\n      await execute(fs.readFileSync(require('node:path').join(__dirname,'okayu-update-client.js'),'utf8'));\n      if(theaterScript)await execute(theaterScript);"
+    },
+    {
+      "path": "app/main.cjs",
+      "find": "  if (!smoke && !verifyRelease) void require('./linux-integration.cjs').installLinuxShortcuts({app,description:require('../package.json').description}).catch(error=>console.error('Linux shortcuts:',error.message));",
+      "replace": "  // Okayu Update owns its launcher; preserve the original global shortcut and icon."
     }
   ]
 }
