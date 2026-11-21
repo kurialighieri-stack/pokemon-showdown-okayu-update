@@ -1,0 +1,26 @@
+{
+  "id": "battle-messages",
+  "name": "Botón para ocultar avisos",
+  "version": "0.1.0",
+  "order": 20,
+  "appVersions": [
+    "1.2.0"
+  ],
+  "files": {
+    "app/battle-messages.js": "237c1bfa9064b0a24dbbe917fc02c8e8aa7f181030aaf3339210faf2cdba0793",
+    "app/battle-messages.css": "b32046cb2f8b0ab747904f5cf138b01b3cc0f0be3e99f6ceb700fe2dfa12aa6d"
+  },
+  "edits": [
+    {
+      "path": "app/theater-mode.js",
+      "find": "  const enabled=active===id,label=enabled?'Exit Theater Mode':'Enter Theater Mode';",
+      "replace": "  window.__showdownProBattleMessages?.attach(root);\n  const enabled=active===id,label=enabled?'Exit Theater Mode':'Enter Theater Mode';"
+    }
+  ],
+  "clientScripts": [
+    "app/battle-messages.js"
+  ],
+  "styles": [
+    "app/battle-messages.css"
+  ]
+}
