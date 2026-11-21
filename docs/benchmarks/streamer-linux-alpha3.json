@@ -1,0 +1,351 @@
+{
+  "date": "2026-11-21",
+  "platform": "Linux x86_64 / Wayland",
+  "appVersion": "1.2.0",
+  "client": "new",
+  "window": [
+    1536,
+    960
+  ],
+  "measurementSeconds": 4,
+  "syntheticBattle": true,
+  "notes": [
+    "Single runs on the same machine, not a statistically controlled benchmark.",
+    "The source-only theater row includes first Calcdex expansion and remains slow in both versions.",
+    "Network/GPU scheduling and source FPS vary between runs. No universal FPS guarantee."
+  ],
+  "baseline": [
+    {
+      "name": "source-only",
+      "theater": false,
+      "enabled": false,
+      "hub": false,
+      "shown": false,
+      "sourceFps": 37.71485773870865,
+      "paintedFps": 0,
+      "mainCpuMs": 226.481,
+      "bytesPerSecond": 0,
+      "dropped": 0,
+      "samples": 0,
+      "stageMs": {
+        "capture": 0,
+        "mask": 0,
+        "encode": 0,
+        "after": 0,
+        "before": 0,
+        "ack": 0
+      },
+      "hubWidth": 0,
+      "error": null
+    },
+    {
+      "name": "source-theater",
+      "theater": true,
+      "enabled": false,
+      "hub": false,
+      "shown": false,
+      "sourceFps": 4.993356988911004,
+      "paintedFps": 0,
+      "mainCpuMs": 272.249,
+      "bytesPerSecond": 0,
+      "dropped": 0,
+      "samples": 0,
+      "stageMs": {
+        "capture": 0,
+        "mask": 0,
+        "encode": 0,
+        "after": 0,
+        "before": 0,
+        "ack": 0
+      },
+      "hubWidth": 0,
+      "error": null
+    },
+    {
+      "name": "normal-private",
+      "theater": false,
+      "enabled": true,
+      "hub": false,
+      "shown": false,
+      "sourceFps": 29.606243347480227,
+      "paintedFps": 13.683557849675735,
+      "mainCpuMs": 3100.662,
+      "bytesPerSecond": 3372870.6236289297,
+      "dropped": 0,
+      "samples": 56,
+      "stageMs": {
+        "capture": 62.05721964285749,
+        "mask": 10.987795999999564,
+        "encode": 3.121736035715133,
+        "after": 10.439973857142961,
+        "before": 0.0008963035714779315,
+        "ack": 16.658408767857377
+      },
+      "hubWidth": 0,
+      "error": null
+    },
+    {
+      "name": "theater-private",
+      "theater": true,
+      "enabled": true,
+      "hub": false,
+      "shown": false,
+      "sourceFps": 30.724073198952347,
+      "paintedFps": 13.48861750197908,
+      "mainCpuMs": 2574.665,
+      "bytesPerSecond": 6351664.087918596,
+      "dropped": 0,
+      "samples": 53,
+      "stageMs": {
+        "capture": 66.18841543396191,
+        "mask": 15.705420754717434,
+        "encode": 5.121970320754972,
+        "after": 8.878068471697674,
+        "before": 0.0008584339622482834,
+        "ack": 21.28512862264187
+      },
+      "hubWidth": 0,
+      "error": null
+    },
+    {
+      "name": "theater-showdex-hub",
+      "theater": true,
+      "enabled": true,
+      "hub": true,
+      "shown": true,
+      "sourceFps": 15.747394924205075,
+      "paintedFps": 0,
+      "mainCpuMs": 1594.715,
+      "bytesPerSecond": 0,
+      "dropped": 0,
+      "samples": 0,
+      "stageMs": {
+        "capture": 0,
+        "mask": 0,
+        "encode": 0,
+        "after": 0,
+        "before": 0.38173700003972044,
+        "ack": 0
+      },
+      "hubWidth": 0,
+      "error": "Battle Hub mirror unavailable"
+    },
+    {
+      "name": "normal-showdex-hub",
+      "theater": false,
+      "enabled": true,
+      "hub": true,
+      "shown": true,
+      "sourceFps": 31.750347975876156,
+      "paintedFps": 16.25017809788937,
+      "mainCpuMs": 2838.007,
+      "bytesPerSecond": 3856586.2672213335,
+      "dropped": 0,
+      "samples": 65,
+      "stageMs": {
+        "capture": 61.39517873846187,
+        "mask": 12.569660661539036,
+        "encode": 3.4988674769231762,
+        "after": 0.001061492307836978,
+        "before": 0.0009582000003250029,
+        "ack": 20.354809707691757
+      },
+      "hubWidth": 360,
+      "error": "Battle Hub mirror unavailable"
+    }
+  ],
+  "optimized": [
+    {
+      "name": "source-only",
+      "theater": false,
+      "enabled": false,
+      "hub": false,
+      "shown": false,
+      "sourceFps": 31.970319099429,
+      "paintedFps": 0,
+      "mainCpuMs": 137.684,
+      "bytesPerSecond": 0,
+      "dropped": 0,
+      "samples": 0,
+      "stageMs": {
+        "capture": 0,
+        "mask": 0,
+        "encode": 0,
+        "after": 0,
+        "before": 0,
+        "ack": 0
+      },
+      "hubWidth": 0,
+      "error": null
+    },
+    {
+      "name": "source-theater",
+      "theater": true,
+      "enabled": false,
+      "hub": false,
+      "shown": false,
+      "sourceFps": 4.244744028479244,
+      "paintedFps": 0,
+      "mainCpuMs": 224.027,
+      "bytesPerSecond": 0,
+      "dropped": 0,
+      "samples": 0,
+      "stageMs": {
+        "capture": 0,
+        "mask": 0,
+        "encode": 0,
+        "after": 0,
+        "before": 0,
+        "ack": 0
+      },
+      "hubWidth": 0,
+      "error": null
+    },
+    {
+      "name": "normal-private",
+      "theater": false,
+      "enabled": true,
+      "hub": false,
+      "shown": false,
+      "sourceFps": 32.01299568403544,
+      "paintedFps": 20.349346093727952,
+      "mainCpuMs": 2382.986,
+      "bytesPerSecond": 4572357.110814558,
+      "dropped": 0,
+      "samples": 81,
+      "stageMs": {
+        "capture": 43.88381059259305,
+        "mask": 8.662326839506012,
+        "encode": 2.4690347160491157,
+        "after": 5.41628209876594,
+        "before": 0.000683234567807148,
+        "ack": 10.360472827160715
+      },
+      "hubWidth": 0,
+      "error": null
+    },
+    {
+      "name": "theater-private",
+      "theater": true,
+      "enabled": true,
+      "hub": false,
+      "shown": false,
+      "sourceFps": 32.667704865630945,
+      "paintedFps": 14.106508919249725,
+      "mainCpuMs": 3332.421,
+      "bytesPerSecond": 6830805.208238024,
+      "dropped": 0,
+      "samples": 57,
+      "stageMs": {
+        "capture": 62.2077935964913,
+        "mask": 12.093800350876878,
+        "encode": 3.9829921228069507,
+        "after": 7.619147649122424,
+        "before": 0.0007350701753717946,
+        "ack": 20.003194175438757
+      },
+      "hubWidth": 0,
+      "error": null
+    },
+    {
+      "name": "theater-showdex-hub",
+      "theater": true,
+      "enabled": true,
+      "hub": true,
+      "shown": true,
+      "sourceFps": 34.24205464485051,
+      "paintedFps": 16.996056320071787,
+      "mainCpuMs": 2512.267,
+      "bytesPerSecond": 7811787.391912525,
+      "dropped": 0,
+      "samples": 68,
+      "stageMs": {
+        "capture": 58.161101544117734,
+        "mask": 11.36763750000083,
+        "encode": 3.8474192499991604,
+        "after": 0.0008104852942564963,
+        "before": 0.0007026470587280689,
+        "ack": 15.73157255882378
+      },
+      "hubWidth": 360,
+      "error": null
+    },
+    {
+      "name": "normal-showdex-hub",
+      "theater": false,
+      "enabled": true,
+      "hub": true,
+      "shown": true,
+      "sourceFps": 36.74330737190713,
+      "paintedFps": 23.245765888349407,
+      "mainCpuMs": 2651.944,
+      "bytesPerSecond": 4927742.433890512,
+      "dropped": 0,
+      "samples": 93,
+      "stageMs": {
+        "capture": 42.985212666666875,
+        "mask": 8.958646473118279,
+        "encode": 2.470408526882238,
+        "after": 0.0008204731186138346,
+        "before": 0.0006685053759288314,
+        "ack": 10.89342682795713
+      },
+      "hubWidth": 360,
+      "error": null
+    }
+  ],
+  "sameLayoutMapTimings": [
+    {
+      "name": "original",
+      "times": [
+        5.4000000059604645,
+        3.699999988079071,
+        3.6000000089406967,
+        3.7999999970197678,
+        3.9000000059604645,
+        3.5,
+        4.199999988079071,
+        3.6000000089406967
+      ]
+    },
+    {
+      "name": "current",
+      "times": [
+        4.5,
+        3.0999999940395355,
+        2.6000000089406967,
+        3.0999999940395355,
+        3,
+        3.4000000059604645,
+        3.0999999940395355,
+        3.2999999970197678
+      ]
+    },
+    {
+      "name": "original",
+      "times": [
+        3.5,
+        3.9000000059604645,
+        2.5,
+        2.5,
+        2.3999999910593033,
+        2.9000000059604645,
+        2.5999999940395355,
+        2.800000011920929
+      ]
+    },
+    {
+      "name": "current",
+      "times": [
+        2.7000000029802322,
+        2.3999999910593033,
+        2.300000011920929,
+        2.2999999970197678,
+        2,
+        1.7000000029802322,
+        2.0999999940395355,
+        2.0999999940395355
+      ]
+    }
+  ]
+}
