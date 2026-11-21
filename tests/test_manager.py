@@ -82,6 +82,13 @@ class Transactions(unittest.TestCase):
    fcntl.flock(lock,fcntl.LOCK_EX)
    with self.assertRaises(ModError):self.m.apply(['sample'])
   self.assertEqual(self.tree(),self.original)
+ def test_binary_icon_is_restored_when_module_is_removed(self):
+  icon='app/assets/icons/icon.png';p=self.app/icon;p.parent.mkdir(parents=True);original=b'\x89PNG\r\noriginal';p.write_bytes(original)
+  compat=self.repo/'compatibility/1.2.0.json';data=json.loads(compat.read_text());data['files'][icon]=digest(original);compat.write_text(json.dumps(data))
+  payload=self.repo/'modules/sample/files'/icon;payload.parent.mkdir(parents=True);payload.write_bytes(b'\x89PNG\r\nokayulogo')
+  manifest=self.repo/'modules/sample/addon.json';data=json.loads(manifest.read_text());data['files'][icon]=digest(payload.read_bytes());manifest.write_text(json.dumps(data))
+  self.m.apply(['sample']);self.assertEqual(p.read_bytes(),payload.read_bytes())
+  self.m.apply([]);self.assertEqual(p.read_bytes(),original);self.m.revert();self.assertEqual(p.read_bytes(),original)
  def test_diagnostics_exclude_path_and_profile(self):
   report=json.dumps(self.m.diagnostic());self.assertNotIn(str(self.root),report);self.assertNotIn('cookies',report)
 

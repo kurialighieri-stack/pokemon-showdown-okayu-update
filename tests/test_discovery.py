@@ -76,6 +76,13 @@ class Discovery(unittest.TestCase):
   desktop.write_text('[Desktop Entry]\nName=custom\n')
   with self.assertRaises(ModError):create_shortcut(install,self.apps)
   self.assertIn('custom',desktop.read_text())
+ def test_theme_shortcut_uses_branded_native_icon_and_window_class(self):
+  install=self.install();assets=install/'resources/app/app/assets/icons';assets.mkdir(parents=True);(assets/'icon.png').write_bytes(b'png')
+  (install/'resources/app/app/okayu-update-installed.json').write_text('{"modules":["theme-okayu"]}')
+  original=self.apps/'pokemon-showdown-pro.desktop';original.write_text('original shortcut')
+  shortcut=create_shortcut(install,self.apps);text=shortcut.read_text()
+  self.assertIn('Icon='+str(assets/'icon.png'),text);self.assertIn('StartupWMClass=pokemon-showdown-okayu-update',text)
+  self.assertEqual(original.read_text(),'original shortcut')
  def test_revert_does_not_remove_another_installation_shortcut(self):
   a=self.install('one');b=self.install('two');shortcut=create_shortcut(b,self.apps)
   remove_shortcut(a,self.apps);self.assertTrue(shortcut.exists())
