@@ -1,5 +1,7 @@
 # Pokemon Showdown: Okayu Update
 
+<img src="modules/theme-okayu/files/app/assets/icons/icon.png" width="100" alt="Logo Okayu" />
+
 **Desarrollado con asistencia extensa de IA (OpenAI Codex), bajo la dirección del mantenedor.** Consulta [la declaración de uso de IA](AI_DISCLOSURE.md) y [las pruebas realizadas](docs/VALIDATION.md).
 
 Gestor externo de modificaciones reversibles para [Pokémon Showdown Pro](https://github.com/Ryukotsuki/PokemonShowdownPro).
@@ -14,7 +16,7 @@ El gestor instala módulos sobre la aplicación original. No sustituye su interf
 | --- | --- |
 | Modo cine optimizado | Corrige la realimentación del observador de cambios, reduce trabajo de estilos y retrasa el cálculo de paneles plegados. |
 | Botón de avisos | Permite ocultar/restaurar el recuadro narrativo y los avisos de habilidades, conservando el log. |
-| Tema Okayu | Paleta violeta y rosa que hereda el diseño de Pro en el cliente, Battle Hub y Calcdex. |
+| Tema Okayu | Paleta violeta y rosa que hereda Pro, con el logo Okayu en la ventana, el cliente, Battle Hub y el acceso propio del menú. |
 | Showdown+ | Adaptación de Showdown+ 1.4 a Electron. Requiere importar el XPI oficial. |
 | Idiomas de Calcdex | Sigue el idioma de Showdown, usa sus nombres/descripciones y añade controles en español, con respaldo a inglés. |
 
@@ -35,6 +37,8 @@ Requisitos: Linux, Python 3.10 o posterior y el **AppImage original o una distri
 La distribución `.tar.gz` extraída de Pro se modifica directamente. Si tienes un AppImage, **Instalar / cambiar módulos** prepara automáticamente una distribución en `$XDG_DATA_HOME/pokemon-showdown-okayu-update/managed/` (por defecto, `~/.local/share/pokemon-showdown-okayu-update/managed/`). No necesitas saber dónde están los archivos internos. Se conserva el AppImage intacto. Esta alfa **no vuelve a empaquetar ni modifica el AppImage comprimido**. Después de instalar, el acceso **Pokemon Showdown: Okayu Update** abre la distribución modificada. El acceso anterior del AppImage sigue abriendo el original. También puedes elegir **Abrir aplicación** en el gestor.
 
 No selecciones nuestra antigua copia experimental ni una instalación modificada manualmente: las huellas deben coincidir con la base original. El gestor conserva el perfil normal de la aplicación. Los módulos no copian perfiles, equipos, cookies ni credenciales.
+
+El módulo Okayu también instala el logo proporcionado por el mantenedor en el icono nativo de la ventana, Battle Hub, la cabecera de Showdown y el acceso propio del menú. Los logos forman parte de la instalación del módulo, aunque cambies temporalmente de paleta; se restauran al revertir o retirar ese módulo. El acceso y el icono globales de la aplicación original se conservan. El AppImage original comprimido no cambia.
 
 El tema Okayu aparece en las opciones de tema de Showdown después de reiniciar. El botón «Textos» aparece junto a los controles de combate. Los idiomas de Calcdex siguen las preferencias de Showdown.
 

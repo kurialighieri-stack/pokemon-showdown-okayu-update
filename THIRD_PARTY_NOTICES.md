@@ -7,3 +7,7 @@
 - **Electron, Node.js, pnpm y extensiones incluidas con Pro** conservan las licencias y avisos de la distribución original. El gestor no los redistribuye.
 
 Este proyecto es independiente y no es una publicación oficial de Pokémon Showdown, Showdex, Showdown+, Nintendo, Game Freak ni The Pokémon Company.
+
+## Identidad Okayu
+
+El logo de onigiri morado fue proporcionado por el mantenedor para integrarlo en el paquete. Se conserva su PNG sin alterar. No es un recurso extraído de Showdown ni de Showdown+; la licencia del código no cambia los derechos que correspondan a esa imagen.
