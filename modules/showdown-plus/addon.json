@@ -1,7 +1,7 @@
 {
   "id": "showdown-plus",
   "name": "Showdown+ 1.4 — adaptación Electron",
-  "version": "0.1.0",
+  "version": "0.2.0",
   "order": 40,
   "appVersions": [
     "1.2.0"
@@ -48,7 +48,19 @@
     "kind": "xpi",
     "sha256": "d128d2e8703bbe8d6a38141ee8591a37acd26c99003d788f1ccfc019b876030c",
     "destination": "vendor/browser-addons/showdownPlus",
-    "source": "https://addons.mozilla.org/firefox/addon/pokemon-showdown-plus/"
+    "source": "https://addons.mozilla.org/firefox/addon/pokemon-showdown-plus/",
+    "acceptedPackages": [
+      {
+        "origin": "mozilla",
+        "sha256": "d128d2e8703bbe8d6a38141ee8591a37acd26c99003d788f1ccfc019b876030c",
+        "url": "https://addons.mozilla.org/firefox/addon/pokemon-showdown-plus/"
+      },
+      {
+        "origin": "github",
+        "sha256": "825eeb9bca4e618f620f4177bfdfbb6d77607c461258c8f7e2623564cf9a5fe3",
+        "url": "https://github.com/JxstMichie/PokemonShowdownPlus/releases/download/v1.4/pokemon-showdown-hd.xpi"
+      }
+    ]
   },
   "styles": [
     "app/showdown-plus.css"
