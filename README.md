@@ -6,6 +6,8 @@
 
 Gestor externo de modificaciones reversibles para [Pokémon Showdown Pro](https://github.com/Ryukotsuki/PokemonShowdownPro).
 
+**Licencia del código propio: [GNU AGPL v3 o posterior — copyleft fuerte](LICENSE) (`AGPL-3.0-or-later`).**
+
 **Versión alfa para Linux y Windows x64. Compatible con Pro 1.2.0 cuando sus archivos coinciden con el adaptador de cada plataforma. En Windows se excluye Glass.**
 
 No es una versión oficial de Showdown, Showdex ni Showdown+.
@@ -210,7 +212,11 @@ macOS, actualizaciones automáticas del gestor y reconstrucción de AppImage que
 
 ## Licencias y autoría
 
-El código propio del gestor y las adaptaciones derivadas de Pro se distribuyen bajo AGPL-3.0-or-later. Se conserva la licencia de Pro. Consulta [THIRD_PARTY_NOTICES.md](THIRD_PARTY_NOTICES.md). Los recursos de Showdown+ no se incluyen ni cambian de licencia: se importan localmente desde el paquete oficial. Pokémon y sus recursos conservan sus titulares y licencias correspondientes.
+El código propio del gestor y las adaptaciones derivadas de Pro se distribuyen bajo **GNU Affero General Public License, versión 3 o cualquier versión posterior** (`AGPL-3.0-or-later`), una licencia de **copyleft fuerte**. El texto íntegro está en [LICENSE](LICENSE) y el identificador está declarado en [pyproject.toml](pyproject.toml).
+
+Al redistribuir el código cubierto o sus versiones modificadas deben conservarse los avisos y proporcionarse el código fuente correspondiente bajo los términos de la AGPL. Su sección 13 también exige ofrecer el código fuente correspondiente a quienes interactúen remotamente por red con una versión modificada, cuando se dé ese supuesto. El texto de la licencia determina las obligaciones aplicables; no se imponen restricciones adicionales.
+
+Se conserva la licencia de Pro y las atribuciones de sus autores. Consulta [THIRD_PARTY_NOTICES.md](THIRD_PARTY_NOTICES.md) para los componentes y recursos externos. Los recursos de Showdown+ no se incluyen ni cambian de licencia: se importan localmente desde el paquete oficial. La AGPL del gestor no relicencia Showdown+, los sprites de Pokémon ni otros recursos de terceros. Los paquetes Linux y Windows de Releases incluyen `LICENSE` y los avisos de terceros.
 
 ## Portabilidad
 

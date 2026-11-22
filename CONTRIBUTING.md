@@ -1,5 +1,7 @@
 # Contribuir
 
+El código propio de este proyecto se publica bajo **AGPL-3.0-or-later (copyleft fuerte)**; las contribuciones de código propio deben proporcionarse bajo esa licencia. Conserva el texto de `LICENSE`, los avisos de autoría y las licencias de los componentes externos. No atribuyas la AGPL del gestor a recursos de terceros con condiciones distintas; documenta su procedencia en `THIRD_PARTY_NOTICES.md`.
+
 Abre una incidencia antes de ampliar el soporte de versiones. Incluye versión de Pro, módulos activos y diagnóstico del gestor. No adjuntes el perfil del navegador, equipos privados ni paquetes de terceros.
 
 Para un adaptador nuevo:
