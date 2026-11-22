@@ -10,3 +10,9 @@ html.pro-hide-battle-messages .battle :is(.messagebar,.abilityresult,pokemon-abi
 .pro-battle-messages-controls > .button {
  font-size:11px;line-height:16px;padding:2px 7px;cursor:pointer;
 }
+
+/* Local sprite assets: SVG viewBox removes transparent padding without editing the PNGs. */
+.pro-battle-messages-controls { gap:4px;align-items:center; }
+.pro-battle-messages-controls > .button { display:inline-flex !important;align-items:center;justify-content:center;width:36px !important;min-width:36px !important;height:32px !important;min-height:32px !important;box-sizing:border-box;padding:1px !important;line-height:1 !important; }
+.okayu-control-sprite { display:block;width:28px;height:28px;overflow:visible;pointer-events:none;image-rendering:pixelated; }
+html:not([data-okayu-showdown-plus="on"]) .pro-battle-panels-theme-toggle { display:none !important; }

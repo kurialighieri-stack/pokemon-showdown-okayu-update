@@ -2,6 +2,8 @@
 (() => {
  if(window.__showdownProBattleMessages)return true;
  const key='showdownProBattleMessagesHidden';
+ const icons={unown:['unown.png','37 29 22 38',96,96],shiny:['unown-shiny.png','37 29 22 38',96,96]};
+ function icon(button,name){if(button.dataset.icon===name)return;button.dataset.icon=name;const [file,view,width,height]=icons[name],ns='http://www.w3.org/2000/svg',svg=document.createElementNS(ns,'svg'),image=document.createElementNS(ns,'image');svg.setAttribute('viewBox',view);svg.setAttribute('aria-hidden','true');svg.setAttribute('focusable','false');svg.classList.add('okayu-control-sprite');image.setAttribute('width',String(width));image.setAttribute('height',String(height));image.setAttribute('href','showdown-pro://assets/icons/controls/'+file);svg.append(image);button.replaceChildren(svg);}
  let hidden=false;
  try{hidden=localStorage.getItem(key)==='true';}catch{}
  const labels=()=>{
@@ -13,10 +15,10 @@
   document.documentElement.classList.toggle('pro-hide-battle-messages',hidden);
   const l=labels();
   for(const button of document.querySelectorAll('.pro-battle-messages-toggle')){
-   const text=l.name+': '+l.state;
-   if(button.textContent!==text)button.textContent=text;
-   button.title=l.action;button.setAttribute('aria-label',l.action);button.setAttribute('aria-pressed',String(hidden));
+   icon(button,hidden?'shiny':'unown');
+   const label=l.name+': '+l.state+'. '+l.action;button.title=label;button.setAttribute('aria-label',label);button.setAttribute('aria-pressed',String(hidden));
   }
+
  }
  function setHidden(value){
   hidden=!!value;
@@ -45,7 +47,7 @@
   paint();
  }
  window.addEventListener('storage',event=>{if(event.key===key){hidden=event.newValue==='true';paint();}});
- window.PS?.prefs?.subscribe?.(name=>{if(!name||name==='language'||name==='serversettings')paint();});
+ window.PS?.prefs?.subscribe?.(name=>{if(!name||name==='language'||name==='serversettings'||name==='theme')paint();});
  window.__showdownProBattleMessages={attach,setHidden,get hidden(){return hidden;}};
  paint();return true;
 })();

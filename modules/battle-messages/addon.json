@@ -1,14 +1,16 @@
 {
   "id": "battle-messages",
   "name": "Botón para ocultar avisos",
-  "version": "0.1.0",
+  "version": "0.2.0-local.1",
   "order": 20,
   "appVersions": [
     "1.2.0"
   ],
   "files": {
-    "app/battle-messages.js": "237c1bfa9064b0a24dbbe917fc02c8e8aa7f181030aaf3339210faf2cdba0793",
-    "app/battle-messages.css": "b32046cb2f8b0ab747904f5cf138b01b3cc0f0be3e99f6ceb700fe2dfa12aa6d"
+    "app/battle-messages.js": "be01d5a4929b8aaa6d77600ad7010476637aa69b1b0242120947e345217e521c",
+    "app/battle-messages.css": "8ff635498d9ca2653942e0f39b99f499c30e0b2aa24c850e20a986756e5ebbc8",
+    "app/assets/icons/controls/unown.png": "f75c23d3c7717c325083edc902470d4007d8e491647320b75f9fdfc8d1f446ad",
+    "app/assets/icons/controls/unown-shiny.png": "42608a88b9f55f801a5a7d43e273171cc0c2e3b1ecb45d8e182eb6274f8b1d24"
   },
   "edits": [
     {

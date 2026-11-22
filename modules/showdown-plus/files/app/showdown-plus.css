@@ -9,3 +9,28 @@ html.pro-theater-active [data-pro-theater-part="battle"] .innerbattle.phd-on :is
 .innerbattle.phd-on img[src*="/sprites/ani"] {
   image-rendering:auto !important;
 }
+
+/* Six equal rows; known icons cannot impose a larger flex min-content height. */
+.phd-team { display:grid !important;grid-template-rows:none !important;grid-auto-rows:minmax(0,1fr) !important;gap:0 !important;overflow:visible !important; }
+.phd-team > .phd-slot { min-height:0 !important;min-width:0 !important;align-self:stretch; }
+.phd-team > .phd-slot .picon { margin:0 !important; }
+/* Independent of the app theme; variables also reach Showdown+'s shadow banners. */
+html[data-okayu-battle-panels="light"] .phd-layer { --phd-bg:#fff !important;--phd-ink:initial !important;--phd-ink-filter:none !important; }
+html[data-okayu-battle-panels="dark"] .phd-layer { --phd-bg:#1f1f1f !important;--phd-ink:#fff !important;--phd-ink-filter:invert(1) !important; }
+html[data-okayu-battle-panels="light"] .phd-team::before { background-image:var(--okayu-pill-light) !important; }
+html[data-okayu-battle-panels="dark"] .phd-team::before { background-image:var(--okayu-pill-dark) !important; }
+
+/* Shared control layout when the text module is not selected. */
+.pro-battle-messages-controls { display:inline-flex;margin-right:5px; }
+.pro-battle-messages-controls[data-docked="false"] {
+ position:absolute;right:6px;bottom:6px;z-index:10;margin:0;
+}
+.pro-battle-messages-controls > .button {
+ font-size:11px;line-height:16px;padding:2px 7px;cursor:pointer;
+}
+
+/* Local sprite assets: SVG viewBox removes transparent padding without editing the PNGs. */
+.pro-battle-messages-controls { gap:4px;align-items:center; }
+.pro-battle-messages-controls > .button { display:inline-flex !important;align-items:center;justify-content:center;width:36px !important;min-width:36px !important;height:32px !important;min-height:32px !important;box-sizing:border-box;padding:1px !important;line-height:1 !important; }
+.okayu-control-sprite { display:block;width:28px;height:28px;overflow:visible;pointer-events:none;image-rendering:pixelated; }
+html:not([data-okayu-showdown-plus="on"]) .pro-battle-panels-theme-toggle { display:none !important; }

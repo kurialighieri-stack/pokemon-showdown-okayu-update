@@ -1,15 +1,16 @@
 {
   "id": "glass",
   "name": "Glass para Linux (experimental)",
-  "version": "0.1.0",
+  "version": "0.3.1-local.1",
   "order": 60,
   "appVersions": [
     "1.2.0"
   ],
   "files": {
-    "app/okayu-glass.cjs": "78fb1c13466fc485405a7a05b6d879ee0b675f9963681e7b49bb961533e58d59",
-    "app/okayu-glass-panel.js": "d7b653747e4e79973a94bffbf0817de637bbbe9567a71602a136e86c44749e5d",
-    "app/okayu-glass.css": "c848e1915fc8a3ad240c0c1ef3fbcffed687288d5550da9b997853f47316bee6"
+    "app/okayu-glass.cjs": "d0f96dad03d87ef584ef9b5d20b40b82c0cda95ab14e4785f7a22001bc79fd4e",
+    "app/okayu-glass-panel.js": "060981b38a2f22038a3986d4a9e05644ac2b8b5fe8aca076e55e98126472bea0",
+    "app/okayu-glass.css": "e4c86c2e20a0f75c739993222f9e9fa07c78c70399ef880851ae18b85628a966",
+    "app/okayu-glass-renderer.js": "351902fbb9d8cead904884cd1ec479aad0f723207e15ffbd4b525f31a5ad9e2d"
   },
   "edits": [
     {
@@ -35,12 +36,32 @@
     {
       "path": "app/main.cjs",
       "find": "window = new BrowserWindow({ title: appTitle,",
-      "replace": "window = new BrowserWindow({ ...okayuGlass.windowOptions(), title: appTitle,"
+      "replace": "window = okayuGlass.createWindow({ title: appTitle,"
     },
     {
       "path": "app/main.cjs",
       "find": "  client.setVisible(true);",
       "replace": "  client.setVisible(true);\n  await okayuGlass.attach({window,client,getTheme:()=>theme,publish});"
+    },
+    {
+      "path": "app/main.cjs",
+      "find": "  hubTooltip?.hide();\n  const [width,height]=window.getContentSize();",
+      "replace": "  hubTooltip?.hide();\n  okayuGlass.setTheater(theaterActive);\n  const [width,height]=window.getContentSize();"
+    },
+    {
+      "path": "app/main.cjs",
+      "find": "const popup=new BrowserWindow({parent:window,",
+      "replace": "const popup=new BrowserWindow({...okayuGlass.windowOptions(),parent:window,"
+    },
+    {
+      "path": "app/main.cjs",
+      "find": "  if (!smoke && !popup.isDestroyed()) popup.show();",
+      "replace": "  await okayuGlass.attachPopup(popup);\n  if (!smoke && !popup.isDestroyed()) popup.show();"
+    },
+    {
+      "path": "app/main.cjs",
+      "find": "  hubTooltip = await createHubTooltip(window);",
+      "replace": "  hubTooltip = await createHubTooltip(window);\n  await okayuGlass.attachTooltip(hubTooltip.view);"
     }
   ]
 }

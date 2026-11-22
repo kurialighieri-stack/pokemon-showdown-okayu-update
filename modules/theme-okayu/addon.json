@@ -1,7 +1,7 @@
 {
   "id": "theme-okayu",
   "name": "Tema Okayu",
-  "version": "0.1.3",
+  "version": "0.1.5-local.1",
   "order": 30,
   "appVersions": [
     "1.2.0"
@@ -15,11 +15,12 @@
     "app/addons/history.js": "99979a5969c9d03a390c436a5c9b150e3cbed24976971b1d64f496cfe209d62d",
     "app/addons/tera-settings.js": "9ea0133ec43ea8e2efe5ec37d1b9379f47b6d348e20fad4f56769f0fbfd9215b",
     "scripts/showdex-pro-css.cjs": "cd97fc22a1cc7750212bff3910eeb804d48c0bc13c6be7107bffcdf0612ee661",
-    "app/client-preload.cjs": "645074e56898f4b2a638a1bd65147ea69e60cbd2b401976b242df9a585a688cf",
+    "app/client-preload.cjs": "33939d1016650acc1fd8efb6764b538f5ff4cafc00efa4f753faf6d113bdfdb4",
     "scripts/showdex-pro-source.cjs": "5bf5534d5b4ccb0823260c3a124b6f7ea4f5837df410f2733fa25f7ab6cc41fd",
     "app/assets/icons/icon.png": "c714b51225730e1b9375437bae57876025515f8a8e6152cc6dca79035814cc4e",
     "app/okayu-branding.css": "d004b482ec063baa1f2f66aee5456983af5477edb13d65f843e0eebfd74b329b",
-    "app/assets/icons/okayu-icon-512.png": "c714b51225730e1b9375437bae57876025515f8a8e6152cc6dca79035814cc4e"
+    "app/assets/icons/okayu-icon-512.png": "c714b51225730e1b9375437bae57876025515f8a8e6152cc6dca79035814cc4e",
+    "app/okayu-theme-cache.cjs": "2124c556fe2c66fd6059a0580a15b25d5e2b25236861a2627a1267d8f7fef0ea"
   },
   "edits": [
     {
@@ -59,7 +60,7 @@
     },
     {
       "path": "app/main.cjs",
-      "find": "const appTitle = 'Pokémon Showdown Pro';",
+      "find": "const appTitle = 'Pok\u00e9mon Showdown Pro';",
       "replace": "const appTitle = 'Pokemon Showdown: Okayu Update';\nif(process.platform==='linux'){app.setDesktopName('pokemon-showdown-okayu-update.desktop');app.commandLine.appendSwitch('class','pokemon-showdown-okayu-update');}"
     },
     {
@@ -71,6 +72,26 @@
       "path": "app/stream/stream.js",
       "find": "const color={pro:[20/255,40/255,56/255],light:[240/255,243/255,247/255],dark:[32/255,35/255,41/255]}[frame.theme]||[20/255,40/255,56/255];",
       "replace": "const color={okayu:[33/255,29/255,44/255],pro:[20/255,40/255,56/255],light:[240/255,243/255,247/255],dark:[32/255,35/255,41/255]}[frame.theme]||[20/255,40/255,56/255];"
+    },
+    {
+      "path": "app/main.cjs",
+      "find": "theme = 'pro';",
+      "replace": "theme = require('./okayu-theme-cache.cjs').read();"
+    },
+    {
+      "path": "app/main.cjs",
+      "find": " && theme !== value",
+      "replace": ""
+    },
+    {
+      "path": "app/main.cjs",
+      "find": "    theme = value;",
+      "replace": "    theme = value;require('./okayu-theme-cache.cjs').remember(value);"
+    },
+    {
+      "path": "app/main.cjs",
+      "find": "    return new Response(response.body, { status: response.status, headers });",
+      "replace": "    if(url.hostname==='app'&&url.pathname==='/index.html'){headers.delete('content-length');return new Response((await response.text()).replace('data-theme=\"pro\"','data-theme=\"'+theme+'\"'),{status:response.status,headers});}\n    return new Response(response.body, { status: response.status, headers });"
     }
   ],
   "rebuildShowdex": true,

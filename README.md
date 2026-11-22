@@ -16,10 +16,12 @@ El gestor instala módulos sobre la aplicación original. No sustituye su interf
 | --- | --- |
 | Mejoras de optimización | Optimiza cine y streamer: observador y paneles plegados, captura recortada del Hub, control del trabajo pendiente y Hub visible en teatro. |
 | Botón de avisos | Permite ocultar/restaurar el recuadro narrativo y los avisos de habilidades, conservando el log. |
-| Tema Okayu | Paleta violeta y rosa que hereda Pro, con el logo Okayu en la ventana, el cliente, Battle Hub y el acceso propio del menú. |
+| Tema Okayu | Tema predeterminado al instalar su addon: paleta violeta y rosa que hereda Pro, con el logo Okayu en la ventana, el cliente, Battle Hub y el acceso propio del menú. |
 | Showdown+ | Adaptación de Showdown+ 1.4 a Electron. Detecta el XPI instalado en Firefox o importa el oficial de Mozilla/GitHub. |
 | Idiomas de Calcdex | Sigue el idioma de Showdown, usa sus nombres/descripciones y añade controles en español, con respaldo a inglés. |
 | Glass para Linux (experimental) | Transparencia de superficies y blur interno con controles en Add-ons; lectura de preferencias COSMIC y solicitud de blur nativo en KWin/X11 si se anuncia compatible. |
+
+Al instalar el addon Okayu, su primer arranque lo selecciona como tema predeterminado. Las elecciones posteriores de tema se conservan.
 
 La conexión común de módulos se instala automáticamente. Showdown+ usa el cliente nuevo. Calcdex sigue usando los IDs y datos originales para los cálculos.
 
@@ -41,7 +43,7 @@ No selecciones nuestra antigua copia experimental ni una instalación modificada
 
 El módulo Okayu también instala el logo proporcionado por el mantenedor en el icono nativo de la ventana, Battle Hub, la cabecera de Showdown y el acceso propio del menú. Los logos forman parte de la instalación del módulo, aunque cambies temporalmente de paleta; se restauran al revertir o retirar ese módulo. El acceso y el icono globales de la aplicación original se conservan. El AppImage original comprimido no cambia. Desde alpha.3 el icono nativo es cuadrado (512 × 512), con el dibujo centrado y escala proporcional; el acceso usa un nombre de recurso nuevo para evitar la caché del antiguo icono rectangular.
 
-El tema Okayu aparece en las opciones de tema de Showdown después de reiniciar. El botón «Textos» aparece junto a los controles de combate. Los idiomas de Calcdex siguen las preferencias de Showdown.
+El tema Okayu aparece en las opciones de tema de Showdown después de reiniciar. Junto a los controles de combate, Unown normal indica textos visibles y Unown shiny indica textos ocultos; púlsalo para alternar. Con Showdown+ activo aparece al lado Solrock (barras y banners claros) o Lunatone (oscuros). Este selector no cambia el tema general; ambas elecciones se guardan entre sesiones. Las barras muestran todos los Pokémon conocidos del equipo y reparten su espacio para que los seis quepan. Los idiomas de Calcdex siguen las preferencias de Showdown.
 
 La búsqueda evita listar procesos de Electron o recorrer todo el disco. Ignora los montajes temporales `/tmp/.mount_…` y la antigua copia experimental. Recuerda la instalación preparada para las próximas veces. Los detalles extensos de extracción y dependencias se guardan en registros locales en lugar de imprimirse en la terminal.
 
@@ -113,10 +115,10 @@ Se conservan las máscaras de privacidad, la validación de geometría antes/des
 
 ## Glass para Linux: alcance experimental
 
-Instala el módulo opcional **Glass para Linux** (ID `glass`) y abre su tarjeta en **Battle Hub → Add-ons**. Está desactivado inicialmente. Solo afecta a los temas **Pro y Okayu**.
+Instala el módulo opcional **Glass para Linux** (ID `glass`) y abre su tarjeta en **Battle Hub → Add-ons**. Está desactivado inicialmente. Solo afecta a los temas **Pro y Okayu**. Al activar o desactivar Glass, reabre la app cuando lo indique la tarjeta: esto permite que Glass apagado use la ventana opaca original. Ajustar transparencia o blur no requiere reiniciar.
 
-- **Transparencia:** ajusta el fondo de las superficies entre 0 y 95 %, manteniendo texto, controles y campo de combate opacos.
-- **Blur interno:** de 0 a 24 px. Desenfoca capas dentro del contenido web, **no las ventanas ni el fondo de escritorio que estén detrás**. Puede aumentar el coste de GPU.
+- **Transparencia:** ajusta el fondo de las superficies entre 0 y 95 %, con una base común para Hub, cliente, Showdex/Calcdex, controles, menús y ventanas de ajustes. Texto, iconos y campo de combate conservan su opacidad; las tarjetas anidadas no acumulan fondos sólidos.
+- **Blur de menús:** de 0 a 24 px. Los menús y tooltips usan el tinte del tema y desenfocan el contenido de la app que tienen detrás, **no las ventanas ni el fondo de escritorio que estén detrás**. Puede aumentar el coste de GPU.
 - **Usar configuración del sistema:** disponible cuando se pueden leer los ajustes de vidrio de COSMIC. Sigue el tema claro/oscuro, el permiso de vidrio en ventanas y el alfa de superficie `medium`; muestra el grosor de frost del sistema. No escribe en la configuración de COSMIC. Cuando se hereda, se deja el blur externo a cargo del sistema y se desactiva el blur interno añadido.
 
 La tarjeta distingue el efecto interno de la capacidad nativa:
@@ -130,7 +132,7 @@ La tarjeta distingue el efecto interno de la capacidad nativa:
 
 **No es todavía soporte completo del Frosted Glass nativo de COSMIC.** La base portable, los controles y la herencia de preferencias están separados del backend para poder añadirlo sin duplicar el cliente. No se incluye un control engañoso de intensidad nativa ni se cambian globalmente otros programas. Las API de material/vibrancy de Electron son de Windows/macOS; el protocolo Wayland permite solicitar una región de blur, con algoritmo e intensidad sujetos al compositor. Fuentes: [Electron: ventanas transparentes](https://www.electronjs.org/docs/latest/tutorial/custom-window-styles), [API de materiales](https://www.electronjs.org/docs/latest/api/base-window#winsetbackgroundmaterialmaterial-windows), [protocolo Wayland oficial](https://gitlab.freedesktop.org/wayland/wayland-protocols/-/blob/main/staging/ext-background-effect/ext-background-effect-v1.xml).
 
-Las preferencias se guardan en `okayu-glass.json` dentro del perfil de la aplicación y sobreviven a las actualizaciones. La ventana solicita un canal alfa desde su creación al instalar este módulo; requiere reiniciar la app tras instalarlo o retirarlo. Algunos controladores o compositores pueden limitar la transparencia al maximizar/redimensionar. El módulo no captura el escritorio ni modifica la ventana de emisión de streamer. Desactívalo desde la tarjeta para volver a superficies opacas o retíralo desde el gestor para recuperar también la creación de ventana original.
+Las preferencias se guardan en `okayu-glass.json` dentro del perfil de la aplicación y sobreviven a las actualizaciones. La ventana solicita un canal alfa desde su creación al instalar este módulo; requiere reiniciar la app tras instalarlo o retirarlo. Algunos controladores o compositores pueden limitar la transparencia al maximizar/redimensionar. El módulo no captura el escritorio ni modifica la ventana de emisión de streamer. La adaptación usa una hoja CSS fija, sin recorrer elementos ni observar las animaciones. Desactívalo desde la tarjeta para volver a superficies opacas o retíralo desde el gestor para recuperar también la creación de ventana original.
 
 ## Respaldos, reversión y actualizaciones
 
@@ -180,3 +182,7 @@ Windows, macOS, actualizaciones automáticas del gestor y reconstrucción de App
 ## Licencias y autoría
 
 El código propio del gestor y las adaptaciones derivadas de Pro se distribuyen bajo AGPL-3.0-or-later. Se conserva la licencia de Pro. Consulta [THIRD_PARTY_NOTICES.md](THIRD_PARTY_NOTICES.md). Los recursos de Showdown+ no se incluyen ni cambian de licencia: se importan localmente desde el paquete oficial. Pokémon y sus recursos conservan sus titulares y licencias correspondientes.
+
+## Portabilidad
+
+Consulta [la evaluación de Windows](docs/WINDOWS.md). Windows no está soportado todavía; el port propuesto excluye Glass. El selector Solrock/Lunatone pertenece al módulo Showdown+ y no requiere instalar el botón Unown.

@@ -1,0 +1,20 @@
+// Isolated Electron entry point; never attach this profiler to a personal session.
+const {app,BrowserWindow,WebContentsView}=require('electron'),fs=require('fs'),path=require('path');
+if(process.env.BENCH_APP)require(path.join(process.env.BENCH_APP,'app/linux-integration.cjs')).configureLinuxRuntime(app);
+app.setPath('userData',process.env.BENCH_PROFILE);let main;
+app.whenReady().then(async()=>{
+ const mod=process.env.BENCH_MODULE,glass=mod?require(mod):null;
+ const active=process.env.BENCH_ACTIVE==='1';if(glass)glass.set({enabled:active,useSystem:false,opacity:.55,blur:0});
+ main=glass?glass.createWindow({show:false,width:1200,height:800,webPreferences:{backgroundThrottling:false}}):new BrowserWindow({show:false,width:1200,height:800,webPreferences:{backgroundThrottling:false}});
+ const view=new WebContentsView({webPreferences:{backgroundThrottling:false}});main.contentView.addChildView(view);view.setBounds({x:0,y:0,width:840,height:760});main.setOpacity(.01);main.setSkipTaskbar(true);
+ const rows=Array.from({length:75},(_,i)=>`<div class="row"><button class="button">Move ${i}</button><div class="panel">Damage <span>${i}%</span></div></div>`).join('');
+ const css=`html,body{margin:0;color:white;background:#142838}.sidebar{position:absolute;right:0;top:0;width:360px;height:100%;background:#203d51}.panel,.row,.button{background:#28465a;border:1px solid #52788e}.row{display:flex;height:22px;gap:8px}.battle{width:400px;height:240px;position:relative;background:linear-gradient(#3a8,#7b9)}.sprite{position:absolute;width:32px;height:32px;background:#f84;border-radius:50%}.battle-log{position:absolute;top:0;left:420px;width:400px;height:400px;overflow:auto}.ps-popup{position:absolute;left:20px;top:300px;background:#223d4f}`;
+ await main.loadURL('data:text/html,'+encodeURIComponent(`<style>${css}</style><aside class="sidebar">Hub${rows}</aside>`));
+ await view.webContents.loadURL('data:text/html,'+encodeURIComponent(`<style>${css}</style><div class="ps-room"><div class="battle">${Array.from({length:20},(_,i)=>`<div class="sprite" style="left:${i*18}px;top:${i*8}px"></div>`).join('')}</div><div class="battle-log">Log</div><div data-showdex-module="calcdex">${rows}</div></div>`));
+ if(glass)await glass.attach({window:main,client:view,getTheme:()=> 'pro',publish(){}});main.showInactive();
+ await new Promise(r=>setTimeout(r,400));
+ view.webContents.debugger.attach('1.3');await view.webContents.debugger.sendCommand('Performance.enable');const before=(await view.webContents.debugger.sendCommand('Performance.getMetrics')).metrics;
+ const result=await view.webContents.mainFrame.executeJavaScript(`(async()=>{const times=[],scans=window.__okayuGlassStats?.runs||0;let i=0,last;await new Promise(resolve=>{function frame(now){if(last)times.push(now-last);last=now;for(const [n,e] of [...document.querySelectorAll('.sprite')].entries())e.style.transform='translateY('+Math.sin(i/8+n)*12+'px)';if(i%8===0){const row=document.querySelectorAll('.row')[i%75];row.classList.toggle('selected');row.style.borderWidth=i%16?'1px':'2px';row.querySelector('button').dispatchEvent(new Event('pointerover',{bubbles:true}));}if(i%12===0){const line=document.createElement('p');line.textContent='Turn '+i;document.querySelector('.battle-log').append(line);}if(++i<240)requestAnimationFrame(frame);else resolve();}requestAnimationFrame(frame);});times.sort((a,b)=>a-b);return {frames:times.length,median:times[Math.floor(times.length*.5)],p95:times[Math.floor(times.length*.95)],max:times.at(-1),over25:times.filter(v=>v>25).length,scans:(window.__okayuGlassStats?.runs||0)-scans,stats:window.__okayuGlassStats||null};})()`);
+ const after=(await view.webContents.debugger.sendCommand('Performance.getMetrics')).metrics;result.cost={};for(const key of ['TaskDuration','ScriptDuration','RecalcStyleDuration','LayoutDuration','RecalcStyleCount','LayoutCount'])result.cost[key]=after.find(m=>m.name===key).value-before.find(m=>m.name===key).value;
+ result.mode=process.env.BENCH_LABEL;console.log('BENCH_RESULT '+JSON.stringify(result));main.destroy();app.exit();
+}).catch(e=>{console.error(e);app.exit(1);});setTimeout(()=>app.exit(2),60000).unref();

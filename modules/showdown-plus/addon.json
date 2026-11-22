@@ -1,16 +1,20 @@
 {
   "id": "showdown-plus",
   "name": "Showdown+ 1.4 — adaptación Electron",
-  "version": "0.2.0",
+  "version": "0.2.2-local.1",
   "order": 40,
   "appVersions": [
     "1.2.0"
   ],
   "files": {
     "app/showdown-plus.cjs": "cf15f91841a1148c413766bb2b946f4f842ee1ad9037e1a16464551863ed7f53",
-    "app/showdown-plus.css": "5d6a672764c2e8dc8e86c092521912a681a1207aa79a153a2d4e48b7ab11f128",
+    "app/showdown-plus.css": "cab3d67729ba7325aeae1657a511cb9c4f01513b3888fc703fc4b83458d687a7",
     "vendor/browser-addons/showdownPlus/electron-shim.js": "bc847ee06ab6ff553892832b43ed9289f92a8dd72a62202e0dd67edfc88ef814",
-    "vendor/browser-addons/showdownPlus/background-electron.js": "e62220b1959b843c55d5a4721e751d95a2dfce84065c108ed9ad9185d93d6e33"
+    "vendor/browser-addons/showdownPlus/background-electron.js": "e62220b1959b843c55d5a4721e751d95a2dfce84065c108ed9ad9185d93d6e33",
+    "vendor/browser-addons/showdownPlus/css-assets.js": "322aeb8771aa55bf73f306889477eb94a61a4f2bbcf55e946dfa87bbf67ff079",
+    "app/assets/icons/controls/solrock.png": "52877bd782ee0e53aea4666668600cbbb371cfe4ea36a98e445608dbd44d44a9",
+    "app/assets/icons/controls/lunatone.png": "fedcea6c95b5866f08d2db569450139a460e98ae3250f99574b1ab2963aed4fb",
+    "app/showdown-plus-panels.js": "3a17300e4b9465f9a86301ba6ec88a3e7ef9bf44d831cf16e93233f72b3e208f"
   },
   "edits": [
     {
@@ -26,7 +30,7 @@
     {
       "path": "app/browser-addons.cjs",
       "find": "    delete manifest.update_url;\n",
-      "replace": "    delete manifest.update_url;\n    if(key==='showdownPlus') {\n      delete manifest.browser_specific_settings;\n      delete manifest.browser_action;\n      delete manifest.optional_permissions;\n      manifest.permissions=['storage'];\n      manifest.web_accessible_resources=[...new Set([...manifest.web_accessible_resources,'sprites.txt','render_metadata.json','doubles.json','move.json','ui/data.json','tera-bake.js'])];\n      manifest.background={scripts:['electron-shim.js','config.js','patch.js','background-electron.js']};\n      manifest.options_ui={page:'ui/settings.html',open_in_tab:true};\n      for(const entry of manifest.content_scripts) entry.js.unshift('electron-shim.js');\n      fs.writeFileSync(path.join(target,'integration.json'),JSON.stringify({upstream:'1.4',adapter:1}));\n    }\n"
+      "replace": "    delete manifest.update_url;\n    if(key==='showdownPlus') {\n      delete manifest.browser_specific_settings;\n      delete manifest.browser_action;\n      delete manifest.optional_permissions;\n      manifest.permissions=['storage'];\n      manifest.web_accessible_resources=[...new Set([...manifest.web_accessible_resources,'sprites.txt','render_metadata.json','doubles.json','move.json','ui/data.json','ui/panels.css','tera-bake.js'])];\n      manifest.background={scripts:['electron-shim.js','config.js','patch.js','background-electron.js']};\n      manifest.options_ui={page:'ui/settings.html',open_in_tab:true};\n      for(const entry of manifest.content_scripts){entry.css=(entry.css||[]).filter(file=>file!=='ui/panels.css');entry.js.unshift('electron-shim.js','css-assets.js');}\n      fs.writeFileSync(path.join(target,'integration.json'),JSON.stringify({upstream:'1.4',adapter:1}));\n    }\n"
     },
     {
       "path": "app/client-preload.cjs",
@@ -42,6 +46,11 @@
       "path": "app/main.cjs",
       "find": "  session.defaultSession.protocol.handle('showdown-pro', assets);",
       "replace": "  require('./showdown-plus.cjs').installShowdownPlus({session:clientSession,\n    source:path.join(root,'vendor/browser-addons/showdownPlus'),\n    getExtension:()=>browserAddons?.active.get('showdownPlus')});\n  session.defaultSession.protocol.handle('showdown-pro', assets);"
+    },
+    {
+      "path": "app/theater-mode.js",
+      "find": "  const enabled=active===id,label=enabled?'Exit Theater Mode':'Enter Theater Mode';",
+      "replace": "  window.__okayuShowdownPlusPanels?.attach(root);\n  const enabled=active===id,label=enabled?'Exit Theater Mode':'Enter Theater Mode';"
     }
   ],
   "import": {
@@ -163,7 +172,21 @@
           "text": "\n  // Local sprite servers and arbitrary custom domains are outside this adapter.\n  document.getElementById('localon').closest('.card').hidden = true;"
         }
       ]
+    },
+    {
+      "path": "ui/panels.js",
+      "before": "4b274ade4c546696decbc78ba0026977708f91daba6461e7b4cf14e756323dea",
+      "changes": [
+        {
+          "start": 2652,
+          "end": 2687,
+          "text": "Math.max(t.totalPokemon||0,t.pokemon.length||0)||6"
+        }
+      ]
     }
   ],
-  "generateConfigNode": true
+  "generateConfigNode": true,
+  "clientScripts": [
+    "app/showdown-plus-panels.js"
+  ]
 }

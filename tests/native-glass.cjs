@@ -2,7 +2,7 @@
 const assert=require('node:assert/strict'),fs=require('node:fs'),path=require('node:path');
 module.exports=async({window,client,state,waitFor,root})=>{
  console.log('GLASS NATIVE START');window.setSkipTaskbar(true);window.setOpacity(.01);window.showInactive();window.webContents.setBackgroundThrottling(false);client.webContents.setBackgroundThrottling(false);
- const run=code=>client.webContents.executeJavaScript(`(async()=>{${code}})()`),hub=code=>window.webContents.executeJavaScript(`(async()=>{${code}})()`);
+ const run=code=>client.webContents.mainFrame.executeJavaScript(`(async()=>{${code}})()`),hub=code=>window.webContents.mainFrame.executeJavaScript(`(async()=>{${code}})()`);
  await waitFor(()=>hub('return !!document.getElementById("okayu-glass-card");'));
  await hub("await pro.setSetting('sidebarTab','addons');await pro.setSetting('okayuGlass',{enabled:true,useSystem:false,opacity:.55,blur:6});");
  const choose=async value=>{await run(`PS.prefs.set('theme',${JSON.stringify(value)});`);await waitFor(()=>state().theme===value);await waitFor(()=>run(`return document.documentElement.dataset.okayuGlass===${JSON.stringify(['pro','okayu'].includes(value)?'on':'off')};`));};
@@ -11,7 +11,7 @@ module.exports=async({window,client,state,waitFor,root})=>{
   await choose(theme);console.log('GLASS THEME',theme);
   const value=await hub("const root=document.documentElement,sidebar=document.querySelector('.sidebar'),s=getComputedStyle(sidebar);return {active:root.dataset.okayuGlass,alpha:root.style.getPropertyValue('--okayu-glass-alpha'),blur:s.backdropFilter,background:s.backgroundColor,body:getComputedStyle(document.body).backgroundColor,textOpacity:s.opacity};");
   assert.equal(value.active,['pro','okayu'].includes(theme)?'on':'off');
-  if(['pro','okayu'].includes(theme)){assert.equal(value.blur,'blur(6px)');assert.equal(value.textOpacity,'1');assert.equal(value.body,'rgba(0, 0, 0, 0)');}
+  if(['pro','okayu'].includes(theme)){assert.equal(value.blur,'none');assert.match(value.background,/0\.55\)/);assert.equal(value.textOpacity,'1');assert.equal(value.body,'rgba(0, 0, 0, 0)');}
   reports[theme]=value;
  }
  await choose('okayu');

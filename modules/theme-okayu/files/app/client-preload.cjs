@@ -1,6 +1,8 @@
 const { contextBridge, ipcRenderer, webFrame } = require('electron');
+let themeStyleReady=Promise.resolve(false);
 // Narrow client bridge: battle reports and validated Theater layout preferences.
 contextBridge.exposeInMainWorld('showdownProEvents', Object.freeze({
+  themeStyleReady:()=>themeStyleReady,
   searchReplays: query => ipcRenderer.invoke('client:replay-search',query),
   replayAccount: () => ipcRenderer.invoke('client:replay-account'),
   loadReplay: url => ipcRenderer.invoke('client:replay-load',url),
@@ -48,6 +50,7 @@ if (location.origin === 'https://play.pokemonshowdown.com' && window.top === win
   try {
     const value = JSON.parse(localStorage.getItem('showdown_prefs') || '{}');
     const prefs = value && typeof value === 'object' && !Array.isArray(value) ? value : {};
+    if(!prefs.okayuDefaultThemeVersion){prefs.theme='okayu';prefs.okayuDefaultThemeVersion=1;}
     if (!prefs.showdownProThemeVersion) {
       if (!prefs.theme || prefs.theme === 'dark') prefs.theme = 'pro';
       prefs.showdownProThemeVersion = 1;
@@ -78,9 +81,45 @@ if (location.origin === 'https://play.pokemonshowdown.com' && window.top === win
   observer.observe(document, { childList: true, subtree: true, attributes: true,
     attributeFilter: ['class', 'data-showdown-pro-theme-ready'] });
   apply();
-  ipcRenderer.invoke('client:theme-css').then(css => {
-    if (typeof css === 'string') webFrame.insertCSS(css, { cssOrigin: 'user' });
-  }).catch(error => console.error('Pro startup styling:', error.message));
+  themeStyleReady=ipcRenderer.invoke('client:theme-css').then(css => {
+    if(typeof css!=='string')return false;
+    // Parse once with Chromium: keep author layout priority and user !important
+    // overrides, with every declaration installed at just one origin.
+    if(/@import\s/i.test(css))throw Error('Imported theme CSS requires the compatibility fallback');
+    const source=new CSSStyleSheet();source.replaceSync(css);
+    const header=text=>{let quote='';for(let i=0;i<text.length;i++){const c=text[i];if(c==='\\'){i++;continue;}if(quote){if(c===quote)quote='';}else if(c==='"'||c==="'")quote=c;else if(c==='{')return text.slice(0,i);}return '';};
+    function declarations(text){
+      let n='',p='',begin=0,quote='',depth=0,comment=false;
+      const emit=end=>{const declaration=text.slice(begin,end).trim();if(declaration){if(/!important\s*$/i.test(declaration))p+=declaration+';';else n+=declaration+';'}begin=end+1;};
+      for(let i=0;i<text.length;i++){
+        const c=text[i],next=text[i+1];
+        if(comment){if(c==='*'&&next==='/'){comment=false;i++;}continue;}
+        if(c==='\\'){i++;continue;}
+        if(quote){if(c===quote)quote='';continue;}
+        if(c==='/'&&next==='*'){comment=true;i++;continue;}
+        if(c==='"'||c==="'"){quote=c;continue;}
+        if('([{'.includes(c))depth++;else if(')]}'.includes(c))depth--;
+        if(c===';'&&depth===0)emit(i);
+      }
+      emit(text.length);return {normal:n,important:p};
+    }
+    function split(rules){
+      let normal='',important='';
+      for(const rule of rules){
+        let n='',p='';
+        if(rule.style){const declaration=declarations(rule.style.cssText);n=declaration.normal;p=declaration.important;}
+        if(rule.cssRules){const nested=split(rule.cssRules);n+=nested.normal;p+=nested.important;}
+        const head=rule.selectorText??rule.keyText??header(rule.cssText);
+        if(rule.style||rule.cssRules){if(n)normal+=head?head+'{'+n+'}':n;if(p)important+=head?head+'{'+p+'}':p;}
+        else {normal+=rule.cssText;if(rule.cssText.startsWith('@layer '))important+=rule.cssText;}
+      }
+      return {normal,important};
+    }
+    const styles=split(source.cssRules);
+    if(styles.normal)webFrame.insertCSS(styles.normal,{cssOrigin:'author'});
+    if(styles.important)webFrame.insertCSS(styles.important,{cssOrigin:'user'});
+    return true;
+  }).catch(error=>{console.error('Pro startup styling:',error.message);return false;});
 }
 
 // Follow the theme Showdown actually renders, including its System setting.

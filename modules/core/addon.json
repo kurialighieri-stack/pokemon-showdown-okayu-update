@@ -1,22 +1,49 @@
 {
   "id": "core",
   "name": "Okayu Update \u2014 conexi\u00f3n de m\u00f3dulos",
-  "version": "0.1.1",
+  "version": "0.1.3-local.1",
   "order": 0,
   "appVersions": [
     "1.2.0"
   ],
-  "files": {},
+  "files": {
+    "app/client-theme-bundle.cjs": "019d8c8dcb583f966566a93aca8acc26c24de97cd156762746a8edd080f66355"
+  },
   "edits": [
     {
       "path": "app/client-startup.cjs",
       "find": "      if(theaterScript)await execute(theaterScript);",
-      "replace": "      const modCSS=fs.readFileSync(require('node:path').join(__dirname,'okayu-update.css'),'utf8');\n      await contents.insertCSS(modCSS,{cssOrigin:'user'});\n      await execute(fs.readFileSync(require('node:path').join(__dirname,'okayu-update-client.js'),'utf8'));\n      if(theaterScript)await execute(theaterScript);"
+      "replace": "      await execute(fs.readFileSync(require('node:path').join(__dirname,'okayu-update-client.js'),'utf8'));\n      if(theaterScript)await execute(theaterScript);"
     },
     {
       "path": "app/main.cjs",
       "find": "  if (!smoke && !verifyRelease) void require('./linux-integration.cjs').installLinuxShortcuts({app,description:require('../package.json').description}).catch(error=>console.error('Linux shortcuts:',error.message));",
       "replace": "  // Okayu Update owns its launcher; preserve the original global shortcut and icon."
+    },
+    {
+      "path": "app/client-preload.cjs",
+      "find": "// Narrow client bridge:",
+      "replace": "let themeStyleReady=Promise.resolve(false);\n// Narrow client bridge:"
+    },
+    {
+      "path": "app/client-preload.cjs",
+      "find": "  searchReplays:",
+      "replace": "  themeStyleReady:()=>themeStyleReady,\n  searchReplays:"
+    },
+    {
+      "path": "app/client-preload.cjs",
+      "find": "  ipcRenderer.invoke('client:theme-css').then(css => {\n    if (typeof css === 'string') webFrame.insertCSS(css, { cssOrigin: 'user' });\n  }).catch(error => console.error('Pro startup styling:', error.message));",
+      "replace": "  themeStyleReady=ipcRenderer.invoke('client:theme-css').then(css => {\n    if(typeof css!=='string')return false;\n    // Parse once with Chromium: keep author layout priority and user !important\n    // overrides, with every declaration installed at just one origin.\n    if(/@import\\s/i.test(css))throw Error('Imported theme CSS requires the compatibility fallback');\n    const source=new CSSStyleSheet();source.replaceSync(css);\n    const header=text=>{let quote='';for(let i=0;i<text.length;i++){const c=text[i];if(c==='\\\\'){i++;continue;}if(quote){if(c===quote)quote='';}else if(c==='\"'||c===\"'\")quote=c;else if(c==='{')return text.slice(0,i);}return '';};\n    function declarations(text){\n      let n='',p='',begin=0,quote='',depth=0,comment=false;\n      const emit=end=>{const declaration=text.slice(begin,end).trim();if(declaration){if(/!important\\s*$/i.test(declaration))p+=declaration+';';else n+=declaration+';'}begin=end+1;};\n      for(let i=0;i<text.length;i++){\n        const c=text[i],next=text[i+1];\n        if(comment){if(c==='*'&&next==='/'){comment=false;i++;}continue;}\n        if(c==='\\\\'){i++;continue;}\n        if(quote){if(c===quote)quote='';continue;}\n        if(c==='/'&&next==='*'){comment=true;i++;continue;}\n        if(c==='\"'||c===\"'\"){quote=c;continue;}\n        if('([{'.includes(c))depth++;else if(')]}'.includes(c))depth--;\n        if(c===';'&&depth===0)emit(i);\n      }\n      emit(text.length);return {normal:n,important:p};\n    }\n    function split(rules){\n      let normal='',important='';\n      for(const rule of rules){\n        let n='',p='';\n        if(rule.style){const declaration=declarations(rule.style.cssText);n=declaration.normal;p=declaration.important;}\n        if(rule.cssRules){const nested=split(rule.cssRules);n+=nested.normal;p+=nested.important;}\n        const head=rule.selectorText??rule.keyText??header(rule.cssText);\n        if(rule.style||rule.cssRules){if(n)normal+=head?head+'{'+n+'}':n;if(p)important+=head?head+'{'+p+'}':p;}\n        else {normal+=rule.cssText;if(rule.cssText.startsWith('@layer '))important+=rule.cssText;}\n      }\n      return {normal,important};\n    }\n    const styles=split(source.cssRules);\n    if(styles.normal)webFrame.insertCSS(styles.normal,{cssOrigin:'author'});\n    if(styles.important)webFrame.insertCSS(styles.important,{cssOrigin:'user'});\n    return true;\n  }).catch(error=>{console.error('Pro startup styling:',error.message);return false;});"
+    },
+    {
+      "path": "app/client-startup.cjs",
+      "find": "      await contents.insertCSS(themeCSS,{cssOrigin:'user'});\n      await execute(`(() => {\n        let style = document.getElementById('showdown-pro-theme');\n        if (!style) {\n          style = document.createElement('style'); style.id = 'showdown-pro-theme';\n          document.head.appendChild(style);\n        }\n        style.textContent = ${JSON.stringify(themeCSS)};\n        return !!style.sheet;\n      })()`);\n",
+      "replace": "      const early=await execute('window.showdownProEvents?.themeStyleReady?.()');\n      if(!early){\n        // A failed early install restores both priorities, as in original Pro.\n        const fallback=require('./client-theme-bundle.cjs')();\n        await contents.insertCSS(fallback,{cssOrigin:'user'});\n        await contents.insertCSS(fallback,{cssOrigin:'author'});\n      }\n      // Empty compatibility marker; declarations are delivered by the preload.\n      await execute(`(()=>{let s=document.getElementById('showdown-pro-theme');if(!s){s=document.createElement('style');s.id='showdown-pro-theme';document.head.append(s);}s.textContent='';return !!s.sheet;})()`);\n"
+    },
+    {
+      "path": "app/main.cjs",
+      "find": "event => trustedClient(event) ? require('./client-theme-css.cjs') : null",
+      "replace": "event => trustedClient(event) ? require('./client-theme-bundle.cjs')() : null"
     }
   ]
 }
