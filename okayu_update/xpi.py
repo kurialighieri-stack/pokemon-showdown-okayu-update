@@ -5,6 +5,7 @@ from dataclasses import dataclass
 from pathlib import Path
 from urllib.parse import urlsplit,unquote
 from .manager import ModError
+from .platforms import WINDOWS
 
 ADDON_ID='PokemonShowdownHD@NathanMichael'
 RELEASE_URL='https://github.com/JxstMichie/PokemonShowdownPlus/releases/tag/v1.4'
@@ -45,6 +46,8 @@ def validate_xpi(path,spec):
 
 def firefox_roots(home=None):
     home=Path(home or Path.home());config=Path(os.environ.get('XDG_CONFIG_HOME',home/'.config'))
+    if WINDOWS:
+        yield Path(os.environ.get('APPDATA',home/'AppData/Roaming'))/'Mozilla/Firefox','Firefox Windows'
     roots=[(home/'.mozilla/firefox','Firefox Linux'),(home/'.config/mozilla/firefox','Firefox Linux'),(config/'mozilla/firefox','Firefox Linux'),
       (home/'.var/app/org.mozilla.firefox/.mozilla/firefox','Firefox Flatpak'),
       (home/'.var/app/org.mozilla.firefox/config/mozilla/firefox','Firefox Flatpak'),
@@ -66,7 +69,7 @@ def profiles(root):
         p=root/filename
         try:
             if p.stat().st_size>2*1024*1024:continue
-            config=configparser.ConfigParser(interpolation=None,strict=False);config.read_string(p.read_text())
+            config=configparser.ConfigParser(interpolation=None,strict=False);config.read_string(p.read_text(encoding='utf-8'))
             for section in config.sections():
                 values=config[section];name=values.get('Path') if section.lower().startswith('profile') else values.get('Default')
                 if not name:continue
@@ -88,6 +91,7 @@ def local_xpi_path(value,profile):
         parsed=urlsplit(value)
         if parsed.netloc not in ('','localhost'):return None
         value=unquote(parsed.path)
+        if WINDOWS and len(value)>2 and value[0]=='/' and value[2]==':':value=value[1:]
     elif '://' in value:return None
     p=Path(value).expanduser()
     if not p.is_absolute():p=profile/p
@@ -104,7 +108,7 @@ def discover_xpis(spec,home=None,roots=None):
             registry=profile/'extensions.json'
             try:
                 if registry.stat().st_size<8*1024*1024:
-                    for addon in json.loads(registry.read_text()).get('addons',[]):
+                    for addon in json.loads(registry.read_text(encoding='utf-8')).get('addons',[]):
                         if addon.get('id')==ADDON_ID:
                             for key in ('path','rootURI'):
                                 path=local_xpi_path(addon.get(key),profile)

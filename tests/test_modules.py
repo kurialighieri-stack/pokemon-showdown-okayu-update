@@ -4,7 +4,9 @@ ROOT=Path(__file__).resolve().parents[1]
 class ModuleComposition(unittest.TestCase):
  def test_all_payload_hashes_match(self):
   for manifest in (ROOT/'modules').glob('*/addon.json'):
-   for name,expected in json.loads(manifest.read_text())['files'].items():
+   module=json.loads(manifest.read_text(encoding='utf-8'));payloads=dict(module['files'])
+   for extra in module.get('platformFiles',{}).values():payloads.update(extra)
+   for name,expected in payloads.items():
     with self.subTest(module=manifest.parent.name,file=name):self.assertEqual(hashlib.sha256((manifest.parent/'files'/name).read_bytes()).hexdigest(),expected)
  def test_okayu_palette_composes_with_optimized_streamer(self):
   theme=json.loads((ROOT/'modules/theme-okayu/addon.json').read_text())

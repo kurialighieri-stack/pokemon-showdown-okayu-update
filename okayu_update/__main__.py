@@ -1,14 +1,21 @@
 import argparse,json,subprocess,sys,os,shutil,webbrowser
 from pathlib import Path
 from .manager import Manager,ModError,VERSION
+from .platforms import WINDOWS,launcher,native_path
 from .discovery import discover,inspect,prepare_image,remember,create_shortcut,data_directory,image_file,remove_shortcut
 
 def dialog(*args):
+    if WINDOWS:
+        from .windows import dialog as native_dialog
+        return native_dialog(*args)
     result=subprocess.run(['zenity',*args],text=True,capture_output=True)
     if result.returncode:raise KeyboardInterrupt
     return result.stdout.strip()
 
 def progress(text,operation):
+    if WINDOWS:
+        print(text,flush=True)
+        return operation()
     indicator=subprocess.Popen(['zenity','--progress','--pulsate','--auto-close','--no-cancel','--title=Okayu Update','--text='+text],stdin=subprocess.PIPE,stdout=subprocess.DEVNULL,stderr=subprocess.DEVNULL,text=True)
     try:return operation()
     finally:
@@ -23,11 +30,19 @@ def choose_installation(for_install=False):
     else:
         rows=[]
         for index,candidate in enumerate(found):rows.extend([candidate.label,candidate.version or 'Por comprobar',str(candidate.path),'found:'+str(index)])
-        rows.extend(['Elegir archivo AppImage…','','Selecciona el archivo que descargaste','image',
+        if WINDOWS:
+            rows.extend(['Elegir ZIP oficial Windows…','','Se creará una copia para Okayu','zip',
+                         'Elegir carpeta instalada…','','Distribución Windows extraída','folder'])
+        else:rows.extend(['Elegir archivo AppImage…','','Selecciona el archivo que descargaste','image',
                      'Elegir carpeta… (avanzado)','','Solo para una distribución ya extraída','folder'])
         choice=dialog('--list','--title=Encontrar Pokémon Showdown Pro',
-            '--text='+('Encontramos estas opciones. No necesitas buscar la carpeta interna de la aplicación.' if found else 'No encontramos Showdown Pro automáticamente. Elige su archivo AppImage; nosotros preparamos la carpeta.'),
+            '--text='+('Encontramos estas opciones. No necesitas buscar la carpeta interna de la aplicación.' if found else 'Elige la distribución original descargada o su carpeta instalada.'),
             '--column=Aplicación','--column=Versión','--column=Ubicación','--column=ID','--hide-column=4','--print-column=4','--width=900','--height=360',*rows)
+        if choice=='zip':
+            from .windows import prepare_zip
+            archive=dialog('--file-selection','--title=ZIP original de Pro 1.2.0 Windows x64','--file-filter=ZIP | *.zip')
+            target=progress('Preparando copia de Showdown Pro para Okayu…',lambda:prepare_zip(archive))
+            remember(target);return target
         if choice=='image':
             selected=inspect(dialog('--file-selection','--title=Elige el AppImage de Pokémon Showdown Pro','--file-filter=AppImage | *.AppImage *.appimage'))
         elif choice=='folder':
@@ -73,7 +88,7 @@ def choose_showdown_xpi(spec):
         return str(package)
 
 def gui():
-    if not shutil.which('zenity'):raise ModError('La interfaz gráfica necesita Zenity. También puedes utilizar los comandos indicados con --help.')
+    if not WINDOWS and not shutil.which('zenity'):raise ModError('La interfaz gráfica necesita Zenity. También puedes utilizar los comandos indicados con --help.')
     title='Pokemon Showdown: Okayu Update'
     action=dialog('--list','--title='+title,'--text=Buscaremos Showdown Pro automáticamente. Cierra la aplicación antes de instalar o revertir.','--column=Operación','Instalar / cambiar módulos','Abrir aplicación','Revertir modificaciones','Estado / diagnóstico','Recuperar interrupción','--width=620','--height=330')
     target=choose_installation(for_install=action.startswith('Instalar'));m=Manager(target)
@@ -98,9 +113,9 @@ def gui():
     elif action=='Abrir aplicación':
         status=m.status()
         if status['state'] in ('changed','recovery-required'):raise ModError('La instalación cambió o está pendiente de recuperación. Revisa el diagnóstico antes de abrirla.')
-        launch=m.root.parents[1]/'AppRun'
+        launch=launcher(m.root.parents[1])
         if not launch.is_file():raise ModError('No se encontró AppRun. Abre el ejecutable original de esta instalación.')
-        subprocess.Popen([str(launch)],start_new_session=True,stdout=subprocess.DEVNULL,stderr=subprocess.DEVNULL);return
+        subprocess.Popen([native_path(launch)],start_new_session=True,stdout=subprocess.DEVNULL,stderr=subprocess.DEVNULL);return
     else:
         destination=Path(dialog('--file-selection','--save','--confirm-overwrite','--filename=okayu-diagnostic.json','--title=Guardar diagnóstico sin datos del perfil'))
         destination.write_text(json.dumps(m.diagnostic(),indent=2)+'\n');message='Diagnóstico guardado. No incluye datos del perfil de Showdown.'
@@ -124,12 +139,16 @@ def main():
         if args.command in (None,'gui'):return gui()
         if args.command=='xpi-discover':
             from .xpi import discover_xpis
-            spec=json.loads((Path(__file__).resolve().parents[1]/'modules/showdown-plus/addon.json').read_text())['import']
+            spec=json.loads((Path(__file__).resolve().parents[1]/'modules/showdown-plus/addon.json').read_text(encoding='utf-8'))['import']
             print(json.dumps([{'path':str(c.path),'browser':c.browser,'profile':c.profile,'origin':c.origin,'version':c.version,'sha256':c.sha256} for c in discover_xpis(spec)],indent=2,ensure_ascii=False));return
         if args.command=='discover':
             print(json.dumps([{'path':str(c.path),'kind':c.kind,'version':c.version,'prepared':c.prepared} for c in discover()],indent=2,ensure_ascii=False));return
         if args.command=='prepare':
-            print(json.dumps({'preparedInstallation':str(prepare_image(args.image,args.data))},indent=2));return
+            if WINDOWS:
+                from .windows import prepare_zip
+                target=prepare_zip(args.image,args.data)
+            else:target=prepare_image(args.image,args.data)
+            print(json.dumps({'preparedInstallation':str(target)},indent=2));return
         m=Manager(args.installation,args.data)
         if args.command=='status':result=m.status()
         elif args.command=='diagnose':result=m.diagnostic()
@@ -143,7 +162,7 @@ def main():
     except KeyboardInterrupt:return 130
     except (ModError,OSError,ValueError,subprocess.CalledProcessError) as error:
         message=str(error);print('Okayu Update: '+message,file=sys.stderr)
-        if args.command in (None,'gui') and shutil.which('zenity'):subprocess.run(['zenity','--error','--title=Okayu Update','--text='+message])
+        if args.command in (None,'gui') and (WINDOWS or shutil.which('zenity')):dialog('--error','--title=Okayu Update','--text='+message)
         return 1
 
 if __name__=='__main__':sys.exit(main())

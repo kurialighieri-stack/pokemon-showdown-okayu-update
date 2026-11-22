@@ -1,0 +1,57 @@
+name: Publish Linux and Windows release
+on:
+  push:
+    branches: [main]
+    paths:
+      - pyproject.toml
+      - .github/workflows/release.yml
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  tests:
+    strategy:
+      matrix:
+        os: [ubuntu-latest, windows-latest]
+    runs-on: ${{ matrix.os }}
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '24'
+      - run: python -X utf8 -m unittest discover -s tests -v
+  publish:
+    needs: tests
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+      - name: Build both packages and checksums
+        shell: bash
+        run: |
+          VERSION="$(python -c 'from okayu_update.manager import VERSION; print(VERSION)')"
+          TAG="v${VERSION}"
+          echo "RELEASE_TAG=$TAG" >> "$GITHUB_ENV"
+          python tools/build_linux.py --output "dist/Pokemon-Showdown-Okayu-Update-${TAG}-linux.zip"
+          python tools/build_windows.py --output "dist/Pokemon-Showdown-Okayu-Update-${TAG}-windows.zip"
+          (cd dist && sha256sum *.zip > "Pokemon-Showdown-Okayu-Update-${TAG}.sha256")
+      - name: Publish prerelease with Linux and Windows assets
+        env:
+          GH_TOKEN: ${{ github.token }}
+        shell: bash
+        run: |
+          if gh release view "$RELEASE_TAG" >/dev/null 2>&1; then
+            echo "Release $RELEASE_TAG already exists; refusing to overwrite it."
+            exit 1
+          fi
+          gh release create "$RELEASE_TAG" dist/*.zip dist/*.sha256 \
+            --target "$GITHUB_SHA" --prerelease \
+            --title "Pokemon Showdown: Okayu Update $RELEASE_TAG — Linux y Windows" \
+            --notes-file "docs/releases/${RELEASE_TAG}.md"

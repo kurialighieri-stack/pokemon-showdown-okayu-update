@@ -1,0 +1,29 @@
+{
+  "appVersion": "1.2.0",
+  "files": {
+    "app/addon-catalog.cjs": "9d1283d29e98c82f73c7d494adc8d6b703ef111eb67826e9c934eca871a56d01",
+    "app/addons/history.js": "60c03b754c7a18e7ba8165eda9277b401f3f1a128b21d7c3664421eb85059fac",
+    "app/addons/tera-settings.js": "3a20131f9d8a331bc355b2e6a1d606de4325fe0462d1325122bf2ef51bc8a57e",
+    "app/browser-addons.cjs": "a71983989552b00198b6abad1ab04e80fc0a41e7e2bfed612821a365fa60616f",
+    "app/client-preload.cjs": "ccf347e3ecd917f4cbeedc7d346664d725c1bf1852f6a962be215af4bc7cada7",
+    "app/client-startup.cjs": "18e3e32226fc7e8c3a35e57c6b5f23387770035eca0e8c80a25f153c0b621e85",
+    "app/client-theme-css.cjs": "3ebd95c24cc5534e5a3e1620046150e93c825dfb76fd4807272467948101cccd",
+    "app/client-theme.js": "161189b4421fcc5dd061177271458b2ec442e0f0aa698fd70401b0db7a02e0d4",
+    "app/hub-tooltip.cjs": "a4c8f96b46f79ce81eeab0544273631b4a9567bc7ac065dc665eeb54ea88c01f",
+    "app/main.cjs": "72c31f84de528c9ed268fa659f30a8b86554847643a270095bf07887a52910c5",
+    "app/panel/panel.js": "10fd960ff31cd03dd15a86ab0e317ff7328cf8899789638a3dad569d5c8e595a",
+    "app/stream/stream.js": "935de618ce515a162b019c6f98a428975ffa371de4a64404fcf9c47a7facddd4",
+    "app/streamer-mode.cjs": "7d75db6df0bb35b636c520725c75ee0c858b4f8983d453181d25761aae1837af",
+    "app/theater-mode.css": "883dafb007f8c0494703ed8ae06be71324b1ac544276ea8568fc0c801eb728b2",
+    "app/theater-mode.js": "e83aa0c28f74f1c8c4b0c9fa6504f858a153fad21dca7a1454a4f0c8b6ff8b8a",
+    "scripts/showdex-pro-css.cjs": "f36cec3ef1806f15a97019ae8557c5cb857adcb0a99bfd53e99c83e3344d6cd1",
+    "scripts/showdex-pro-source.cjs": "952c897ddbf8b54ed9f1f3ea296b50053c7df290b8ee130a2d561948adec3aea",
+    "app/assets/icons/icon.png": "0b555e7960d189d7b5f111732802fc6b3c630a6028cc23c7c26bb0b507d3d4ca"
+  },
+  "showdexVersion": "1.4.2",
+  "platform": "windows",
+  "source": {
+    "url": "https://github.com/Ryukotsuki/PokemonShowdownPro/releases/download/v1.2.0/PokemonShowdownPro-1.2.0-windows-x64.zip",
+    "sha256": "7b572264df34ec77bc6c2edd3f18ca439f737a7ef0a0ea9306492ed60ca2abd8"
+  }
+}

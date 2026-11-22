@@ -1,5 +1,7 @@
+import os
 import shutil,subprocess,unittest
 from pathlib import Path
+@unittest.skipIf(os.name=='nt','Glass is excluded on Windows')
 class Glass(unittest.TestCase):
  @unittest.skipUnless(shutil.which('node'),'Node is needed for Glass preference tests')
  def test_settings_and_system_preferences(self):

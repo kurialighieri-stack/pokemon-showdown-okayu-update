@@ -1,9 +1,10 @@
 """Bounded installation discovery and persistent AppImage preparation."""
 from __future__ import annotations
-import configparser,fcntl,hashlib,json,os,re,shlex,shutil,stat,subprocess,tempfile,itertools
+import configparser,hashlib,json,os,re,shlex,shutil,stat,subprocess,tempfile,itertools
 from dataclasses import dataclass
 from pathlib import Path
 from .manager import Manager,ModError,atomic,app_root
+from .platforms import WINDOWS,data_directory,file_lock,windows_processes,launcher,native_path
 
 @dataclass(frozen=True)
 class Installation:
@@ -15,9 +16,6 @@ class Installation:
     def label(self):
         if self.prepared:return 'Showdown Pro — preparado para Okayu'
         return 'Showdown Pro — AppImage original' if self.kind=='appimage' else 'Showdown Pro — instalación detectada'
-
-def data_directory():
-    return Path(os.environ.get('OKAYU_UPDATE_DATA',Path(os.environ.get('XDG_DATA_HOME',Path.home()/'.local/share'))/'pokemon-showdown-okayu-update')).expanduser().resolve()
 
 def temporary_mount(path):return any(p.startswith('.mount_') for p in Path(path).parts)
 
@@ -36,11 +34,12 @@ def inspect(path):
         if image_file(path):
             match=re.search(r'(\d+\.\d+\.\d+)',path.name)
             return Installation(path,'appimage',match.group(1) if match else '')
+        if path.is_file() and WINDOWS and path.suffix.lower()=='.exe':path=path.parent
         if path.is_file() and path.name in ('AppRun','pokemon-showdown-pro','pokemon-showdown-pro.bin'):path=path.parent
-        root=app_root(path);package=json.loads((root/'package.json').read_text())
+        root=app_root(path);package=json.loads((root/'package.json').read_text(encoding='utf-8'))
         if package.get('name')!='pokemon-showdown-pro':return None
         install=root.parents[1];metadata=install/'okayu-source.json'
-        return Installation(install,'directory',str(package.get('version','')),metadata.is_file())
+        return Installation(Path(native_path(install)), 'directory',str(package.get('version','')),metadata.is_file())
     except (OSError,ValueError,ModError):return None
 
 def desktop_targets(file):
@@ -54,6 +53,10 @@ def desktop_targets(file):
     except (OSError,ValueError,configparser.Error,KeyError):return []
 
 def process_targets(proc=Path('/proc')):
+    if WINDOWS and proc==Path('/proc'):
+        for executable in windows_processes():
+            if 'showdown' in executable.name.lower():yield executable.parent
+        return
     if not proc.exists():return
     for item in proc.iterdir():
         if not item.name.isdigit():continue
@@ -82,7 +85,7 @@ def discover(home=None,data=None,application_dirs=None,search_dirs=None,proc=Pat
         candidate=inspect(path)
         if candidate and candidate.path not in {c.path for c in candidates}:candidates.append(candidate)
     settings=data/'settings.json'
-    try:add(json.loads(settings.read_text())['lastTarget'])
+    try:add(json.loads(settings.read_text(encoding='utf-8'))['lastTarget'])
     except (OSError,ValueError,KeyError):pass
     managed=data/'managed'
     if managed.is_dir():
@@ -97,6 +100,8 @@ def discover(home=None,data=None,application_dirs=None,search_dirs=None,proc=Pat
                     for target in desktop_targets(p):add(target)
     for target in process_targets(proc):add(target)
     roots=search_dirs if search_dirs is not None else [home/'Applications',home/'Aplicaciones',home/'Downloads',home/'Descargas',home/'Desktop',home/'Escritorio']
+    if WINDOWS and search_dirs is None:
+        roots += [home/'AppData/Local/Programs',Path(os.environ.get('LOCALAPPDATA',home/'AppData/Local'))/'Programs',Path(os.environ.get('ProgramFiles','C:/Program Files'))]
     # Only common locations and one subdirectory level; never scan the whole home or disk.
     for folder in roots:
         folder=Path(folder)
@@ -114,7 +119,7 @@ def discover(home=None,data=None,application_dirs=None,search_dirs=None,proc=Pat
     for c in candidates:
         if c.prepared:
             try:
-                meta=json.loads((c.path/'okayu-source.json').read_text());sources[meta['source']] = meta
+                meta=json.loads((c.path/'okayu-source.json').read_text(encoding='utf-8'));sources[meta['source']] = meta
             except (OSError,ValueError,KeyError):pass
     result=[]
     for c in candidates:
@@ -138,12 +143,10 @@ def prepare_image(image,data=None):
     if not image_file(image):raise ModError('Selecciona un archivo AppImage válido de Pokémon Showdown Pro.')
     digest=file_hash(image);managed=data/'managed';managed.mkdir(parents=True,exist_ok=True)
     target=managed/('showdown-pro-'+digest[:16])
-    with (managed/'.import.lock').open('a') as lock:
-        try:fcntl.flock(lock,fcntl.LOCK_EX|fcntl.LOCK_NB)
-        except BlockingIOError:raise ModError('Ya se está preparando otro AppImage. Espera a que termine.')
+    with file_lock(managed/'.import.lock'):
         if target.is_symlink():raise ModError('El destino administrado es un enlace y no se modificará.')
         if target.exists():
-            try:meta=json.loads((target/'okayu-source.json').read_text())
+            try:meta=json.loads((target/'okayu-source.json').read_text(encoding='utf-8'))
             except (OSError,ValueError):raise ModError('El destino existe pero no se reconoce. Se conserva sin sobrescribirlo.')
             if meta.get('sha256')!=digest or not inspect(target):raise ModError('La instalación preparada no coincide con el AppImage.')
             remember(target,data);return target
@@ -165,16 +168,19 @@ def prepare_image(image,data=None):
         remember(target,data);return target
 
 def create_shortcut(target,application_dir=None):
+    if WINDOWS:
+        from .windows import create_shortcut as create
+        return create(target,application_dir)
     target=Path(target).resolve();launch=target/'AppRun'
     if not launch.is_file():return None
     folder=Path(application_dir or Path(os.environ.get('XDG_DATA_HOME',Path.home()/'.local/share'))/'applications')
     shortcut=folder/'pokemon-showdown-okayu-update.desktop'
     marker='X-Okayu-Update-Managed=true'
-    if shortcut.exists() and marker not in shortcut.read_text():raise ModError('Ya existe un acceso Okayu personalizado; no se reemplazará.')
+    if shortcut.exists() and marker not in shortcut.read_text(encoding='utf-8'):raise ModError('Ya existe un acceso Okayu personalizado; no se reemplazará.')
     quote=lambda value:'"'+str(value).replace('\\','\\\\').replace('"','\\"').replace('`','\\`').replace('$','\\$').replace('%','%%')+'"'
     native_icon=target/'resources/app/app/assets/icons/icon.png'
     icon=native_icon if native_icon.is_file() else target/'pokemon-showdown-pro.png'
-    try:modules=json.loads((target/'resources/app/app/okayu-update-installed.json').read_text()).get('modules',[])
+    try:modules=json.loads((target/'resources/app/app/okayu-update-installed.json').read_text(encoding='utf-8')).get('modules',[])
     except (OSError,ValueError):modules=[]
     # A new basename also avoids reusing KDE's cached rectangular alpha.2 icon.
     square_icon=target/'resources/app/app/assets/icons/okayu-icon-512.png'
@@ -184,10 +190,13 @@ def create_shortcut(target,application_dir=None):
     atomic(shortcut,text.encode());return shortcut
 
 def remove_shortcut(target,application_dir=None):
+    if WINDOWS:
+        from .windows import remove_shortcut as remove
+        return remove(target,application_dir)
     folder=Path(application_dir or Path(os.environ.get('XDG_DATA_HOME',Path.home()/'.local/share'))/'applications')
     shortcut=folder/'pokemon-showdown-okayu-update.desktop'
     if not shortcut.is_file():return
-    text=shortcut.read_text()
+    text=shortcut.read_text(encoding='utf-8')
     if 'X-Okayu-Update-Managed=true' not in text:return
     for candidate in desktop_targets(shortcut):
         if candidate==Path(target).resolve()/'AppRun':shortcut.unlink();return

@@ -6,9 +6,36 @@
 
 Gestor externo de modificaciones reversibles para [Pokémon Showdown Pro](https://github.com/Ryukotsuki/PokemonShowdownPro).
 
-**Versión alfa para Linux. Compatible únicamente con la distribución extraída de Pro 1.2.0 cuyos archivos coincidan con el adaptador.** No es una versión oficial de Showdown, Showdex ni Showdown+.
+**Versión alfa para Linux y Windows x64. Compatible con Pro 1.2.0 cuando sus archivos coinciden con el adaptador de cada plataforma. En Windows se excluye Glass.**
+
+No es una versión oficial de Showdown, Showdex ni Showdown+.
 
 El gestor instala módulos sobre la aplicación original. No sustituye su interfaz por otro cliente ni mantiene un segundo motor de combate. Guarda los respaldos fuera de la instalación y permite volver a los archivos originales.
+
+## Descargas y requisitos
+
+Descarga el paquete de tu sistema desde [Releases](https://github.com/kurialighieri-stack/pokemon-showdown-okayu-update/releases/tag/v0.1.0-alpha.4):
+
+| Sistema | Paquete alpha.4 | Dependencias |
+| --- | --- | --- |
+| Linux x86_64 | [Descargar ZIP Linux](https://github.com/kurialighieri-stack/pokemon-showdown-okayu-update/releases/download/v0.1.0-alpha.4/Pokemon-Showdown-Okayu-Update-v0.1.0-alpha.4-linux.zip) | Python 3.10 o posterior; Zenity para la interfaz gráfica; Pro 1.2.0 original en AppImage o extraído. |
+| Windows x64 | [Descargar ZIP Windows](https://github.com/kurialighieri-stack/pokemon-showdown-okayu-update/releases/download/v0.1.0-alpha.4/Pokemon-Showdown-Okayu-Update-v0.1.0-alpha.4-windows.zip) | [Python 3.10 o posterior con el lanzador `py`](https://www.python.org/downloads/windows/); ZIP oficial de Pro 1.2.0 Windows x64. |
+
+**Python es necesario para ejecutar el gestor Okayu Update y para importar Showdown+ en Pro, en ambos sistemas.** Python es una dependencia externa: estos paquetes no lo incluyen. La extensión Showdown+ instalada directamente en Firefox no depende de Python; la dependencia corresponde a este gestor y a su proceso de importación. El XPI oficial de Showdown+ tampoco está incluido y se verifica al importarlo.
+
+Se utiliza el Node incluido en Pro para recompilar Calcdex; no necesitas instalar Node aparte. La primera compilación necesita conexión. El archivo `.sha256` del release permite comprobar las descargas.
+
+## Inicio rápido (Windows)
+
+1. Instala [Python 3.10 o posterior para Windows](https://www.python.org/downloads/windows/) e incluye el lanzador `py`.
+2. Descarga y extrae el **ZIP Windows de Okayu Update** en una carpeta de ruta corta, por ejemplo `C:\Okayu`.
+3. Descarga [el ZIP oficial de Pro 1.2.0 Windows x64](https://github.com/Ryukotsuki/PokemonShowdownPro/releases/download/v1.2.0/PokemonShowdownPro-1.2.0-windows-x64.zip). Cierra Showdown Pro.
+4. Abre **`Okayu-Update.cmd`** y acepta la solicitud de administrador de Windows (UAC). Si cancelas, el gestor no se inicia.
+5. Selecciona **Instalar / cambiar módulos** y el ZIP original de Pro o su carpeta instalada. Al elegir el ZIP se prepara una copia permanente y se conserva el archivo original.
+6. Elige los módulos. Para Showdown+, reutiliza el XPI detectado en Firefox o selecciona uno oficial de la versión 1.4. El proceso de importación requiere Python mediante el gestor.
+7. Espera a que termine la instalación y abre **Pokemon Showdown: Okayu Update** desde Inicio o desde **Abrir aplicación** en el gestor.
+
+Windows incluye rendimiento, avisos, Okayu, Showdown+ e idiomas de Calcdex; **Glass se ofrece solo en Linux**. Los respaldos se guardan en `%LOCALAPPDATA%\pokemon-showdown-okayu-update`. Consulta [la guía completa de Windows](docs/WINDOWS.md).
 
 ## Módulos
 
@@ -25,11 +52,11 @@ Al instalar el addon Okayu, su primer arranque lo selecciona como tema predeterm
 
 La conexión común de módulos se instala automáticamente. Showdown+ usa el cliente nuevo. Calcdex sigue usando los IDs y datos originales para los cálculos.
 
-## Inicio rápido
+## Inicio rápido (Linux)
 
 Requisitos: Linux, Python 3.10 o posterior y el **AppImage original o una distribución extraída** de Pokémon Showdown Pro 1.2.0. Para los diálogos gráficos instala Zenity mediante tu distribución. La primera compilación de Calcdex necesita conexión para obtener sus dependencias. Se utiliza el runtime Node que incluye Pro.
 
-1. Descarga el proyecto y descomprímelo en una carpeta propia.
+1. Instala Python 3.10 o posterior y Zenity mediante el gestor de paquetes de tu distribución. Descarga el **ZIP Linux de Okayu Update** desde Releases y descomprímelo en una carpeta propia.
 2. Cierra la instalación de Showdown que vas a modificar.
 3. Ejecuta `sh Okayu-Update.sh`.
 4. Selecciona **Instalar / cambiar módulos**. El gestor detecta Showdown Pro mediante sus accesos del menú, procesos principales y ubicaciones habituales. Si encuentra una única opción, no pide buscar carpetas.
@@ -76,6 +103,8 @@ sh ./Okayu-Update.sh apply /ruta/a/ShowdownPro \
 ### Showdown+: detección y descarga
 
 El gestor busca Showdown+ **sin cambiar Firefox ni sus perfiles**. Incluye Firefox nativo (`~/.mozilla/firefox`, `~/.config/mozilla/firefox` y `$XDG_CONFIG_HOME/mozilla/firefox`), Flatpak (`~/.var/app/org.mozilla.firefox/`) y Snap (`~/snap/firefox/common/` y `current/`). Lee los registros `profiles.ini`/`installs.ini`, perfiles en rutas personalizadas y la entrada de esta extensión en `extensions.json`. Un complemento desactivado también puede reutilizarse. No enumera el resto de extensiones ni copia el perfil.
+
+En Windows también detecta los perfiles de Firefox en `%APPDATA%\Mozilla\Firefox`. **La importación de Showdown+ requiere Python 3.10 o posterior para ejecutar Okayu Update**; no se descarga ni instala Python automáticamente.
 
 La interfaz muestra los XPI compatibles encontrados y permite **Seleccionar XPI manualmente**. Si todavía no lo tienes:
 
@@ -177,7 +206,7 @@ Los módulos declaran sus archivos, huellas y cambios exactos en `modules/*/addo
 
 Para desarrollo se puede reutilizar un checkout de Showdex 1.4.2 con sus dependencias mediante `--showdex-source /ruta/al/checkout`. Ese parámetro es una fuente de código confiada por el desarrollador, no un mecanismo de descarga verificada.
 
-Windows, macOS, actualizaciones automáticas del gestor y reconstrucción de AppImage quedan fuera de esta primera alfa.
+macOS, actualizaciones automáticas del gestor y reconstrucción de AppImage quedan fuera de esta alfa.
 
 ## Licencias y autoría
 
@@ -185,4 +214,4 @@ El código propio del gestor y las adaptaciones derivadas de Pro se distribuyen 
 
 ## Portabilidad
 
-Consulta [la evaluación de Windows](docs/WINDOWS.md). Windows no está soportado todavía; el port propuesto excluye Glass. El selector Solrock/Lunatone pertenece al módulo Showdown+ y no requiere instalar el botón Unown.
+Consulta [la guía de Windows x64](docs/WINDOWS.md). El adaptador Windows excluye Glass y utiliza huellas propias de la distribución ZIP oficial. El selector Solrock/Lunatone pertenece al módulo Showdown+ y no requiere instalar el botón Unown.

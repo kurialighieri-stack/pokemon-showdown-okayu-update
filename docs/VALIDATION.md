@@ -1,5 +1,26 @@
 # Validación de las versiones alfa
 
+## Windows x64 — alpha.4, 2026-11-22
+
+Base: ZIP oficial Pro 1.2.0 Windows x64, SHA-256 `7b572264df34ec77bc6c2edd3f18ca439f737a7ef0a0ea9306492ed60ca2abd8`. Se trabajó sobre copias de prueba, con perfiles de Electron separados del perfil personal.
+
+- Suite Python: **60 pruebas; 43 aprobadas, 17 omitidas y ningún fallo** en Windows con Python 3.13.9. Las omisiones corresponden a integración Linux/AppImage/Glass y a enlaces simbólicos que necesitan permisos especiales. Incluye bloqueo real entre procesos, recuperación tras terminar un proceso hijo, detección de ejecutables y acceso propio de Inicio.
+- Se verificaron las **32 combinaciones** de los cinco módulos Windows mediante planificación sin escritura. Esto comprueba composición y anclas; no equivale a compilar ni probar visualmente cada combinación.
+- Se instalaron los cinco módulos y se compiló Showdex 1.4.2 con dependencias descargadas desde una caché vacía. En Windows se usa el enlazado hoisted de pnpm y copias de paquetes para evitar las rutas profundas de su almacén virtual. La reaplicación reutilizó la caché y recompiló correctamente.
+- Showdown+ se importó desde el XPI oficial de GitHub y luego desde la extensión **real instalada en Firefox Windows** mediante `--xpi auto`. Se comprobó el origen Mozilla, versión 1.4 y SHA-256 `d128d2e8703bbe8d6a38141ee8591a37acd26c99003d788f1ccfc019b876030c`. El XPI del perfil conservó su huella.
+- Electron cargó Calcdex y el tema Okayu. Se activó Showdown+ mediante el panel nativo, porque el modo smoke original de Pro desactiva todos los complementos al arrancar. La prueba verificó seis miembros por equipo, geometría y destinos de hover, estilos claros/oscuros en modo normal y teatro, estados de Unown, clics, recursos de los cuatro iconos y persistencia tras recargar. Glass estuvo ausente.
+- Se revirtieron **176 archivos**. Los **900 archivos originales** del ZIP se compararon byte por byte y coincidieron después de revertir.
+
+Reproducción del ensayo Electron sobre una instalación de prueba con los cinco módulos:
+
+```bat
+py -3 tools\validate_windows_runtime.py --installation C:\ShowdownPrueba --evidence C:\EvidenciaOkayu --profile C:\PerfilPruebaOkayu --skip-capture
+```
+
+Límites: no se midieron FPS ni consumo GPU en Windows. El capturador `capturePage()` de Electron produjo `UnknownVizError` en una ejecución, por lo que la prueba final utilizó aserciones DOM y omitió las capturas. Los diálogos Windows se comprobaron por construcción y análisis de sus solicitudes Unicode; su revisión visual manual completa sigue pendiente. No se probó Windows ARM64, el instalador Setup, ASAR, versiones futuras de Pro ni una ejecución nueva en Linux. Se añadió una matriz CI Linux/Windows para repetir la suite después de publicar los cambios.
+
+## Validación anterior de Linux
+
 Fecha: 2026-11-21. Plataforma probada: Linux x86_64. Base: Pokémon Showdown Pro 1.2.0 extraído de la distribución original. Pruebas realizadas con asistencia de IA; no hay una auditoría independiente.
 
 ## Motor del gestor

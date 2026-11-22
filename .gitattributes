@@ -1,0 +1,6 @@
+* text=auto eol=lf
+*.png -text
+*.ico -text
+*.zip -text
+*.xpi -text
+*.cmd text eol=crlf

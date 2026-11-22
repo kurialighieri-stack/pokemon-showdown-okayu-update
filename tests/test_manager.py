@@ -1,4 +1,5 @@
-import json,tempfile,unittest,hashlib,zipfile,os
+import json,tempfile,unittest,hashlib,zipfile,os,subprocess,sys
+from okayu_update.platforms import WINDOWS,file_lock
 from pathlib import Path
 from okayu_update.manager import Manager,ModError,digest,unpack
 
@@ -16,7 +17,7 @@ class Transactions(unittest.TestCase):
    for name,text in files.items():
     f=p/'files'/name;f.parent.mkdir(parents=True,exist_ok=True);f.write_text(text);hashes[name]=digest(f.read_bytes())
    (p/'addon.json').write_text(json.dumps({'id':key,'name':key,'order':0 if key=='core' else 1,'files':hashes,'edits':edits,'appVersions':['1.2.0']}))
-  (self.repo/'compatibility/1.2.0.json').write_text(json.dumps({'appVersion':'1.2.0','files':{'app/main.cjs':digest((self.app/'app/main.cjs').read_bytes())}}))
+  (self.repo/('compatibility/1.2.0-windows.json' if WINDOWS else 'compatibility/1.2.0.json')).write_text(json.dumps({'appVersion':'1.2.0','files':{'app/main.cjs':digest((self.app/'app/main.cjs').read_bytes())}}))
   self.m=Manager(self.app,self.root/'state',self.repo);self.original=self.tree()
  def tree(self):return {p.relative_to(self.app).as_posix():p.read_bytes() for p in self.app.rglob('*') if p.is_file()}
  def test_apply_reapply_restore_exact_bytes(self):
@@ -49,6 +50,7 @@ class Transactions(unittest.TestCase):
   self.assertEqual(before,self.tree())
  def test_plan_does_not_modify_installation(self):
   self.m.prepare(['sample'],build=False);self.assertEqual(self.tree(),self.original)
+ @unittest.skipIf(WINDOWS,'Windows symlinks need developer mode or administrator privileges')
  def test_symlink_target_refused(self):
   external=self.root/'external';external.write_text('mine');(self.app/'app/new.js').symlink_to(external)
   with self.assertRaises(ModError):self.m.apply(['sample'])
@@ -58,16 +60,20 @@ class Transactions(unittest.TestCase):
   with zipfile.ZipFile(z,'w') as f:f.writestr('../outside','bad')
   with self.assertRaises(ModError):unpack(z,self.root/'extracted')
  def test_recovery_after_process_termination(self):
-  pid=os.fork()
-  if pid==0:
-   import okayu_update.manager as implementation
-   original=implementation.atomic
-   def interrupt(path,data):
-    original(path,data)
-    if path.is_relative_to(self.app):os._exit(7)
-   implementation.atomic=interrupt
-   self.m.apply(['sample']);os._exit(1)
-  _,status=os.waitpid(pid,0);self.assertEqual(os.waitstatus_to_exitcode(status),7)
+  code="""
+import os,sys
+from pathlib import Path
+import okayu_update.manager as implementation
+m=implementation.Manager(sys.argv[1],sys.argv[2],sys.argv[3])
+original=implementation.atomic
+def interrupt(path,data):
+ original(path,data)
+ if path.is_relative_to(m.root):os._exit(7)
+implementation.atomic=interrupt
+m.apply(['sample'])
+"""
+  result=subprocess.run([sys.executable,'-X','utf8','-c',code,str(self.app),str(self.root/'state'),str(self.repo)])
+  self.assertEqual(result.returncode,7)
   self.assertTrue(self.m.journal.exists());self.m.recover();self.assertEqual(self.tree(),self.original)
  def test_corrupt_backup_is_not_restored(self):
   self.m.apply(['sample']);receipt=json.loads(self.m.receipt.read_text())
@@ -76,15 +82,13 @@ class Transactions(unittest.TestCase):
   with self.assertRaises(ModError):self.m.revert()
   self.assertEqual(self.tree(),before)
  def test_concurrent_operation_refused(self):
-  import fcntl
   self.m.directory.mkdir(parents=True)
-  with (self.m.directory/'.lock').open('a') as lock:
-   fcntl.flock(lock,fcntl.LOCK_EX)
+  with file_lock(self.m.directory/'.lock'):
    with self.assertRaises(ModError):self.m.apply(['sample'])
   self.assertEqual(self.tree(),self.original)
  def test_binary_icon_is_restored_when_module_is_removed(self):
   icon='app/assets/icons/icon.png';p=self.app/icon;p.parent.mkdir(parents=True);original=b'\x89PNG\r\noriginal';p.write_bytes(original)
-  compat=self.repo/'compatibility/1.2.0.json';data=json.loads(compat.read_text());data['files'][icon]=digest(original);compat.write_text(json.dumps(data))
+  compat=self.repo/('compatibility/1.2.0-windows.json' if WINDOWS else 'compatibility/1.2.0.json');data=json.loads(compat.read_text());data['files'][icon]=digest(original);compat.write_text(json.dumps(data))
   payload=self.repo/'modules/sample/files'/icon;payload.parent.mkdir(parents=True);payload.write_bytes(b'\x89PNG\r\nokayulogo')
   manifest=self.repo/'modules/sample/addon.json';data=json.loads(manifest.read_text());data['files'][icon]=digest(payload.read_bytes());manifest.write_text(json.dumps(data))
   self.m.apply(['sample']);self.assertEqual(p.read_bytes(),payload.read_bytes())

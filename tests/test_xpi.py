@@ -6,7 +6,7 @@ from okayu_update.manager import ModError
 
 class FirefoxXpi(unittest.TestCase):
  def setUp(self):
-  self.tmp=tempfile.TemporaryDirectory();self.addCleanup(self.tmp.cleanup);self.home=Path(self.tmp.name)
+  self.tmp=tempfile.TemporaryDirectory();self.addCleanup(self.tmp.cleanup);self.home=Path(self.tmp.name).resolve()
   self.spec={'acceptedPackages':[]}
  def package(self,path,origin='mozilla',version='1.4',identity=ADDON_ID,missing=None):
   path.parent.mkdir(parents=True,exist_ok=True)
@@ -33,6 +33,7 @@ class FirefoxXpi(unittest.TestCase):
   xpi=self.package(self.home/'external file.xpi','github')
   (profile/'extensions.json').write_text(json.dumps({'addons':[{'id':ADDON_ID,'active':False,'rootURI':'jar:'+xpi.as_uri()+'!/'}]}))
   found=self.find();self.assertEqual([x.path for x in found],[xpi]);self.assertEqual(found[0].origin,'github')
+ @unittest.skipIf(os.name=='nt','Windows symlinks require extra privileges')
  def test_relative_installs_registry_and_symlink_deduplication(self):
   xpi=self.profile('.mozilla/firefox');root=xpi.parents[2];(root/'installs.ini').write_text('[HASH]\nDefault=abc.default-release\n')
   alias=self.home/'.config/mozilla/firefox';alias.parent.mkdir(parents=True);alias.symlink_to(root,target_is_directory=True)

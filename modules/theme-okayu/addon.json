@@ -60,7 +60,7 @@
     },
     {
       "path": "app/main.cjs",
-      "find": "const appTitle = 'Pok\u00e9mon Showdown Pro';",
+      "find": "const appTitle = 'Pokémon Showdown Pro';",
       "replace": "const appTitle = 'Pokemon Showdown: Okayu Update';\nif(process.platform==='linux'){app.setDesktopName('pokemon-showdown-okayu-update.desktop');app.commandLine.appendSwitch('class','pokemon-showdown-okayu-update');}"
     },
     {
@@ -97,5 +97,29 @@
   "rebuildShowdex": true,
   "styles": [
     "app/okayu-branding.css"
-  ]
+  ],
+  "platformFiles": {
+    "windows": {
+      "app/assets/icons/okayu-icon.ico": "8a7b8859d3e9c049066307d305f12442ea99863f9aed4f327b9f0cc2bd3511c2"
+    }
+  },
+  "platformEdits": {
+    "windows": [
+      {
+        "path": "app/main.cjs",
+        "find": "process.platform === 'win32' ? 'icon.ico' : 'icon.png'",
+        "replace": "process.platform === 'win32' ? 'okayu-icon.ico' : 'icon.png'"
+      },
+      {
+        "path": "app/main.cjs",
+        "find": "const APP_ID = 'com.pokemonshowdownpro.desktop';",
+        "replace": "const APP_ID = 'com.pokemonshowdown.okayu-update';"
+      },
+      {
+        "path": "app/main.cjs",
+        "find": "relaunchDisplayName: 'Pokémon Showdown Pro'",
+        "replace": "relaunchDisplayName: 'Pokemon Showdown: Okayu Update'"
+      }
+    ]
+  }
 }

@@ -4,6 +4,7 @@ from unittest.mock import patch,Mock
 from okayu_update.discovery import discover,inspect,desktop_targets,prepare_image,file_hash,create_shortcut,remove_shortcut,process_targets,remember,Installation
 from okayu_update.manager import ModError,app_root
 
+@unittest.skipIf(os.name=='nt','Linux AppImage, desktop entry and /proc integration')
 class Discovery(unittest.TestCase):
  def setUp(self):
   self.temp=tempfile.TemporaryDirectory();self.addCleanup(self.temp.cleanup);self.root=Path(self.temp.name)
@@ -99,6 +100,7 @@ class GuidedSelection(unittest.TestCase):
   with patch('okayu_update.__main__.discover',return_value=[item]),patch('okayu_update.__main__.dialog') as dialog,patch('okayu_update.__main__.prepare_image',return_value=Path('/managed/showdown')) as prepare,patch('okayu_update.__main__.progress',side_effect=lambda text,fn:fn()),patch('okayu_update.__main__.remember'):
    self.assertEqual(choose_installation(True),Path('/managed/showdown'));prepare.assert_called_once_with(item.path)
    self.assertEqual(dialog.call_args.args[0],'--question')
+ @unittest.skipIf(os.name=='nt','Linux AppImage picker')
  def test_no_detection_offers_appimage_instead_of_forcing_folder(self):
   from okayu_update.__main__ import choose_installation
   with patch('okayu_update.__main__.discover',return_value=[]),patch('okayu_update.__main__.dialog',return_value='folder') as dialog,patch('okayu_update.__main__.inspect',return_value=None):

@@ -1,21 +1,26 @@
 """Versioned, reversible file transactions for Pokemon Showdown: Okayu Update."""
 from __future__ import annotations
-import hashlib,json,os,shutil,subprocess,tempfile,time,uuid,zipfile,stat,fcntl,functools
+import hashlib,json,os,shutil,subprocess,tempfile,time,uuid,zipfile,stat,functools
 from pathlib import Path,PurePosixPath
+from .platforms import WINDOWS,data_directory,file_lock,windows_processes,long_path,native_path,build_directory
 
-VERSION='0.1.0-alpha.3'
+VERSION='0.1.0-alpha.4'
 ROOT=Path(__file__).resolve().parents[1]
 class ModError(Exception):pass
 
 def digest(data):return hashlib.sha256(data).hexdigest() if data is not None else None
-def load(path):return json.loads(Path(path).read_text())
+def load(path):return json.loads(Path(path).read_text(encoding='utf-8'))
 def safe(root,name):
     p=PurePosixPath(name)
-    if not name or p.is_absolute() or '\\' in name or any(x in ('..','.') for x in name.split('/')):raise ModError('Ruta de módulo inválida: '+name)
+    if not name or p.is_absolute() or '\\' in name or ':' in name or any(x in ('..','.') for x in name.split('/')):raise ModError('Ruta de módulo inválida: '+name)
+    if WINDOWS:
+        reserved={'CON','PRN','AUX','NUL','CONIN$','CONOUT$',*(f'COM{i}' for i in range(1,10)),*(f'LPT{i}' for i in range(1,10))}
+        if any(part.rstrip(' .')!=part or part.split('.')[0].upper() in reserved for part in p.parts):raise ModError('Ruta de Windows inválida: '+name)
     target=root.joinpath(*p.parts)
     for item in [target,*target.parents]:
         if item==root.parent:break
-        if item.is_symlink():raise ModError('No se modifican enlaces simbólicos: '+name)
+        reparse=WINDOWS and item.exists() and bool(getattr(item.lstat(),'st_file_attributes',0)&0x400)
+        if item.is_symlink() or reparse:raise ModError('No se modifican enlaces simbólicos: '+name)
     return target
 
 def read(root,name):
@@ -34,6 +39,7 @@ def atomic(path,data):
         if os.path.exists(tmp):os.unlink(tmp)
 
 def unpack(archive,destination):
+    destination=long_path(destination)
     with zipfile.ZipFile(archive) as z:
         if len(z.infolist())>50000 or sum(i.file_size for i in z.infolist())>1024**3:raise ModError('Paquete demasiado grande')
         for info in z.infolist():
@@ -43,7 +49,7 @@ def unpack(archive,destination):
             with z.open(info) as src,target.open('wb') as dst:shutil.copyfileobj(src,dst)
 
 def app_root(path):
-    path=Path(path).expanduser().resolve()
+    path=long_path(path)
     if any(part.startswith('.mount_') for part in path.parts):raise ModError('Esa carpeta es un montaje temporal. Selecciona el archivo AppImage para preparar una instalación fija.')
     if (path/'resources/app/package.json').is_file():return path/'resources/app'
     if (path/'package.json').is_file() and (path/'app/main.cjs').is_file():return path
@@ -51,12 +57,16 @@ def app_root(path):
 
 def require_closed(root):
     install=root.parents[1]
+    if WINDOWS:
+        for executable in windows_processes():
+            if long_path(executable).is_relative_to(install):raise ModError('Cierra esta instalación de Showdown antes de modificarla.')
+        return
     if not Path('/proc').exists():return
     for proc in Path('/proc').iterdir():
         if not proc.name.isdigit() or int(proc.name)==os.getpid():continue
         try:
             executable=(proc/'exe').resolve()
-            if executable.is_relative_to(install):raise ModError('Cierra esta instalación de Showdown antes de modificarla.')
+            if long_path(executable).is_relative_to(install):raise ModError('Cierra esta instalación de Showdown antes de modificarla.')
         except (PermissionError,FileNotFoundError,ProcessLookupError):continue
 
 def exclusive(method):
@@ -64,18 +74,18 @@ def exclusive(method):
     def wrapper(self,*args,**kwargs):
         if getattr(self,'_owns_lock',False):return method(self,*args,**kwargs)
         self.directory.mkdir(parents=True,exist_ok=True)
-        with (self.directory/'.lock').open('a') as lock:
-            try:fcntl.flock(lock,fcntl.LOCK_EX|fcntl.LOCK_NB)
-            except BlockingIOError:raise ModError('Otra operación de Okayu Update está en curso para esta instalación')
-            self._owns_lock=True
-            try:return method(self,*args,**kwargs)
-            finally:self._owns_lock=False;fcntl.flock(lock,fcntl.LOCK_UN)
+        try:
+            with file_lock(self.directory/'.lock'):
+                self._owns_lock=True
+                try:return method(self,*args,**kwargs)
+                finally:self._owns_lock=False
+        except BlockingIOError:raise ModError('Otra operación de Okayu Update está en curso para esta instalación')
     return wrapper
 
 class Manager:
     def __init__(self,path,state=None,repository=ROOT):
-        self.root=app_root(path);self.repository=Path(repository)
-        self.data=Path(state or os.environ.get('OKAYU_UPDATE_DATA',Path(os.environ.get('XDG_DATA_HOME',Path.home()/'.local/share'))/'pokemon-showdown-okayu-update'))
+        self.root=app_root(path);self.repository=long_path(repository)
+        self.data=long_path(state or data_directory())
         if self.data.resolve().is_relative_to(self.root.parents[1]):raise ModError('Los respaldos deben guardarse fuera de la instalación de la aplicación')
         self.identity=hashlib.sha256(str(self.root).encode()).hexdigest()[:20]
         self.directory=self.data/'installations'/self.identity
@@ -87,16 +97,19 @@ class Manager:
         for key in load(self.repository/'modules/index.json'):
             m=load(self.repository/'modules'/key/'addon.json')
             if m['id']!=key:raise ModError('Identificador de módulo inválido')
-            result.append(m)
+            if not (WINDOWS and key=='glass'):result.append(m)
         return sorted(result,key=lambda m:m['order'])
+    def compatibility_path(self):
+        suffix='-windows' if WINDOWS else ''
+        return self.repository/'compatibility'/f'{self.version}{suffix}.json'
     def compatibility(self):
-        p=self.repository/'compatibility'/f'{self.version}.json'
+        p=self.compatibility_path()
         if not p.is_file():raise ModError(f'Versión {self.version} aún no compatible. No se modificó ningún archivo. Adjunta el diagnóstico a GitHub.')
         return load(p)
     def status(self):
         r=load(self.receipt) if self.receipt.exists() else None
         conflicts=[name for name,entry in (r or {}).get('files',{}).items() if digest(read(self.root,name))!=entry['after']]
-        return {'managerVersion':VERSION,'appVersion':self.version,'compatible':(self.repository/'compatibility'/f'{self.version}.json').is_file(),'installedModules':(r or {}).get('modules',[]),'state':'recovery-required' if self.journal.exists() else 'changed' if conflicts else 'installed' if r else 'clean','changedFiles':conflicts}
+        return {'managerVersion':VERSION,'appVersion':self.version,'compatible':self.compatibility_path().is_file(),'installedModules':(r or {}).get('modules',[]),'state':'recovery-required' if self.journal.exists() else 'changed' if conflicts else 'installed' if r else 'clean','changedFiles':conflicts}
     def _baseline(self,compat):
         if self.journal.exists():raise ModError('Hay una transacción pendiente. Ejecuta recover antes de continuar.')
         previous=load(self.receipt) if self.receipt.exists() else None
@@ -153,15 +166,16 @@ class Manager:
                     files[name]=text.encode()
                 if module.get('generateConfigNode'):
                     files[prefix+'/config-node.cjs']=files[prefix+'/config.js']+b'\nmodule.exports = {phdParseList, phdRedirectUrl};\n'
-            for name,expected in module['files'].items():
+            payloads={**module['files'],**module.get('platformFiles',{}).get('windows' if WINDOWS else 'linux',{})}
+            for name,expected in payloads.items():
                 p=safe(directory/'files',name);data=p.read_bytes()
                 if digest(data)!=expected:raise ModError('El paquete local fue alterado: '+module['id']+'/'+name)
                 if baseline(name) is not None and name not in compat['files'] and not (previous and name in previous['files']):raise ModError('Colisión con archivo ajeno: '+name)
                 files[name]=data
-            for patch in module['edits']:
+            for patch in [*module['edits'],*module.get('platformEdits',{}).get('windows' if WINDOWS else 'linux',[])]:
                 data=current(patch['path'])
                 if data is None:raise ModError('Falta archivo: '+patch['path'])
-                text=data.decode();count=text.count(patch['find'])
+                text=data.decode().replace('\r\n','\n');count=text.count(patch['find'])
                 if count!=1:raise ModError(f"Ancla incompatible en {module['id']}/{patch['path']}: {count} coincidencias")
                 files[patch['path']]=text.replace(patch['find'],patch['replace']).encode()
         scripts=[];styles=[]
@@ -185,22 +199,31 @@ class Manager:
             if name not in compat['files'] and name not in owned and read(self.root,name) is not None:raise ModError('Archivo existente no administrado: '+name)
         return {'modules':[m['id'] for m in modules],'files':files,'baseline':baseline,'rebuildShowdex':rebuild,'previous':previous,'activePrevious':active}
     def _build_showdex(self,files,provided,compat):
+        self.data.mkdir(parents=True,exist_ok=True)
+        with file_lock(self.data/'.build.lock'),build_directory(self.data) as workspace:
+            return self._compile_showdex(files,provided,compat,workspace)
+    def _compile_showdex(self,files,provided,compat,workspace):
         archive=self.root/'build/upstream/showdex-source.zip'
         if not archive.is_file():raise ModError('Falta el código fuente de Showdex incluido con Pro')
-        node=self.root/'build/update-runtime/node'
+        node=self.root/('build/update-runtime/node.exe' if WINDOWS else 'build/update-runtime/node')
         if not node.exists():raise ModError('Esta versión requiere el runtime Node incluido en la distribución Linux de Pro')
-        env={**os.environ,'ELECTRON_RUN_AS_NODE':'1','CI':'true','PATH':str(node.parent)+os.pathsep+os.environ.get('PATH','')}
+        env={**os.environ,'ELECTRON_RUN_AS_NODE':'1','CI':'true','PATH':native_path(node.parent)+os.pathsep+os.environ.get('PATH','')}
         self.directory.mkdir(parents=True,exist_ok=True)
-        source=Path(provided).resolve() if provided else self.data/'build-cache'/digest(archive.read_bytes())/'source'
+        cache_key=('win-hoisted-'+digest(archive.read_bytes())[:16]) if WINDOWS else digest(archive.read_bytes())
+        source=Path(provided).resolve() if provided else workspace/'build-cache'/cache_key/'source'
         if not (source/'package.json').is_file():source.mkdir(parents=True,exist_ok=True);unpack(archive,source)
         if load(source/'package.json')['version']!=compat['showdexVersion']:raise ModError('Versión de Showdex inesperada')
-        if not (source/'node_modules/webpack').exists():
+        ready=source/'.okayu-dependencies-ready'
+        if not (source/'node_modules/webpack').exists() or (not provided and not ready.exists()):
             print('Instalando dependencias de Showdex (primera compilación)…',flush=True)
             dependency_log=self.directory/'last-dependencies.log'
             with dependency_log.open('w') as output:
-                try:subprocess.run([str(node),str(self.root/'node_modules/pnpm/bin/pnpm.cjs'),'install','--frozen-lockfile','--ignore-scripts'],cwd=source,env=env,stdout=output,stderr=subprocess.STDOUT,check=True)
+                options=['--config.node-linker=hoisted','--config.package-import-method=copy'] if WINDOWS else []
+                try:subprocess.run([native_path(node),native_path(self.root/'node_modules/pnpm/bin/pnpm.cjs'),'install','--frozen-lockfile','--ignore-scripts',*options],cwd=native_path(source),env=env,stdout=output,stderr=subprocess.STDOUT,check=True)
                 except subprocess.CalledProcessError:raise ModError('No se pudieron preparar las dependencias de Calcdex. Consulta last-dependencies.log; la instalación sigue intacta.')
-        with tempfile.TemporaryDirectory(prefix='okayu-build-',dir=self.directory) as tmp:
+            ready.write_text('ready\n',encoding='utf-8')
+        build_parent=workspace/'installations'/self.identity;build_parent.mkdir(parents=True,exist_ok=True)
+        with tempfile.TemporaryDirectory(prefix='okayu-build-',dir=build_parent) as tmp:
             stage=Path(tmp)/'app';shutil.copytree(self.root,stage,ignore=shutil.ignore_patterns('test-results','okayu-update-showdex'),copy_function=shutil.copy2)
             for name,data in files.items():
                 p=safe(stage,name)
@@ -210,7 +233,7 @@ class Manager:
             output=Path(tmp)/'compiled';log=self.directory/'last-build.log'
             print('Compilando Calcdex con los módulos seleccionados…',flush=True)
             with log.open('w') as f:
-                try:subprocess.run([str(node),str(stage/'scripts/build-showdex.mjs'),'--source',str(source),'--output',str(output)],cwd=stage,env=env,stdout=f,stderr=subprocess.STDOUT,check=True)
+                try:subprocess.run([native_path(node),native_path(stage/'scripts/build-showdex.mjs'),'--source',native_path(source),'--output',native_path(output)],cwd=native_path(stage),env=env,stdout=f,stderr=subprocess.STDOUT,check=True)
                 except subprocess.CalledProcessError:raise ModError('Falló la compilación. El archivo last-build.log contiene el detalle; la instalación sigue intacta.')
             if not (output/'main.js').is_file():raise ModError('Compilación incompleta')
             for p in output.rglob('*'):
@@ -297,5 +320,5 @@ class Manager:
     def diagnostic(self):
         s=self.status();compat=self.compatibility() if s['compatible'] else {'files':{}}
         s['fingerprints']={name:digest(read(self.root,name)) for name in compat['files']}
-        s['platform']='linux';s['profileDataIncluded']=False
+        s['platform']='windows' if WINDOWS else 'linux';s['profileDataIncluded']=False
         return s

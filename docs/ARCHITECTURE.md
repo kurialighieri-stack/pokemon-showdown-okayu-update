@@ -15,6 +15,7 @@ La versión del paquete y las huellas de los archivos de programa deben coincidi
 - `id`, `name`, `version`, `order` y `appVersions`.
 - `files`: archivos nuevos o sustituidos y SHA-256 de su contenido.
 - `edits`: anclas literales que deben aparecer exactamente una vez.
+- `platformFiles` y `platformEdits`: recursos y anclas adicionales por plataforma; Windows utiliza un ICO propio y la identidad de ventana Okayu.
 - `clientScripts` y `styles`: recursos del cliente que carga la conexión común.
 - `rebuildShowdex`: necesidad de recompilar el calculador.
 - `import`: paquete externo admitido por SHA-256, utilizado por Showdown+.
