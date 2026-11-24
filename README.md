@@ -8,7 +8,7 @@ Okayu Update reúne un **gestor de modificaciones reversibles para Linux y Windo
 
 **Licencia del código propio: [GNU AGPL v3 o posterior — copyleft fuerte](LICENSE) (`AGPL-3.0-or-later`).**
 
-**Escritorio: alpha.4 para Linux y Windows x64, compatible con Pro 1.2.0 cuando sus archivos coinciden con el adaptador de cada plataforma. Android: 0.1.0-prototype.1, para Android 10 o posterior. Son versiones experimentales; el port Android todavía no tiene paridad funcional completa.**
+**Escritorio: alpha.4 para Linux y Windows x64, compatible con Pro 1.2.0 cuando sus archivos coinciden con el adaptador de cada plataforma. Android: 0.1.0-prototype.2, para Android 10 o posterior. Son versiones experimentales; el port Android todavía no tiene paridad funcional completa.**
 
 No es una versión oficial de Showdown, Showdex ni Showdown+.
 
@@ -20,7 +20,7 @@ Elige el paquete de tu plataforma. Las versiones de escritorio y Android se publ
 
 | Plataforma | Versión | Descarga | Requisitos |
 | --- | --- | --- | --- |
-| Android | **0.1.0-prototype.1 · APK de prueba** | [Descargar APK](https://github.com/kurialighieri-stack/pokemon-showdown-okayu-update/releases/download/android-v0.1.0-prototype.1/Pokemon-Showdown-Okayu-Android-0.1.0-prototype.1.apk) · [Release, fuentes y SHA-256](https://github.com/kurialighieri-stack/pokemon-showdown-okayu-update/releases/tag/android-v0.1.0-prototype.1) | Android 10+, Android System WebView actualizado y conexión. No necesita Python, una instalación de Pro ni importar un XPI por separado. |
+| Android | **0.1.0-prototype.2 · APK de prueba** | [Descargar APK](https://github.com/kurialighieri-stack/pokemon-showdown-okayu-update/releases/download/android-v0.1.0-prototype.2/Pokemon-Showdown-Okayu-Android-0.1.0-prototype.2.apk) · [Release, fuentes y SHA-256](https://github.com/kurialighieri-stack/pokemon-showdown-okayu-update/releases/tag/android-v0.1.0-prototype.2) | Android 10+, Android System WebView actualizado y conexión. No necesita Python, una instalación de Pro ni importar un XPI por separado. |
 | Linux x86_64 | alpha.4 | [Descargar ZIP Linux](https://github.com/kurialighieri-stack/pokemon-showdown-okayu-update/releases/download/v0.1.0-alpha.4/Pokemon-Showdown-Okayu-Update-v0.1.0-alpha.4-linux.zip) | Python 3.10+, Zenity y Pro 1.2.0 original en AppImage o extraído. |
 | Windows x64 | alpha.4 | [Descargar ZIP Windows](https://github.com/kurialighieri-stack/pokemon-showdown-okayu-update/releases/download/v0.1.0-alpha.4/Pokemon-Showdown-Okayu-Update-v0.1.0-alpha.4-windows.zip) | [Python 3.10+ con el lanzador `py`](https://www.python.org/downloads/windows/) y ZIP oficial de Pro 1.2.0 Windows x64. |
 
@@ -54,6 +54,8 @@ Windows incluye rendimiento, avisos, Okayu, Showdown+ e idiomas de Calcdex; **Gl
 El port utiliza Kotlin, AndroidX WebKit y un único WebView. Reutiliza el cliente y sus cálculos; adapta su distribución para uso táctil. La interfaz de escritorio conserva sus módulos y distribución originales.
 
 - **Combate horizontal a pantalla completa:** menús contextuales en píldoras para luchar, cambiar Pokémon, elegir objetivos en dobles, consultar Calcdex y chat, o abrir la confirmación original de rendición.
+- **Tableta:** controles y tipografía ampliados, tarjetas de vida completas en dobles, menús inferiores y distribución sin el segundo panel de escritorio. Los tamaños de combate del teléfono se conservan.
+- **Tablas de Calcdex:** movimientos y estadísticas apilados y con columnas adaptadas tanto en teléfono como en tableta.
 - **Calcdex y Opciones:** tarjetas claras, fondo de acento en Calcdex, colores del tema, controles adaptados y cierres revisados.
 - **Narración:** franja inferior de ancho completo con escritura progresiva y ocultación temporal del HUD. Los controles de replay/espectador permanecen accesibles durante los textos.
 - **Temporizador y ataques:** reloj con tiempo restante y activación/desactivación al tocar; eficacia localizada mediante el cálculo original, diferenciada por rival cuando corresponde en dobles.
@@ -222,7 +224,7 @@ El diagnóstico contiene versiones, estado, nombres de archivos del programa y h
 - [Pruebas y alcance de escritorio](docs/VALIDATION.md).
 - [Guía Android y compilación](android/README.md).
 - [Pruebas y pendientes de Android](android/VALIDATION.md).
-- [Notas de la pre-release Android](docs/releases/android-v0.1.0-prototype.1.md).
+- [Notas de la pre-release Android](docs/releases/android-v0.1.0-prototype.2.md).
 - [Desarrollo con IA](AI_DISCLOSURE.md).
 - [Guía de contribución](CONTRIBUTING.md).
 

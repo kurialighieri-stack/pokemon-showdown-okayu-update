@@ -69,3 +69,16 @@ Los fixtures y sus resultados no contienen cuentas reales. Las capturas del tel�
 - `native-backgrounds.js`: `battle-stadium.png` → `final-stadium.png` → `new-save.png` en tres combates nuevos; reaplicar la escena conserva la elección. Los tres PNG se decodificaron en WebView a 800 × 480.
 - `native-credits.js`: aviso local con GAME FREAK, The Pokémon Company, proyecto no oficial sin ánimo de lucro y asistencia de IA; vuelta de Créditos a Opciones correcta.
 - Compilación/lint correctos; 3 pruebas de integridad Android y 60 pruebas del gestor ejecutadas (10 casos dependientes de otro entorno omitidos en Linux). Los checks de fuente para GitHub no sustituyen la validación física ni la matriz pendiente.
+
+## Revisión local para tableta (24 de noviembre)
+
+- Dispositivo físico: Samsung SM-X400, área WebView horizontal de 1408 × 880 dp. Se corrigió el contenedor de escritorio que recortaba el campo y dejaba una segunda sala visible detrás de Calcdex.
+- Reglas de tableta a partir de 1000 CSS px: controles de 72 dp, iconos y tipografía ampliados; tarjetas de nombre/vida ampliadas otro 50% respecto de la primera revisión. Cada SVG queda completo dentro del área útil, incluso en dobles. Los sprites del combate mantienen su escala anterior.
+- La columna de ataques permite desplazamiento cuando falta altura. Volver queda en una franja inferior reservada, debajo de los movimientos y fuera de las tarjetas de vida. Las tarjetas de vida, equipos y estados usan zonas separadas.
+- Calcdex apila las tablas de movimientos y estadísticas para que la tipografía ampliada tenga columnas suficientes, conserva su instancia y usa un botón de salida Android cuando la distribución de escritorio no proporciona una X nativa.
+- `native-tablet-ui.js` comprueba límites de las tarjetas/SVG, separación del HUD, movimientos y Volver, escala de sprites y salida de Calcdex. `native-tablet-menus.js` cubre menú principal, seis tarjetas, pie de confirmación, objetivos de dobles, Tera, filas y pie de opciones.
+- `native-phone-ui.js` comprueba que la media query de tableta no aumenta controles del teléfono: movimientos y barra superior de 48 dp. La tipografía conserva el ajuste de accesibilidad del sistema.
+- `CDP_VIEWPORT=WIDTHxHEIGHT` en `tools/cdp.cjs` permite comprobar otras áreas útiles dentro de una sesión de depuración; no equivale a probar otro dispositivo físico. Los fixtures deben ejecutarse únicamente sin partidas reales activas. Reiniciar la app al terminar restaura la conexión original.
+- Revisión preparada para la pre-release Android 0.1.0-prototype.2, sin cambios en los paquetes de escritorio.
+- Se verificaron adicionalmente 1000 × 600, 1024 × 768 y 1280 × 800 dp mediante emulación de viewport sobre la tableta; no se presentan como dispositivos físicos distintos. En la altura menor los ataques se desplazan dentro de su columna, sin invadir el HUD inferior.
+- Por petición posterior, el ajuste de tablas de Calcdex también se aplica al teléfono, conservando su tipografía y los tamaños de combate. `native-calcdex-tables.js` comprueba separación de movimientos/estadísticas y contención del texto en 52 celdas de dos calculadores; pasó a 640 × 360, 800 × 360 y 960 × 540, además de tableta.

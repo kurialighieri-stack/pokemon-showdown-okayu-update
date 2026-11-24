@@ -1,6 +1,6 @@
 (async()=>{
  const wait=ms=>new Promise(r=>setTimeout(r,ms)),assert=(v,m)=>{if(!v)throw Error(m);},room=PS.rooms['battle-gen9customgame-999992'],root=document.querySelector('.okayu-active-battle'),scene=room.battle.scene;
- const names=[...document.querySelectorAll('.movemenu button')].map(b=>b.textContent),buttons=[...root.querySelectorAll('.movemenu button')],r=buttons[0].getBoundingClientRect();assert(r.width<275&&r.height>=47.9,'Compact move geometry');
+ const names=[...document.querySelectorAll('.movemenu button')].map(b=>b.textContent),buttons=[...root.querySelectorAll('.movemenu button')],r=buttons[0].getBoundingClientRect();assert(r.width<=(innerWidth>=1000?459.1:306.1)&&r.height>=(innerWidth>=1000?71.9:47.9),'Responsive move geometry');
  okayuAndroid.back();await wait(120);const hidden=__showdownProBattleMessages.hidden;__showdownProBattleMessages.setHidden(false);const fake={battle:room.battle,animating:true,acceleration:1};okayuNarration.show(fake,'¡Milotic ha usado Surf!');await wait(80);
  const box=document.getElementById('okayu-narration'),b=box.getBoundingClientRect();assert(Math.abs(b.left)<1&&Math.abs(b.width-innerWidth)<1&&b.bottom>innerHeight-10,'Narration not full-width bottom');
  for(const sel of ['#okayu-toolbar','.phd-row.player','.phd-row.enemy','.phd-team.player','.phd-team.enemy','.battle-controls'])assert(getComputedStyle(document.querySelector(sel)).visibility==='hidden','HUD visible during narration: '+sel);

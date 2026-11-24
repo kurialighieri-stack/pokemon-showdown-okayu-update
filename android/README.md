@@ -1,4 +1,4 @@
-# Okayu Update Android — prototipo funcional, uso local
+# Okayu Update Android — APK de prueba 0.1.0-prototype.2
 
 Desarrollado con asistencia de IA; véase ../AI_DISCLOSURE.md. **No es todavía la versión completa del plan.** Glass y streamer se excluyen. Se publica el código y la documentación; el APK se publica como prueba con recursos y créditos de terceros.
 
@@ -21,11 +21,11 @@ Requiere Node 24, Python 3.10+, JDK **17**, SDK Android plataforma 35 / build-to
 2. Extrae `resources/app/build/upstream/pokemon-showdown-client-source.zip` en una carpeta de trabajo. Copia `android/client-package-lock.json` como `package-lock.json` allí y ejecuta `npm ci --ignore-scripts` y `node build`. No modifiques los fuentes del cliente.
 3. Ejecuta `python3 android/tools/prepare-client.py --source /ruta/al/cliente --pro /ruta/Pro/resources/app`. Se comprueba el archivo fuente original, los fuentes TS y los hashes de datos fijados en `client-data.lock.json`. Los recursos generados quedan ignorados por Git. Un cambio de datos remoto detiene el empaquetado en lugar de aceptarlo silenciosamente.
 4. Configura `android/local.properties` con `sdk.dir=/ruta/al/SDK` y `JAVA_HOME` apuntando a JDK 17. Ejecuta `cd android && ./gradlew :app:assembleDebug :app:lintDebug`.
-5. Resultado: `android/app/build/outputs/apk/debug/app-debug.apk`. El build verifica todos los hashes del manifiesto de recursos. La firma de depuración se mantiene fuera del repositorio. No usarla como firma de distribución pública.
+5. Resultado: `android/app/build/outputs/apk/debug/app-debug.apk`. El build verifica todos los hashes del manifiesto de recursos. La firma de depuración se mantiene fuera del repositorio. Se distribuye como pre-release experimental firmada con la misma clave de depuración; no es la firma definitiva de una versión estable.
 
 ## Pruebas
 
-- `node android/tools/layout-test.cjs`: cuatro tamaños geométricos.
+- `node android/tools/layout-test.cjs`: siete tamaños geométricos.
 - `python3 -m unittest discover -s android/tests -q`: integridad del paquete, exclusiones y datos fijados.
 - `python3 -m unittest discover -s tests -q`: regresión del gestor Linux.
 - `android/tests/native-*.js` y `native-touch.cjs`: fixtures CDP para WebView. Usan batallas simuladas y sustituyen el envío de comandos antes de montar la sala. No ejecutar estos fixtures en una sesión de juego real.
@@ -35,7 +35,7 @@ Requiere Node 24, Python 3.10+, JDK **17**, SDK Android plataforma 35 / build-to
 
 Los seis addons originales de Pro, el Hub completo (historial/estadísticas/mensajes), la integración de búsqueda/guardado de replays y el actualizador/instalador propio **aún no están portados**. El botón de actualizaciones abre GitHub Releases; no es un actualizador automático. Matchmaking real, autenticación con cuenta, muerte de proceso, reconexión, funcionamiento completo de los cuatro módulos Showdex, importación/exportación y pruebas térmicas prolongadas siguen pendientes. El cliente conserva esas funciones originales donde son web, pero no se consideran verificadas por ello.
 
-Showdown+ incluye recursos cuyo aviso oficial separa el código de las ilustraciones/renders. El APK de prueba usa la copia importada localmente por el usuario. **No publicar un APK con esos recursos hasta confirmar los permisos de redistribución.** Código y APK tienen alcances de licencia distintos. Véase https://github.com/JxstMichie/PokemonShowdownPlus/blob/main/LICENSE.
+Showdown+ incluye recursos cuyo aviso oficial separa el código de las ilustraciones/renders. El APK de prueba usa la copia importada localmente por el usuario. La pre-release incluye avisos de fans y atribuciones por decisión del mantenedor; no se afirma contar con autorización adicional ni que los créditos concedan derechos. Código y APK tienen alcances de licencia distintos. Véase https://github.com/JxstMichie/PokemonShowdownPlus/blob/main/LICENSE.
 
 No anunciar paridad completa antes de completar `VALIDATION.md`.
 
@@ -62,3 +62,11 @@ Cada combate moderno nuevo utiliza el siguiente fondo de la secuencia `battle-st
 Los tres recursos ya deben existir en el Showdown+ importado localmente: el empaquetado verifica sus hashes de `backgrounds.lock.json` y falla si faltan o difieren. No se descargan dinámicamente ni se añaden al repositorio. `node android/tools/backgrounds-test.cjs` prueba el ciclo, persistencia y fallos de almacenamiento; `native-backgrounds.js` verifica las tres imágenes en WebView.
 
 La publicación de fuentes no implica que se haya completado la matriz funcional del port. Los APK locales son de depuración y prueba, no versiones estables firmadas con una clave definitiva. El workflow Android solo comprueba geometría, rotación y sintaxis, sin descargar componentes externos ni utilizar claves.
+
+## Interfaz de tableta y tablas de Calcdex (prototype.2)
+
+Las reglas de ampliación se activan desde 1000 CSS px. En tableta, controles de 72 dp y texto ampliado; tarjetas de nombre/vida completas y menú principal/final alineados con el HUD aliado cuando hay ancho suficiente. Volver permanece debajo de los ataques, en una franja reservada. El tamaño de los Pokémon no cambia. Las tabletas más estrechas desplazan las listas dentro de su columna para conservar separación.
+
+Calcdex apila movimientos y estadísticas en teléfono y tableta, con columnas propias para cada tamaño y salida accesible. Este ajuste de tablas es el único cambio visual nuevo aplicado al teléfono.
+
+Pruebas específicas: `native-tablet-ui.js`, `native-tablet-menus.js`, `native-calcdex-tables.js` y `native-phone-ui.js`. Para emular otro viewport en el dispositivo de pruebas: `CDP_PORT=9224 CDP_VIEWPORT=800x360 node android/tools/cdp.cjs android/tests/native-calcdex-tables.js`. No ejecutar fixtures con una batalla real activa; reiniciar al finalizar.

@@ -1,0 +1,16 @@
+(async()=>{
+ const wait=ms=>new Promise(r=>setTimeout(r,ms)),assert=(v,m)=>{if(!v)throw Error(m);},id='battle-gen9customgame-999992',room=PS.rooms[id],root=document.getElementById('room-'+id);
+ assert(innerWidth>=1000,'Tablet viewport required');assert(!Object.values(PS.rooms).some(r=>r.id!==id&&r.side&&r.battle&&!r.battle.ended),'Live battle active');
+ const results=[],rect=e=>e.getBoundingClientRect(),overlap=(a,b)=>a.left<b.right-1&&a.right>b.left+1&&a.top<b.bottom-1&&a.bottom>b.top+1;
+ const separated=(els,label)=>{const rs=els.map(rect);for(let i=0;i<rs.length;i++)for(let j=i+1;j<rs.length;j++)assert(!overlap(rs[i],rs[j]),label+' buttons overlap');results.push(label);};
+ if(document.documentElement.dataset.okayuPanel)okayuAndroid.back();if(document.documentElement.dataset.okayuMenu==='moves')okayuAndroid.back();await wait(100);
+ separated([...document.querySelectorAll('#okayu-combat-menu button')],'main');const main=rect(document.getElementById('okayu-combat-menu'));for(const card of root.querySelectorAll('.phd-row pokemon-hp'))assert(!overlap(main,rect(card)),'Main menu covers HP card');if(innerWidth>=1370)assert(Math.abs(main.bottom-rect(root.querySelector('.phd-row.player')).bottom)<2,'Main menu not aligned with allied cards');
+ document.querySelectorAll('#okayu-combat-menu button')[1].click();await wait(100);
+ const cards=[...root.querySelectorAll('.switchmenu button')];assert(cards.length===6,'Team missing members');separated(cards,'team');for(const c of cards)assert(rect(c).top>=0&&rect(c).bottom<=rect(document.getElementById('okayu-team-back')).top,'Team card overlaps footer');
+ separated([document.getElementById('okayu-team-back'),document.getElementById('okayu-team-confirm')],'team footer');document.getElementById('okayu-team-back').click();await wait(80);
+ document.querySelectorAll('#okayu-combat-menu button')[0].click();await wait(80);
+ const back=document.getElementById('okayu-context-back');const actions=rect(root.querySelector('.battle-controls'));assert(rect(back).top>=actions.bottom,'Back is not below attacks');assert(!overlap(rect(back),actions),'Back covers attack column');for(const hp of root.querySelectorAll('.phd-row pokemon-hp'))assert(!overlap(rect(back),rect(hp)),'Back covers HP');const mega=root.querySelector('.megaevo-box'),prompt=root.querySelector('.whatdo');assert(!overlap(rect(mega),rect(prompt)),'Tera capsule covers prompt');
+ root.querySelectorAll('.movemenu button')[1].click();await wait(100);assert(document.documentElement.dataset.okayuMenu==='target','Target selector missing');separated([...root.querySelectorAll('.switchmenu button')],'targets');okayuAndroid.back();await wait(80);
+ okayuAndroid.open('options');await wait(80);const panel=document.getElementById('okayu-panel'),rows=[...panel.querySelectorAll('.okayu-option-row')];separated(rows,'option rows');const footer=rect(panel.querySelector('footer')),list=rect(panel.querySelector('.okayu-options-list'));assert(list.bottom<=footer.top+1,'Options list under footer');panel.querySelector('footer button').click();await wait(80);assert(!document.getElementById('okayu-panel'),'Options failed to close');
+ return {viewport:[innerWidth,innerHeight],menus:results,teamFooterClear:true,teraPromptClear:true,optionsFooterClear:true};
+})()
