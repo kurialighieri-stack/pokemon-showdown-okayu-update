@@ -39,6 +39,12 @@ Se utiliza el Node incluido en Pro para recompilar Calcdex; no necesitas instala
 
 Windows incluye rendimiento, avisos, Okayu, Showdown+ e idiomas de Calcdex; **Glass se ofrece solo en Linux**. Los respaldos se guardan en `%LOCALAPPDATA%\pokemon-showdown-okayu-update`. Consulta [la guía completa de Windows](docs/WINDOWS.md).
 
+## Android: port experimental
+
+El código del port Android está en [`android/`](android/README.md), con Kotlin, AndroidX WebKit y un único WebView. Android 10+, horizontal, controles táctiles en píldoras, Showdex/Calcdex, Showdown+, narración, temas y rotación de los tres fondos importados por combate. No incorpora Glass ni streamer. Las interfaces Linux y Windows conservan sus módulos originales.
+
+**Es un prototipo, no una versión con paridad completa ni un APK estable.** Consulta [compilación y procedencia](android/README.md), [validaciones y pendientes](android/VALIDATION.md) y el [plan de interfaz](android/spec/UI-plan.md). Los recursos externos y las claves de firma no se incluyen en Git; el APK de prueba lleva un [aviso de fans y créditos](android/FAN_PROJECT_NOTICE.md), con firma de depuración y limitaciones documentadas. El código conserva la declaración de asistencia de IA y las licencias correspondientes. Para feedback, abre una incidencia con la plantilla **Android prototype issue** e indica el commit y la versión de Android/WebView.
+
 ## Módulos
 
 | Módulo | Función |

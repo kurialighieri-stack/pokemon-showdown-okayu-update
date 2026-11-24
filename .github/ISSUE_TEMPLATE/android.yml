@@ -1,0 +1,39 @@
+name: Android prototype issue
+description: Reporta un fallo del prototipo Android de Okayu Update.
+title: '[Android] '
+labels: []
+body:
+  - type: markdown
+    attributes:
+      value: 'El port sigue en pruebas. No adjuntes contraseñas, tokens, equipos privados ni datos personales. Los recursos externos conservan sus licencias; el código se publica con un APK de prueba que aún no tiene paridad completa.'
+  - type: input
+    id: version
+    attributes:
+      label: Versión o commit del código
+    validations:
+      required: true
+  - type: textarea
+    id: device
+    attributes:
+      label: Dispositivo y entorno
+      description: Modelo, versión de Android y Android System WebView, resolución y tema.
+    validations:
+      required: true
+  - type: textarea
+    id: steps
+    attributes:
+      label: Pasos para reproducir
+      description: Indica si ocurre en singles/dobles, replay/espectador, Calcdex u otro menú.
+    validations:
+      required: true
+  - type: textarea
+    id: behavior
+    attributes:
+      label: Resultado esperado y observado
+    validations:
+      required: true
+  - type: textarea
+    id: evidence
+    attributes:
+      label: Capturas o registros depurados
+      description: Opcional; oculta cuentas, chats y cualquier dato sensible.

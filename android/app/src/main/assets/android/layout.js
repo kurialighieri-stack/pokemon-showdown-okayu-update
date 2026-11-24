@@ -1,0 +1,2 @@
+/* Full viewport background, uniformly scaled 640x360 scene; no model stretching. */
+(function(root){function layout(width,height){if(!Number.isFinite(width)||!Number.isFinite(height)||width<=0||height<=0)throw new RangeError('Invalid viewport');const scale=Math.min(width/640,height/360);return {actions:Math.min(280,Math.max(176,width*.26)),battleWidth:640*scale,battleHeight:360*scale,scale,left:(width-640*scale)/2,top:(height-360*scale)/2};}if(typeof module!=='undefined')module.exports={layout};else root.okayuAndroidLayout=layout;})(globalThis);

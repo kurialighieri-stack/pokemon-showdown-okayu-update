@@ -11,3 +11,10 @@ backups/
 runtime/
 dist/
 python-*-embed-*.zip
+# Android: local tools, generated APKs and private signing material
+android/.gradle/
+android/**/build/
+android/local.properties
+android/app/src/main/assets/client/
+*.jks
+*.keystore

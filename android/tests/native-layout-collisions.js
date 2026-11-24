@@ -1,0 +1,3 @@
+(()=>{const assert=(v,m)=>{if(!v)throw Error(m);};const root=document.querySelector('.okayu-active-battle');const rect=e=>e.getBoundingClientRect();const overlap=(a,b)=>a.left<b.right-1&&a.right>b.left+1&&a.top<b.bottom-1&&a.bottom>b.top+1;const tools=[...document.querySelectorAll('#okayu-toolbar button')].map(rect),team=[...root.querySelectorAll('.phd-team.enemy .phd-slot')].map(rect),turn=rect(root.querySelector('.turn'));
+ for(let i=0;i<tools.length;i++){for(let j=i+1;j<tools.length;j++)assert(!overlap(tools[i],tools[j]),'Utility icons overlap');for(const t of team)assert(!overlap(tools[i],t),'Utility and party icon overlap');assert(!overlap(tools[i],turn),'Turn badge overlaps utility');}
+ return {utilityIcons:tools.length,partyIcons:team.length,noOverlap:true};})()

@@ -1,0 +1,28 @@
+name: Android source checks
+on:
+  push:
+    paths: ['android/**', '.github/workflows/android-source.yml']
+  pull_request:
+    paths: ['android/**', '.github/workflows/android-source.yml']
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  presentation:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '24'
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+      - run: node android/tools/layout-test.cjs
+      - run: node android/tools/backgrounds-test.cjs
+      - name: Check Android adapter syntax
+        run: |
+          for file in android/app/src/main/assets/android/*.js; do node --check "$file"; done
+          python3 -m py_compile android/tools/prepare-client.py android/tests/test_assets.py
+# Full APK builds require locally imported third-party resources. This workflow
+# deliberately does not download or publish those assets or a signing key.

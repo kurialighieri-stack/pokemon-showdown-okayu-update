@@ -1,0 +1,213 @@
+:root {--okayu-actions:224px;--okayu-battle-width:640px;--okayu-battle-top:48px;--okayu-scale:1}
+#okayu-toolbar {position:fixed;inset:0 0 auto;height:48px;z-index:1500;display:flex;background:#211d2c;color:#f6e8f1;align-items:center;gap:4px;padding:0 6px}
+#okayu-toolbar button {min-width:48px;min-height:44px;color:inherit;background:#352c43;border:1px solid #725c8c;border-radius:6px}
+html.okayu-battle #header {display:none!important}
+html.okayu-battle .ps-room {top:48px!important}
+html.okayu-battle .okayu-active-battle .battle {position:fixed!important;left:0!important;top:var(--okayu-battle-top)!important;width:640px!important;height:360px!important;box-sizing:border-box!important;transform:scale(var(--okayu-scale))!important;transform-origin:top left!important;margin:0!important}
+html.okayu-battle .okayu-active-battle .scrollable-battle-container {position:static!important;overflow:visible!important}
+html.okayu-battle .okayu-active-battle .battle-controls {position:fixed!important;left:auto!important;right:0!important;top:48px!important;bottom:0!important;width:var(--okayu-actions)!important;box-sizing:border-box;overflow:auto!important;padding:8px!important;background:#352c43;z-index:30}
+html.okayu-battle .battle-controls :is(button,.button) {min-height:48px;white-space:normal;box-sizing:border-box}
+html.okayu-battle .battle-controls :is(.movemenu,.switchmenu) {display:flex!important;flex-direction:column!important;gap:5px}
+html.okayu-battle .battle-controls :is(.movemenu,.switchmenu)>button {width:100%!important;max-width:none!important;margin:0!important}
+html.okayu-battle .okayu-active-battle :is(.battle-log,.chat-log-add,.userlist,.battle-chat-toggle) {display:none!important}
+html.okayu-battle[data-okayu-panel="log"] .okayu-active-battle .battle-log {display:block!important;position:fixed!important;inset:calc(var(--okayu-battle-top) + 52px) 12px 65px!important;width:auto!important;z-index:1600;background:#352c43;border:1px solid #725c8c;border-radius:8px}
+html.okayu-battle[data-okayu-panel="log"] .okayu-active-battle .chat-log-add {display:block!important;position:fixed!important;inset:auto 12px 8px!important;width:auto!important;z-index:1601;background:#352c43}
+#okayu-panel {position:fixed;inset:calc(var(--okayu-battle-top) + 52px) 12px 12px;overflow:auto;z-index:1600;background:#352c43;color:#f6e8f1;padding:16px;border-radius:8px;border:1px solid #725c8c}
+#okayu-panel button {min-height:48px;min-width:48px;margin:4px}
+html.okayu-battle [data-showdex-module="calcdex"] {display:none!important}
+html.okayu-battle[data-okayu-panel="calc"] [data-showdex-module="calcdex"] {display:block!important;position:fixed!important;inset:calc(var(--okayu-battle-top) + 52px) 12px 12px!important;width:auto!important;height:auto!important;overflow:auto!important;z-index:1600;background:#352c43}
+
+#okayu-toolbar[hidden] {display:none}
+
+html.okayu-battle[data-okayu-panel="calc"] [data-okayu-calc-host] {display:block!important;position:fixed!important;inset:calc(var(--okayu-battle-top) + 52px) 12px 12px!important;width:auto!important;height:auto!important;z-index:1599;background:#352c43}
+html.okayu-battle .battle-controls :is([name="toggleCalcdexOverlay"],.pro-theater-toggle) {display:none!important}
+html.okayu-battle .battle-controls :is(.buttonbar,.playback) {display:flex;flex-direction:column;gap:4px}
+html.okayu-battle .battle-controls button {font-size:14px!important}
+html.okayu-battle .battle-controls {overflow-x:hidden!important}
+html.okayu-battle .battle-controls :is(.movemenu,.switchmenu) {min-width:0!important;width:100%!important;max-width:100%!important;box-sizing:border-box!important;margin-left:0!important;margin-right:0!important}
+html.okayu-battle .battle-controls :is(.movemenu,.switchmenu)>button {min-width:0!important}
+
+html.okayu-battle [class*="Calcdex-module-overlayContainer"] {display:none!important}
+html.okayu-battle[data-okayu-panel="calc"] .okayu-active-battle [class*="Calcdex-module-overlayContainer"] {display:block!important;position:fixed!important;inset:calc(var(--okayu-battle-top) + 52px) 12px 12px!important;width:auto!important;height:auto!important;transform:none!important;z-index:1599}
+html.okayu-battle .battle-controls .pro-battle-messages-controls {position:static!important;justify-content:flex-end;margin:8px 0!important;clear:both}
+html.okayu-battle .battle-controls .pro-battle-messages-controls>.button {width:48px!important;min-width:48px!important;height:48px!important;min-height:48px!important}
+
+/* Floating controls occupy no layout row; keep a full touch target without a box. */
+html.okayu-battle #okayu-toolbar {top:var(--okayu-battle-top);right:auto;left:4px;width:auto;max-width:var(--okayu-battle-width);height:48px;padding:0;gap:0;background:transparent!important;border:0!important;box-shadow:none!important;pointer-events:none}
+html.okayu-battle #okayu-toolbar button {pointer-events:auto;width:48px;min-width:48px;height:48px;min-height:48px;padding:0!important;background:transparent!important;border:0!important;box-shadow:none!important;border-radius:0!important;color:#fff!important;text-shadow:0 1px 2px #000,1px 0 2px #000,-1px 0 2px #000;outline-offset:-4px}
+html.okayu-battle #okayu-toolbar button i {font-size:22px;color:#fff!important;filter:drop-shadow(0 1px 1px #000)}
+html.okayu-battle .ps-room {top:0!important}
+html.okayu-battle .okayu-active-battle .battle-controls {top:0!important}
+/* Native Showdown+ derives both banners and status chips from this row position. */
+html.okayu-battle .phd-layer {--enemy-top:calc(56px / var(--okayu-scale))!important}
+html.okayu-battle .innerbattle:not(.phd-on) .statbar.lstatbar {translate:0 max(0px,calc(56px / var(--okayu-scale) - 30px))}
+/* Leave the native turn badge visible on the left of the floating tools. */
+html.okayu-battle #okayu-toolbar {left:min(calc(120px * var(--okayu-scale)),max(4px,calc(var(--okayu-battle-width) - 240px)))}
+/* Keep party icons below rival HP banners and above the player's own banners. */
+html.okayu-battle .phd-layer {--okayu-team-top:calc(56px / var(--okayu-scale) + 42px);--okayu-team-height:calc(360px - var(--okayu-team-top) - 50px)}
+html.okayu-battle .phd-team {top:var(--okayu-team-top)!important;height:var(--okayu-team-height)!important}
+html.okayu-battle .phd-team::before {width:var(--okayu-team-height)!important}
+html.okayu-battle .phd-layer {--okayu-team-height:calc(360px - var(--okayu-team-top) - var(--player-bottom, 30px) - 44px)}
+
+/* Android game presentation: scene/HUD/actions are independent layers. */
+html.okayu-battle {--okayu-accent:#8d709f;--okayu-surface:rgba(33,29,44,.94)}
+html.okayu-battle .okayu-active-battle .battle {left:var(--okayu-stage-left)!important;top:var(--okayu-battle-top)!important;overflow:visible!important}
+html.okayu-battle .innerbattle {overflow:visible!important}
+html.okayu-battle .battle .backdrop {left:calc(-1 * var(--okayu-stage-left) / var(--okayu-scale))!important;top:calc(-1 * var(--okayu-battle-top) / var(--okayu-scale))!important;width:calc(var(--okayu-view-width) / var(--okayu-scale))!important;height:calc(var(--okayu-view-height) / var(--okayu-scale))!important;background-size:cover!important;background-position:center!important}
+html.okayu-battle .phd-layer {left:calc(-1 * var(--okayu-stage-left) / var(--okayu-scale));top:calc(-1 * var(--okayu-battle-top) / var(--okayu-scale));width:calc(var(--okayu-view-width) / var(--okayu-scale));height:calc(var(--okayu-view-height) / var(--okayu-scale));overflow:visible;--enemy-top:calc(58px / var(--okayu-scale))!important}
+html.okayu-battle .phd-team {display:flex!important;flex-direction:row!important;width:240px!important;height:36px!important;padding:0!important;gap:0!important}
+html.okayu-battle .phd-team::before {display:none!important}
+html.okayu-battle .phd-team.player {top:auto!important;bottom:0!important;left:4px!important}
+html.okayu-battle .phd-team.enemy {top:8px!important;right:4px!important;bottom:auto!important}
+html.okayu-battle .phd-slot {flex:1;min-width:0}
+html.okayu-battle #okayu-toolbar {top:0;left:0;opacity:.9}
+html.okayu-battle .battle .turn {left:calc(248px / var(--okayu-scale))!important;top:calc((8px - var(--okayu-battle-top)) / var(--okayu-scale))!important}
+#okayu-combat-menu {position:fixed;right:12px;bottom:12px;width:clamp(176px,26vw,280px);z-index:1400;display:grid;gap:5px}
+#okayu-combat-menu[hidden],#okayu-context-back[hidden] {display:none!important}
+#okayu-combat-menu button,#okayu-context-back {min-height:44px;border:0;border-radius:24px;background:var(--okayu-surface);color:#f6e8f1;font-size:16px;text-align:left;padding:8px 18px;display:flex;align-items:center;gap:12px;box-shadow:0 1px 3px #0005}
+#okayu-combat-menu button:focus-visible,#okayu-combat-menu button:active {background:var(--okayu-accent);outline:2px solid white}
+#okayu-combat-menu i {width:24px;text-align:center}
+#okayu-context-back {position:fixed;bottom:8px;right:12px;z-index:1450}
+html.okayu-battle .okayu-active-battle .battle-controls {display:none!important;top:auto!important;right:12px!important;bottom:60px!important;height:auto!important;max-height:calc(100vh - 116px)!important;width:clamp(176px,28vw,300px)!important;background:var(--okayu-surface)!important;border:0!important;border-radius:18px;padding:10px!important;box-shadow:none!important}
+html.okayu-battle:is([data-okayu-menu="moves"],[data-okayu-menu="pokemon"],[data-okayu-menu="target"],[data-okayu-menu="forced"],[data-okayu-menu="team"],[data-okayu-menu="wait"],[data-okayu-menu="ended"],[data-okayu-menu="spectator"]) .battle-controls {display:block!important}
+html.okayu-battle:is([data-okayu-menu="pokemon"],[data-okayu-menu="forced"],[data-okayu-menu="team"]) .battle-controls {width:min(560px,75vw)!important}
+html.okayu-battle[data-okayu-menu="moves"] .switchcontrols,html.okayu-battle[data-okayu-menu="pokemon"] .movecontrols {display:none!important}
+html.okayu-battle:is([data-okayu-menu="pokemon"],[data-okayu-menu="forced"]) .switchmenu {display:grid!important;grid-template-columns:repeat(3,minmax(0,1fr))!important;gap:6px!important}
+html.okayu-battle .battle-controls .whatdo {font-size:14px}
+html.okayu-battle .battle-controls .pro-battle-messages-controls {display:none!important}
+html.okayu-battle[data-okayu-panel] :is(#okayu-combat-menu,.battle-controls,#okayu-context-back) {display:none!important}
+html.okayu-battle #okayu-toolbar[data-attention] {filter:drop-shadow(0 0 4px #f18abf)}
+@media (max-height:330px){#okayu-combat-menu {gap:3px;bottom:6px}#okayu-combat-menu button {min-height:44px;padding:5px 14px}}
+@media(prefers-reduced-motion:reduce){#okayu-combat-menu *,#okayu-panel {transition:none!important;animation:none!important}}
+html.okayu-battle .okayu-active-battle .battle {border:0!important;border-radius:0!important;box-shadow:none!important;background:transparent!important}
+
+html.okayu-battle .phd-row.player {bottom:44px!important}
+html.okayu-battle .phd-team {width:228px!important}
+html.okayu-battle .battle .turn {left:calc(296px / var(--okayu-scale))!important}
+html.okayu-battle[data-okayu-menu="team"] .switchmenu {display:grid!important;grid-template-columns:repeat(3,minmax(0,1fr))!important}
+html.okayu-battle[data-okayu-menu="target"] .switchmenu {display:grid!important;grid-template-columns:repeat(2,minmax(0,1fr))!important}
+
+html.okayu-battle {--pro-color-accent:#8d709f;--pro-color-accent-rgb:141,112,159}
+html.okayu-battle .switchmenu>.movewarning {grid-column:1/-1}
+html.okayu-battle {--okayu-hud-bottom:calc(66px + 42px * var(--okayu-scale))}
+html.okayu-battle .phd-layer {--panel:min(210px,calc((var(--okayu-view-width) - var(--okayu-actions) - 40px) / var(--okayu-scale) / 2 - 23px))!important}
+html.okayu-battle .okayu-active-battle,html.okayu-battle .scrollable-battle-container {border:0!important;box-shadow:none!important;background:transparent!important}
+html.okayu-battle .okayu-active-battle .battle-controls {max-height:calc(100vh - var(--okayu-hud-bottom) - 60px)!important}
+html.okayu-battle:is([data-okayu-menu="pokemon"],[data-okayu-menu="forced"]) .battle-controls {bottom:calc(96px * var(--okayu-scale))!important;max-height:calc(100vh - var(--okayu-hud-bottom) - 96px * var(--okayu-scale))!important}
+html.okayu-battle .battle-controls .moveselect {display:none!important}
+html.okayu-battle .battle-controls .whatdo {font-size:12px!important;margin:0 0 4px!important;padding:0!important}
+html.okayu-battle[data-okayu-menu="wait"] .switchcontrols {display:none!important}
+@media(max-height:480px){html.okayu-battle[data-okayu-menu="moves"] .movemenu {display:grid!important;grid-template-columns:repeat(2,minmax(0,1fr))!important;gap:5px!important}}
+@media(max-height:330px){#okayu-combat-menu button {min-height:40px}}
+/* Separate the utility icons and the turn badge instead of sharing a crowded row. */
+html.okayu-battle .battle .turn {left:calc((4px - var(--okayu-stage-left)) / var(--okayu-scale))!important;top:calc((54px - var(--okayu-battle-top)) / var(--okayu-scale))!important}
+/* The controls float as individual pills, never as a rectangular backing panel. */
+html.okayu-battle .okayu-active-battle .battle-controls {background:transparent!important;border:0!important;box-shadow:none!important;overflow-x:visible!important}
+html.okayu-battle .battle-controls .whatdo {color:#fff!important;text-shadow:0 1px 2px #000,1px 0 2px #000}
+html.okayu-battle[data-okayu-menu="moves"] .battle-controls {width:clamp(220px,34vw,340px)!important;padding:6px!important}
+html.okayu-battle[data-okayu-menu="moves"] .movemenu {display:flex!important;flex-direction:column!important;gap:6px!important}
+html.okayu-battle .okayu-active-battle .battle-controls .movemenu button.movebutton {position:relative;display:block!important;min-height:44px!important;height:44px!important;width:100%!important;border:0!important;border-radius:999px!important;overflow:hidden;background:var(--okayu-move-color,#b9a6c9)!important;color:#211d2c!important;text-align:left!important;padding:4px 76px 17px 16px!important;font-size:14px!important;line-height:22px!important;box-shadow:0 1px 3px #0006!important;text-shadow:none!important}
+html.okayu-battle .movebutton br {display:none}
+html.okayu-battle .movebutton small.type {position:absolute;left:16px;bottom:3px;color:#211d2c!important;font-size:10px!important;line-height:12px!important}
+html.okayu-battle .movebutton small.pp {position:absolute;right:0;top:0;bottom:0;width:66px;display:flex;align-items:center;justify-content:center;float:none!important;margin:0!important;padding:0 0 0 6px!important;background:#16121d;color:#fff!important;font-size:16px!important;line-height:1!important;clip-path:polygon(12px 0,100% 0,100% 100%,0 100%)}
+html.okayu-battle .movebutton[aria-disabled="true"] {opacity:.5}
+html.okayu-battle .movebutton:focus-visible {outline:2px solid #fff!important;outline-offset:2px}
+html.okayu-battle .type-Water {--okayu-move-color:#92b9e6}
+html.okayu-battle .type-Fire {--okayu-move-color:#f4aa83}
+html.okayu-battle .type-Grass {--okayu-move-color:#9edb8b}
+html.okayu-battle .type-Ice {--okayu-move-color:#b3e6e4}
+html.okayu-battle .type-Electric {--okayu-move-color:#f3dc80}
+html.okayu-battle .type-Normal {--okayu-move-color:#c9c8bc}
+html.okayu-battle .type-Ghost {--okayu-move-color:#aca4db}
+html.okayu-battle .type-Psychic {--okayu-move-color:#edabc5}
+html.okayu-battle .type-Dark {--okayu-move-color:#b4a3a0}
+html.okayu-battle .type-Dragon {--okayu-move-color:#b29be7}
+html.okayu-battle .type-Fairy {--okayu-move-color:#edc2df}
+html.okayu-battle .type-Fighting {--okayu-move-color:#df9d94}
+html.okayu-battle .type-Flying {--okayu-move-color:#bdc3e8}
+html.okayu-battle .type-Poison {--okayu-move-color:#c6a0d4}
+html.okayu-battle .type-Ground {--okayu-move-color:#dcc096}
+html.okayu-battle .type-Rock {--okayu-move-color:#d3cb9c}
+html.okayu-battle .type-Bug {--okayu-move-color:#c6d98d}
+html.okayu-battle .type-Steel {--okayu-move-color:#bdcbd3}
+html.okayu-battle[data-okayu-menu="moves"] .megaevo-box {position:fixed;right:calc(clamp(220px,34vw,340px) + 26px);bottom:calc(100px * var(--okayu-scale));max-width:136px;max-height:40vh;overflow:auto;display:flex;flex-direction:column;gap:6px}
+html.okayu-battle .megaevo-box label {min-height:44px!important;border:0!important;border-radius:24px!important;background:var(--okayu-surface)!important;color:#fff!important;font-size:12px!important;padding:8px!important;box-sizing:border-box}
+html.okayu-battle .battle-controls .switchmenu button {border:0!important;border-radius:24px!important;background:var(--okayu-surface)!important;box-shadow:0 1px 3px #0005!important;color:#f6e8f1!important;text-align:left!important}
+html.okayu-battle .battle-controls .switchmenu [data-okayu-team-state="active"] {box-shadow:inset 2px 0 #8d709f,0 1px 3px #0005!important}
+html.okayu-battle .battle-controls .switchmenu [data-okayu-team-state="fainted"] {filter:grayscale(1);opacity:.5}
+html.okayu-battle .battle-controls .inline-controls .button {border-radius:24px!important;border:0!important;background:var(--okayu-surface)!important;color:#fff!important;box-shadow:0 1px 3px #0005!important}
+html.okayu-battle .movewarning {color:#fff!important;text-shadow:0 1px 2px #000}
+html.okayu-battle .ps-popup {border-radius:22px!important;max-width:min(440px,92vw)!important;max-height:90vh!important;overflow:auto!important}
+/* A fixed narration surface; incoming text replaces the previous line. */
+html.okayu-battle .battle .messagebar {visibility:hidden!important;pointer-events:none!important}
+#okayu-narration {position:fixed;left:50%;bottom:calc(96px * var(--okayu-scale));transform:translateX(-50%);width:min(70vw,720px);height:64px;box-sizing:border-box;padding:12px 22px;display:flex;align-items:center;background:rgba(28,24,36,.95);border-radius:16px;color:#f6e8f1;font-size:16px;line-height:20px;z-index:1200;pointer-events:none;overflow:hidden}
+#okayu-narration>span[aria-hidden] {display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden;overflow-wrap:anywhere}
+#okayu-narration[hidden],html:not(.okayu-battle) #okayu-narration,html.pro-hide-battle-messages #okayu-narration,html[data-okayu-panel] #okayu-narration {display:none!important}
+.okayu-narration-accessible {position:absolute;width:1px;height:1px;overflow:hidden;clip-path:inset(50%);white-space:nowrap}
+@media(max-height:330px){#okayu-narration {height:56px;font-size:14px;line-height:18px;padding:10px 16px}}
+
+#okayu-narration {contain:layout paint}
+/* Full-screen settings: the list scrolls, the exit action never does. */
+#okayu-panel[data-page="options"] {inset:0!important;padding:0;border:0;border-radius:0;background:#211d2c;display:grid;grid-template-rows:auto minmax(0,1fr) auto;z-index:3000;overflow:hidden}
+#okayu-panel[data-page="options"] h2 {margin:0;padding:12px 6vw;font-size:24px}
+.okayu-options-list {overflow:auto;overscroll-behavior:contain;touch-action:pan-y;padding:0 6vw 12px}
+.okayu-option-row {display:grid;grid-template-columns:minmax(140px,1fr) minmax(160px,1fr);gap:16px;align-items:center;min-height:48px;padding:4px 14px;border-radius:24px}
+.okayu-option-row:focus-within {background:#8d709f;color:#fff}
+.okayu-option-control {display:flex;align-items:center;justify-content:flex-end;gap:12px;min-width:0}
+.okayu-option-control select {min-height:44px;width:100%;border-radius:22px;padding:6px 12px;background:#352c43;color:#f6e8f1;border:0;font-size:16px}
+.okayu-option-control input[type="range"] {width:100%;min-height:44px;accent-color:#cbb6e2;touch-action:pan-x}
+.okayu-option-control input[type="checkbox"] {width:24px;height:24px;margin:10px;accent-color:#8d709f}
+.okayu-option-control output {min-width:76px;text-align:right;font-size:14px}
+#okayu-panel[data-page="options"] footer {padding:4px 6vw 8px;display:flex;justify-content:flex-end;background:#211d2c}
+#okayu-panel[data-page="options"] footer button,.okayu-options-list>button {border:0;border-radius:24px;background:#352c43;color:#f6e8f1;min-height:44px;padding:8px 24px;font-size:16px}
+html.okayu-battle #room-options {position:fixed!important;inset:0!important;width:auto!important;height:auto!important;max-width:none!important;max-height:none!important;border-radius:0!important;padding:12px 5vw!important;overflow:auto!important;z-index:3001}
+/* Wide move card, using the existing tooltip's data and formatting. */
+html.okayu-battle #tooltipwrapper:has(.tooltip-move,.tooltip-zmove,.tooltip-maxmove) {position:fixed!important;left:12px!important;right:auto!important;top:calc(var(--okayu-hud-bottom) + 4px)!important;bottom:auto!important;width:min(720px,62vw,calc(100vw - clamp(220px,34vw,340px) - 36px))!important;z-index:4000!important}
+html.okayu-battle #tooltipwrapper:has(.tooltip-move,.tooltip-zmove,.tooltip-maxmove) .tooltipinner {position:static!important;width:100%!important}
+html.okayu-battle #tooltipwrapper :is(.tooltip-move,.tooltip-zmove,.tooltip-maxmove) {position:relative!important;display:grid!important;grid-template-columns:minmax(110px,.65fr) minmax(140px,1.35fr);grid-template-rows:auto minmax(0,1fr) auto;width:100%!important;max-width:none!important;max-height:calc(100vh - var(--okayu-hud-bottom) - 100px * var(--okayu-scale))!important;box-sizing:border-box;overflow:hidden!important;background:#f6e8f1!important;color:#211d2c!important;border:0!important;border-radius:18px!important;box-shadow:0 2px 6px #0006!important;padding:0!important}
+html.okayu-battle [data-okayu-move-info] h2 {grid-column:1/-1;position:relative;min-height:40px;margin:0!important;padding:8px 82px 8px 12px!important;box-sizing:border-box;background:#16121d!important;color:#fff!important;font-size:16px!important;line-height:20px!important;border:0!important}
+html.okayu-battle .okayu-tooltip-pp {position:absolute;right:12px;top:12px;font-size:18px;color:#fff!important}
+html.okayu-battle .okayu-move-stats,html.okayu-battle .okayu-move-description {padding:10px 12px;overflow:auto;touch-action:pan-y;overscroll-behavior:contain;min-height:0;color:#211d2c!important}
+html.okayu-battle .okayu-move-stats {grid-column:1;grid-row:2;border-right:1px solid #cabbd0}
+html.okayu-battle .okayu-move-description {grid-column:2;grid-row:2}
+html.okayu-battle [data-okayu-move-info] p {margin:0 0 8px!important;padding:0!important;color:#211d2c!important;font-size:13px!important;line-height:18px!important;border:0!important}
+html.okayu-battle [data-okayu-move-info] small {color:#51465a!important}
+html.okayu-battle .okayu-tooltip-close {grid-column:1/-1;min-height:44px;border:0!important;border-radius:0!important;background:#16121d!important;color:#fff!important;text-align:right;padding:8px 16px;font-size:14px}
+/* Team selection is a full-screen temporary overlay, not a battle side panel. */
+html.okayu-battle:is([data-okayu-menu="pokemon"],[data-okayu-menu="forced"]) .okayu-active-battle .battle-controls {position:fixed!important;inset:0!important;transform:none!important;max-height:none!important;width:100%!important;height:100%!important;padding:0!important;border-radius:0!important;background:#211d2c!important;z-index:2000!important;overflow:hidden!important}
+html.okayu-battle:is([data-okayu-menu="pokemon"],[data-okayu-menu="forced"]) .battle-controls .whatdo {height:36px;padding:8px 12px!important;box-sizing:border-box}
+html.okayu-battle:is([data-okayu-menu="pokemon"],[data-okayu-menu="forced"]) .battle-controls .switchcontrols {position:fixed;left:12px;top:42px;bottom:56px;width:38vw;overflow:hidden}
+html.okayu-battle:is([data-okayu-menu="pokemon"],[data-okayu-menu="forced"]) .battle-controls .switchselect {display:none}
+html.okayu-battle:is([data-okayu-menu="pokemon"],[data-okayu-menu="forced"]) .switchmenu {display:flex!important;flex-direction:column!important;height:100%;gap:4px!important}
+html.okayu-battle:is([data-okayu-menu="pokemon"],[data-okayu-menu="forced"]) .switchmenu button {flex:1;min-height:0!important;height:auto!important;max-height:56px;padding:5px 12px!important;box-sizing:border-box;font-size:14px!important}
+html.okayu-battle .switchmenu button.okayu-team-selected {background:#8d709f!important;outline:2px solid #f6e8f1;outline-offset:-2px}
+html.okayu-battle:is([data-okayu-menu="pokemon"],[data-okayu-menu="forced"]) :is(#okayu-toolbar,#okayu-context-back) {display:none!important}
+#okayu-team-detail {position:fixed;left:calc(38vw + 32px);right:12px;top:12px;bottom:60px;overflow:auto;z-index:2010;color:#f6e8f1;background:#211d2c;padding:0 12px;overscroll-behavior:contain;touch-action:pan-y}
+#okayu-team-detail h2 {margin:0 0 6px;font-size:20px}
+#okayu-team-detail h3 {font-size:15px;margin:12px 0 4px}
+#okayu-team-detail p {font-size:13px;line-height:18px;margin:6px 0}
+.okayu-team-moves {display:grid;gap:5px}
+.okayu-team-move {display:flex;justify-content:space-between;gap:8px;background:#f6e8f1;color:#211d2c;border-radius:24px;padding:10px 14px;font-size:14px}
+#okayu-team-confirm,#okayu-team-back {position:fixed;bottom:6px;z-index:2020;min-height:44px;border:0;border-radius:24px;padding:8px 24px;background:#8d709f;color:white;font-size:16px}
+#okayu-team-confirm {right:12px}#okayu-team-back {left:12px}#okayu-team-back[hidden] {display:none}
+#okayu-team-confirm:disabled {opacity:.45}
+#okayu-team-detail .tooltip {max-width:none;width:100%;position:static;box-sizing:border-box}
+/* Targets retain the original valid/disabled commands and opponent/ally order. */
+html.okayu-battle[data-okayu-menu="target"] .okayu-active-battle .battle-controls {left:50%!important;right:auto!important;top:50%!important;bottom:auto!important;transform:translate(-50%,-50%);width:min(70vw,720px)!important;max-height:calc(100vh - var(--okayu-hud-bottom) - 86px)!important;border-radius:24px!important;background:rgba(53,44,67,.85)!important;padding:12px!important}
+html.okayu-battle[data-okayu-menu="target"] .switchmenu>div:empty {display:none}
+html.okayu-battle[data-okayu-menu="target"] .switchmenu {grid-template-columns:repeat(2,minmax(0,1fr))!important;gap:10px!important}
+html.okayu-battle[data-okayu-menu="target"] .switchmenu button {min-height:64px!important;padding:8px 14px!important}
+html.okayu-battle[data-okayu-menu="target"] .switchmenu button::after {content:attr(data-okayu-owner);display:block;font-size:12px;margin-top:4px}
+html.okayu-battle:is([data-okayu-menu="pokemon"],[data-okayu-menu="forced"]) .switchmenu button {position:relative;padding:4px 12px 4px 50px!important;text-align:left!important;line-height:16px!important;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+html.okayu-battle:is([data-okayu-menu="pokemon"],[data-okayu-menu="forced"]) .switchmenu .picon {position:absolute;left:6px;top:50%;transform:translateY(-50%)}
+html.okayu-battle:is([data-okayu-menu="pokemon"],[data-okayu-menu="forced"]) .switchmenu .hpbar {display:block;max-width:100%;height:4px;margin:2px 0}
+.okayu-team-health {display:block;font-size:10px!important;line-height:11px!important;color:inherit!important}
+
+#okayu-narration {left:12px;transform:none;width:min(720px,62vw,calc(100vw - clamp(220px,34vw,340px) - 36px))}
+#okayu-native-options-back {position:fixed;right:12px;bottom:8px;z-index:4000;min-height:44px;padding:8px 24px;border:0;border-radius:24px;background:#352c43;color:#f6e8f1;font-size:16px}
+#okayu-native-options-back[hidden] {display:none}
+html.okayu-battle #room-options {padding-bottom:68px!important}
+.okayu-team-move {align-items:center}
+.okayu-team-move>span:first-child {flex:1;min-width:0}
+.okayu-team-move-type {font-size:10px;color:#51465a}
+.okayu-team-move>span:last-child {background:#51465a;color:#fff;padding:10px 14px;margin:-10px -14px -10px 0;border-radius:0 24px 24px 0;clip-path:polygon(10px 0,100% 0,100% 100%,0 100%);white-space:nowrap}

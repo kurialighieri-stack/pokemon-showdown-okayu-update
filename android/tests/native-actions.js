@@ -1,0 +1,7 @@
+(async()=>{const wait=ms=>new Promise(r=>setTimeout(r,ms)),id='battle-gen9customgame-999992';
+ const moves=[['Surf','surf','allAdjacent'],['Ice Beam','icebeam','normal'],['Protect','protect','self'],['Recover','recover','self']].map(([move,id,target])=>({move,id,target,pp:10,maxpp:10,disabled:false}));
+ const pokemon=[['Milotic','surf'],['Mimikyu','shadowclaw'],['Pikachu','thunderbolt'],['Stantler','tackle'],['Riolu','quickattack'],['Dhelmise','powerwhip']].map(([name,move],i)=>({ident:'p1: '+name,details:name+', L50',condition:'100/100',active:i<2,stats:{atk:100,def:100,spa:100,spd:100,spe:100},moves:i===0?moves.map(m=>m.id):[move],baseAbility:'pressure',item:'',pokeball:'pokeball',teraType:'Water',terastallized:''}));
+ PS.receive('>'+id+'\n|request|'+JSON.stringify({active:[{moves,canTerastallize:'Water'},{moves:[{move:'Shadow Claw',id:'shadowclaw',target:'normal',pp:10,maxpp:10,disabled:false}]}],side:{name:'Test',id:'p1',pokemon},rqid:1}));await wait(600);
+ document.querySelector('#okayu-combat-menu button').click();await wait(100);
+ const root=document.getElementById('room-'+id),buttons=[...root.querySelectorAll('.movemenu button')].map(b=>({name:b.name,label:b.textContent.trim(),disabled:b.disabled,rect:b.getBoundingClientRect().toJSON()}));
+ return {buttons,request:!!PS.rooms[id].request,side:PS.rooms[id].side,controls:root.querySelector('.battle-controls').innerText.slice(0,900),tooltips:root.querySelectorAll('.has-tooltip').length};})()

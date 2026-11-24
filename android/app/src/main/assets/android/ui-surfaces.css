@@ -1,0 +1,99 @@
+/* Android surfaces share the team chooser's paper, diagonal accent and capsules.
+   Local palette roles avoid white text inherited from the dark desktop theme. */
+html.okayu-battle body :is(.okayu-paper-surface,[data-showdex-module="calcdex"]) {
+ --pro-color-bg:var(--okayu-theme-paper);--pro-color-bg-rgb:var(--okayu-theme-paper-rgb);
+ --pro-color-panel:#fff;--pro-color-panel-rgb:255,255,255;
+ --pro-color-raised:var(--okayu-theme-paper);--pro-color-raised-rgb:var(--okayu-theme-paper-rgb);
+ --pro-color-text:var(--okayu-theme-ink);--pro-color-text-rgb:var(--okayu-theme-ink-rgb);
+ --pro-color-muted:var(--okayu-theme-ink);--pro-color-muted-rgb:var(--okayu-theme-ink-rgb);
+ --pro-color-border:var(--okayu-theme-banner);--pro-color-border-rgb:var(--okayu-theme-banner-rgb);
+ --pro-color-accent:var(--okayu-theme-banner);--pro-color-accent-rgb:var(--okayu-theme-banner-rgb);
+ --pro-color-ink:var(--okayu-theme-ink);--pro-color-ink-rgb:var(--okayu-theme-ink-rgb);
+ background:var(--okayu-theme-paper)!important;background-image:none!important;color:var(--okayu-theme-ink)!important;
+}
+/* Full-screen options; labels sit on a themed diagonal, controls on paper. */
+html.okayu-battle body #okayu-panel[data-page="options"] {isolation:isolate}
+html.okayu-battle body #okayu-panel[data-page="options"]::before {content:"";position:absolute;inset:0;z-index:-1;pointer-events:none;background:var(--okayu-theme-banner);clip-path:polygon(0 0,43% 0,31% 100%,0 100%)}
+html.okayu-battle body #okayu-panel[data-page="options"] h2 {font-size:24px;font-weight:600;padding:10px 5vw;color:#fff;text-shadow:0 1px 2px #0003}
+html.okayu-battle body #okayu-panel[data-page="options"] .okayu-options-list {padding:0 5vw 12px}
+html.okayu-battle body #okayu-panel[data-page="options"] .okayu-option-row {grid-template-columns:minmax(180px,.8fr) minmax(200px,1.2fr);min-height:56px;padding:3px 12px;margin:4px 0;background:transparent!important;color:var(--okayu-theme-ink)!important}
+html.okayu-battle body #okayu-panel[data-page="options"] .okayu-option-row>span:first-child {background:var(--okayu-theme-paper);padding:9px 16px;border-radius:999px;font-size:14px;font-weight:600}
+html.okayu-battle body #okayu-panel[data-page="options"] :is(select,footer button,.okayu-options-list>button) {appearance:none;background:#fff!important;background-image:none!important;color:#101014!important;border:0!important;border-radius:999px!important;box-shadow:0 2px 6px #0001!important;text-shadow:none!important;font-size:14px!important;min-height:48px!important;padding:10px 20px!important;line-height:20px!important}
+html.okayu-battle body #okayu-panel[data-page="options"] select {appearance:auto;padding-right:12px!important}
+html.okayu-battle body #okayu-panel[data-page="options"] footer {background:transparent!important;padding:4px 5vw 8px;z-index:1}
+html.okayu-battle body #okayu-panel[data-page="options"] .okayu-option-control {min-height:48px;gap:8px}
+html.okayu-battle body #okayu-panel[data-page="options"] input[type="checkbox"] {appearance:none!important;position:relative!important;width:50px!important;height:28px!important;min-height:28px!important;flex:0 0 50px;border:0!important;border-radius:999px!important;background:#888!important;background-image:none!important;box-shadow:none!important;margin:10px 0!important;cursor:pointer}
+html.okayu-battle body #okayu-panel[data-page="options"] input[type="checkbox"]::after {content:"";position:absolute;left:4px;top:4px;width:20px;height:20px;background:#fff;border-radius:50%}
+html.okayu-battle body #okayu-panel[data-page="options"] input[type="checkbox"]:checked {background:#101014!important}
+html.okayu-battle body #okayu-panel[data-page="options"] input[type="checkbox"]:checked::after {left:26px}
+html.okayu-battle body #okayu-panel[data-page="options"] input[type="range"] {appearance:none!important;background:transparent!important;min-height:48px!important;accent-color:#101014}
+html.okayu-battle body #okayu-panel[data-page="options"] input[type="range"]::-webkit-slider-runnable-track {height:6px;border-radius:999px;background:var(--okayu-theme-banner)}
+html.okayu-battle body #okayu-panel[data-page="options"] input[type="range"]::-webkit-slider-thumb {appearance:none;width:16px;height:26px;margin-top:-10px;border-radius:999px;background:#101014;border:2px solid white}
+html.okayu-battle body #okayu-panel[data-page="options"] output {color:var(--okayu-theme-ink)!important;font-size:12px;background:white;padding:7px;border-radius:999px;min-width:56px}
+/* Readable native move tooltip: paper panels, dark text, black header/footer. */
+html.okayu-battle body #tooltipwrapper [data-okayu-move-info] {background:var(--okayu-theme-paper)!important;color:var(--okayu-theme-ink)!important}
+html.okayu-battle body #tooltipwrapper [data-okayu-move-info] :is(.okayu-move-stats,.okayu-move-description) {background:var(--okayu-theme-paper)!important;color:var(--okayu-theme-ink)!important;border-color:var(--okayu-theme-banner)!important}
+html.okayu-battle body #tooltipwrapper [data-okayu-move-info] :is(.okayu-move-stats,.okayu-move-description) :is(p,small,strong,b,em,span,div) {color:var(--okayu-theme-ink)!important;background-color:transparent!important;border-color:var(--okayu-theme-banner)!important;text-shadow:none!important}
+html.okayu-battle body #tooltipwrapper [data-okayu-move-info] h2,html.okayu-battle body #tooltipwrapper [data-okayu-move-info] .okayu-tooltip-close {background:#101014!important;background-image:none!important;color:#fff!important;border:0!important;box-shadow:none!important;text-shadow:none!important}
+html.okayu-battle body #tooltipwrapper [data-okayu-move-info] h2 * {color:#fff!important}
+/* Calcdex uses the same identity without replacing any calculator controls. */
+html.okayu-battle[data-okayu-panel="calc"] body :is([data-okayu-calc-host],[class*="Calcdex-module-overlayContainer"]) {inset:0!important;border:0!important;background:var(--okayu-theme-paper)!important;z-index:3200!important}
+html.okayu-battle[data-okayu-panel="calc"] body [data-showdex-module="calcdex"] {inset:0!important;width:100%!important;height:100%!important;border:0!important;border-radius:0!important;isolation:isolate;z-index:3201!important;--okayu-calc-accent:var(--okayu-theme-banner)}
+html.okayu-battle body [data-showdex-module="calcdex"]::before {content:"";position:absolute;inset:0;pointer-events:none;z-index:-1;background:var(--okayu-theme-banner);clip-path:polygon(0 0,22% 0,8% 100%,0 100%);opacity:.18}
+html.okayu-battle body [data-showdex-module="calcdex"] [class*="PokeMoves-module-container"] {background:#fff!important;background-image:none!important;color:var(--okayu-theme-ink)!important;border:0!important;box-shadow:0 2px 6px #0001!important;border-radius:22px!important}
+html.okayu-battle body [data-showdex-module="calcdex"] :is([class*="PokeMoves-module-header"],[class*="PokeMoves-module-headerTitle"],[class*="PokeMoves-module-noDamage"],[class*="BuildInfo-module-container"]) {color:var(--okayu-theme-ink)!important;opacity:.85!important}
+html.okayu-battle body [data-showdex-module="calcdex"] :is([class*="Select-module-control"],[class*="ValueField-module-container"],button,[class*="Button-module-container"]):not([class*="Picon"]):not([class*="Badge"]) {border-radius:999px!important;background-image:none!important;text-shadow:none!important;box-shadow:none!important}
+html.okayu-battle body [data-showdex-module="calcdex"] :is([data-pro-calc="player-header"],[class*="PokeInfo-module-container"]) {background:rgba(255,255,255,.78)!important;border-radius:22px!important;padding:8px!important;box-sizing:border-box}
+html.okayu-battle body [data-showdex-module="calcdex"] [data-pro-calc="overlay-close"] {position:sticky!important;right:0!important;top:0!important;left:calc(100% - 48px)!important;width:48px!important;height:48px!important;min-width:48px!important;border-radius:999px!important;display:flex!important;align-items:center;justify-content:center;background:#101014!important;color:white!important;z-index:10!important;margin:0 0 4px!important}
+html.okayu-battle body [data-showdex-module="calcdex"] [data-pro-calc="overlay-close"] i {color:white!important}
+/* Exactly one timer: a clock capsule, synchronized with the native countdown. */
+html.okayu-battle body .ps-room.okayu-active-battle [data-href="battletimer"] {display:none!important}
+html.okayu-battle body #okayu-toolbar button[data-okayu-timer] {width:auto!important;min-width:92px!important;max-width:130px!important;height:48px!important;border:4px solid transparent!important;border-radius:999px!important;background:#fff!important;background-clip:padding-box!important;color:#101014!important;text-shadow:none!important;display:flex!important;align-items:center;justify-content:center;gap:6px;padding:0 10px!important;font-size:14px!important;font-weight:600}
+html.okayu-battle body #okayu-toolbar button[data-okayu-timer] i {color:inherit!important;font-size:17px!important;filter:none!important}
+html.okayu-battle body #okayu-toolbar button[data-okayu-timer][aria-pressed="true"] {background:#101014!important;color:#fff!important}
+html.okayu-battle body #okayu-toolbar button[data-okayu-timer]:disabled {opacity:.65}
+/* Waiting state has only its native text/cancel action; the timer lives above. */
+html.okayu-battle[data-okayu-menu="wait"] body .ps-room.okayu-active-battle .battle-controls {width:clamp(220px,30vw,320px)!important;bottom:62px!important;max-height:120px!important;padding:4px!important;overflow:auto!important;scrollbar-width:none}
+html.okayu-battle[data-okayu-menu="wait"] body .ps-room.okayu-active-battle .battle-controls .whatdo {display:flex;flex-direction:column;gap:8px;margin:0!important}
+html.okayu-battle[data-okayu-menu="wait"] body .ps-room.okayu-active-battle .battle-controls .button {background:#fff!important;background-image:none!important;color:#101014!important;border:0!important;border-radius:999px!important;min-height:48px!important;text-shadow:none!important}
+/* Original confirmations always sit above the Android UI, never below its menu. */
+html.okayu-battle body .ps-overlay {position:fixed!important;inset:0!important;z-index:5000!important;background:rgba(0,0,0,.45)!important;background-image:none!important}
+html.okayu-battle body .ps-popup:not(#room-options) {position:fixed!important;inset:auto!important;left:50%!important;top:50%!important;transform:translate(-50%,-50%)!important;width:min(560px,90vw)!important;max-width:90vw!important;max-height:85vh!important;overflow:auto!important;box-sizing:border-box;padding:16px!important;background:var(--okayu-theme-paper)!important;background-image:none!important;color:var(--okayu-theme-ink)!important;border:0!important;border-radius:24px!important;z-index:5100!important;box-shadow:0 5px 24px #0005!important;text-shadow:none!important}
+html.okayu-battle body .ps-popup:not(#room-options) :is(p,label,h2,h3,strong,small,em) {color:var(--okayu-theme-ink)!important;text-shadow:none!important}
+html.okayu-battle body .ps-popup:not(#room-options) :is(button,.button) {min-height:48px!important;background:#101014!important;background-image:none!important;color:#fff!important;border:0!important;border-radius:999px!important;padding:9px 18px!important;font-size:14px!important;line-height:20px!important;text-shadow:none!important;box-shadow:none!important;margin:4px!important}
+html.okayu-battle[data-okayu-modal] body :is(#okayu-toolbar,#okayu-combat-menu,#okayu-context-back),html.okayu-battle[data-okayu-modal] body .okayu-active-battle .battle-controls {visibility:hidden!important;pointer-events:none!important}
+/* Native replay/spectator buttons in a compact dock clear of the narration bar. */
+html.okayu-battle[data-okayu-viewing="true"] body .ps-room.okayu-active-battle .battle-controls {right:12px!important;bottom:104px!important;width:min(420px,52vw)!important;max-height:calc(100vh - 174px)!important;padding:4px!important;overflow:auto!important;scrollbar-width:thin;scrollbar-color:#fff8 transparent}
+html.okayu-battle[data-okayu-viewing="true"] body .ps-room.okayu-active-battle .battle-controls .inline-controls {display:grid!important;grid-template-columns:repeat(5,minmax(48px,1fr));gap:6px!important;background:transparent!important;margin:0!important;padding:0!important}
+html.okayu-battle[data-okayu-viewing="true"] body .ps-room.okayu-active-battle .battle-controls .inline-controls :is(p,p>span) {display:contents!important;float:none!important;margin:0!important;padding:0!important}
+html.okayu-battle[data-okayu-viewing="true"] body .ps-room.okayu-active-battle .battle-controls .inline-controls br {display:none!important}
+html.okayu-battle[data-okayu-viewing="true"] body .ps-room.okayu-active-battle .battle-controls .inline-controls :is(button,.button) {display:flex!important;flex-direction:column!important;align-items:center;justify-content:center;gap:2px!important;min-width:0!important;width:100%!important;min-height:48px!important;margin:0!important;padding:5px 4px!important;border:0!important;border-radius:24px!important;background:#fff!important;background-image:none!important;color:#101014!important;text-shadow:none!important;box-shadow:none!important;font:600 10px/12px Arial,Helvetica,sans-serif!important;overflow-wrap:anywhere}
+html.okayu-battle[data-okayu-viewing="true"] body .ps-room.okayu-active-battle .battle-controls .inline-controls :is(button,.button) i {font-size:16px}
+html.okayu-battle[data-okayu-viewing="true"] body .ps-room.okayu-active-battle .battle-controls .inline-controls :is([data-cmd="/switchsides"],[data-cmd="/ffto"],.replayDownloadButton,[data-cmd="/savereplay"],[data-cmd="/close"],[data-cmd^="/closeand"]) {grid-column:span 2}
+html.okayu-battle[data-okayu-viewing="true"] body .ps-room.okayu-active-battle .battle-controls .inline-controls :is(.disabled,[aria-disabled="true"]) {opacity:.5}
+html.okayu-battle[data-okayu-viewing="true"] body .ps-room.okayu-active-battle .battle-controls [data-calcdex="overlay-controls"] {display:none!important}
+html.okayu-battle.okayu-narrating[data-okayu-viewing="true"]:not([data-okayu-modal]):not([data-okayu-panel]) body #okayu-toolbar,
+html.okayu-battle.okayu-narrating[data-okayu-viewing="true"]:not([data-okayu-modal]):not([data-okayu-panel]) body .ps-room.okayu-active-battle .battle-controls {visibility:visible!important;pointer-events:auto!important}
+html.okayu-battle[data-okayu-panel="calc"] body #okayu-toolbar {visibility:hidden!important;pointer-events:none!important}
+/* No desktop hover hints over full-screen mobile panels. */
+html.okayu-battle body #showdown-pro-help-tooltip {display:none!important}
+html.okayu-battle[data-okayu-panel] body #okayu-toolbar {visibility:hidden!important;pointer-events:none!important}
+html.okayu-battle body .ps-room.okayu-active-battle .battle-controls .movemenu button.movebutton .okayu-move-effect {position:absolute!important;left:14px!important;right:70px!important;bottom:4px!important;display:block!important;overflow:hidden!important;text-overflow:ellipsis!important;white-space:nowrap!important;background:transparent!important;color:#101014!important;font:600 9px/11px Arial,Helvetica,sans-serif!important;letter-spacing:0!important;text-transform:none!important}
+html.okayu-battle body .ps-room.okayu-active-battle .battle-controls .movemenu button.movebutton:has(.okayu-move-effect) small.type {display:none!important}
+html.okayu-battle body [data-showdex-module="calcdex"] [class*="Dropdown-module-control"] {border-radius:999px!important;min-height:40px!important;background:#fff!important;border:1px solid var(--okayu-theme-banner)!important;box-shadow:none!important;padding-left:10px!important}
+html.okayu-battle body [data-showdex-module="calcdex"] [class*="Dropdown-module-placeholder"] {color:#5b5751!important;opacity:1!important}
+html.okayu-battle body [data-showdex-module="calcdex"] [class*="BuildInfo-module-container"] {font-size:9px!important;opacity:.7!important}
+html.okayu-battle body [data-showdex-module="calcdex"] [class*="PokeMoves-module-noDamage"] {color:#5b5751!important;opacity:1!important}
+#okayu-utility-back {position:fixed;top:4px;right:12px;z-index:4500;min-height:48px;padding:9px 22px;border:0;border-radius:999px;background:#101014;color:#fff;font-size:14px;line-height:20px;box-shadow:none}
+#okayu-utility-back[hidden],html[data-okayu-modal] #okayu-utility-back {display:none!important}
+html.okayu-battle body #okayu-panel:not([data-page="options"]) button {min-height:48px!important;border:0!important;border-radius:999px!important;background:#fff!important;background-image:none!important;color:#101014!important;text-shadow:none!important;padding:10px 20px!important;font-size:14px!important;box-shadow:none!important}
+html.okayu-battle[data-okayu-panel="calc"] body .ps-room:not(.okayu-active-battle):not([data-okayu-calc-host]) :is([data-showdex-module="calcdex"],[class*="Calcdex-module-overlayContainer"]) {display:none!important}
+/* Calculator backdrop uses the theme accent; its functional cards stay white. */
+html.okayu-battle[data-okayu-panel="calc"] body :is([data-okayu-calc-host],[class*="Calcdex-module-overlayContainer"],[data-showdex-module="calcdex"]) {background:var(--okayu-theme-accent)!important;background-image:none!important}
+html.okayu-battle body [data-showdex-module="calcdex"]::before {background:var(--okayu-theme-banner);opacity:.2}
+/* One visible capsule per selector, without its former rectangular wrapper. */
+html.okayu-battle body [data-showdex-module="calcdex"] [class*="Dropdown-module-selectContainer"] {background:transparent!important;border:0!important;border-radius:999px!important;box-shadow:none!important}
+/* Keep the exit reachable while scrolling, without consuming a whole header row. */
+html.okayu-battle body [data-showdex-module="calcdex"] [data-pro-calc="overlay-close"] {position:fixed!important;left:auto!important;right:10px!important;top:8px!important;margin:0!important}
+html.okayu-battle body [data-showdex-module="calcdex"] [data-pro-calc="player-header"] {padding-right:64px!important}
+html.okayu-battle body [data-showdex-module="calcdex"] [class*="BuildInfo-module-container"] {display:none!important}

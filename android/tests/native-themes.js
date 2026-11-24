@@ -1,0 +1,10 @@
+(async()=>{
+ const wait=ms=>new Promise(r=>setTimeout(r,ms)),assert=(v,m)=>{if(!v)throw Error(m);},root=document.querySelector('.okayu-active-battle'),original=PS.prefs.theme,colors={};
+ for(const [key] of okayuThemes.entries){PS.prefs.set('theme',key);await wait(80);assert(document.documentElement.classList.contains('showdown-pro')&&document.documentElement.classList.contains('showdown-okayu'),'Custom theme lost shared layout');assert(document.documentElement.dataset.okayuTheme===key,'Theme key mismatch');colors[key]=getComputedStyle(document.documentElement).getPropertyValue('--okayu-theme-banner').trim();assert(PS.prefs.theme===key,'Theme selection lost');}
+ assert(new Set(Object.values(colors)).size===6,'Theme banners not distinct');
+ PS.prefs.set('theme',original);await wait(80);
+ for(const team of root.querySelectorAll('.phd-team')){const s=getComputedStyle(team,'::before');assert(s.display!=='none'&&s.transform==='none','Horizontal party capsule missing');assert(parseFloat(s.width)>180&&parseFloat(s.height)>=30,'Party capsule geometry');assert(team.querySelectorAll('.phd-slot').length===6,'Six party slots missing');}
+ okayuAndroid.open('options');await wait(80);const choices=[...document.querySelectorAll('#okayu-panel select[name="theme"] option')].map(o=>o.value);assert(['okayu','gura','raora','cecilia','amelia','baelz'].every(k=>choices.includes(k))&&!choices.includes('pro'),'Theme picker entries');okayuAndroid.back();await wait(80);
+ document.querySelectorAll('#okayu-combat-menu button')[1].click();await wait(100);const before=getComputedStyle(root.querySelector('.battle-controls'),'::before');assert(before.content!=='none'&&before.clipPath.includes('polygon'),'Diagonal team banner missing');assert(getComputedStyle(document.getElementById('okayu-team-detail')).backgroundColor==='rgba(0, 0, 0, 0)','Detail hides diagonal banner');document.querySelector('#okayu-team-back').click();
+ return {themes:choices,bannerColors:colors,horizontalCapsules:true,sixSlots:true,diagonalTeamBanner:true,originalTheme:original};
+})()

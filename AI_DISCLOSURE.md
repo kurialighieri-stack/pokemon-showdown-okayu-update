@@ -9,3 +9,5 @@ Se ejecutaron pruebas automatizadas y comprobaciones de integración en Electron
 Esta es una alfa: las contribuciones y las revisiones de personas con experiencia en Python, Electron, Showdown y empaquetado son bienvenidas. Las incidencias deben describir resultados observados y versiones concretas.
 
 El uso de IA no cambia las licencias ni la atribución de los proyectos de terceros. Este proyecto no está afiliado ni respaldado oficialmente por OpenAI ni por los autores de Showdown Pro, Showdown+, Showdex o Pokémon.
+
+El port experimental Android también se implementó con asistencia extensa de OpenAI Codex. Sus pruebas automatizadas, verificaciones en WebView y límites de paridad se documentan por separado en `android/VALIDATION.md`; no constituyen una auditoría independiente ni certificación de dispositivos.
