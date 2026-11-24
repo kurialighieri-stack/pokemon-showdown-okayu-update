@@ -2,30 +2,40 @@
 
 <img src="modules/theme-okayu/files/app/assets/icons/icon.png" width="100" alt="Logo Okayu" />
 
-**Desarrollado con asistencia extensa de IA (OpenAI Codex), bajo la dirección del mantenedor.** Consulta [la declaración de uso de IA](AI_DISCLOSURE.md) y [las pruebas realizadas](docs/VALIDATION.md).
+**Desarrollado con asistencia extensa de IA (OpenAI Codex), bajo la dirección del mantenedor.** Consulta [la declaración de uso de IA](AI_DISCLOSURE.md), las [pruebas de escritorio](docs/VALIDATION.md) y las [pruebas de Android](android/VALIDATION.md).
 
-Gestor externo de modificaciones reversibles para [Pokémon Showdown Pro](https://github.com/Ryukotsuki/PokemonShowdownPro).
+Okayu Update reúne un **gestor de modificaciones reversibles para Linux y Windows** sobre [Pokémon Showdown Pro](https://github.com/Ryukotsuki/PokemonShowdownPro), y un **port independiente para Android distribuido como APK de prueba**.
 
 **Licencia del código propio: [GNU AGPL v3 o posterior — copyleft fuerte](LICENSE) (`AGPL-3.0-or-later`).**
 
-**Versión alfa para Linux y Windows x64. Compatible con Pro 1.2.0 cuando sus archivos coinciden con el adaptador de cada plataforma. En Windows se excluye Glass.**
+**Escritorio: alpha.4 para Linux y Windows x64, compatible con Pro 1.2.0 cuando sus archivos coinciden con el adaptador de cada plataforma. Android: 0.1.0-prototype.1, para Android 10 o posterior. Son versiones experimentales; el port Android todavía no tiene paridad funcional completa.**
 
 No es una versión oficial de Showdown, Showdex ni Showdown+.
 
-El gestor instala módulos sobre la aplicación original. No sustituye su interfaz por otro cliente ni mantiene un segundo motor de combate. Guarda los respaldos fuera de la instalación y permite volver a los archivos originales.
+En Linux y Windows, el gestor instala módulos sobre la aplicación original. No sustituye su interfaz por otro cliente ni mantiene un segundo motor de combate. Guarda los respaldos fuera de la instalación y permite volver a los archivos originales.
 
 ## Descargas y requisitos
 
-Descarga el paquete de tu sistema desde [Releases](https://github.com/kurialighieri-stack/pokemon-showdown-okayu-update/releases/tag/v0.1.0-alpha.4):
+Elige el paquete de tu plataforma. Las versiones de escritorio y Android se publican por separado:
 
-| Sistema | Paquete alpha.4 | Dependencias |
-| --- | --- | --- |
-| Linux x86_64 | [Descargar ZIP Linux](https://github.com/kurialighieri-stack/pokemon-showdown-okayu-update/releases/download/v0.1.0-alpha.4/Pokemon-Showdown-Okayu-Update-v0.1.0-alpha.4-linux.zip) | Python 3.10 o posterior; Zenity para la interfaz gráfica; Pro 1.2.0 original en AppImage o extraído. |
-| Windows x64 | [Descargar ZIP Windows](https://github.com/kurialighieri-stack/pokemon-showdown-okayu-update/releases/download/v0.1.0-alpha.4/Pokemon-Showdown-Okayu-Update-v0.1.0-alpha.4-windows.zip) | [Python 3.10 o posterior con el lanzador `py`](https://www.python.org/downloads/windows/); ZIP oficial de Pro 1.2.0 Windows x64. |
+| Plataforma | Versión | Descarga | Requisitos |
+| --- | --- | --- | --- |
+| Android | **0.1.0-prototype.1 · APK de prueba** | [Descargar APK](https://github.com/kurialighieri-stack/pokemon-showdown-okayu-update/releases/download/android-v0.1.0-prototype.1/Pokemon-Showdown-Okayu-Android-0.1.0-prototype.1.apk) · [Release, fuentes y SHA-256](https://github.com/kurialighieri-stack/pokemon-showdown-okayu-update/releases/tag/android-v0.1.0-prototype.1) | Android 10+, Android System WebView actualizado y conexión. No necesita Python, una instalación de Pro ni importar un XPI por separado. |
+| Linux x86_64 | alpha.4 | [Descargar ZIP Linux](https://github.com/kurialighieri-stack/pokemon-showdown-okayu-update/releases/download/v0.1.0-alpha.4/Pokemon-Showdown-Okayu-Update-v0.1.0-alpha.4-linux.zip) | Python 3.10+, Zenity y Pro 1.2.0 original en AppImage o extraído. |
+| Windows x64 | alpha.4 | [Descargar ZIP Windows](https://github.com/kurialighieri-stack/pokemon-showdown-okayu-update/releases/download/v0.1.0-alpha.4/Pokemon-Showdown-Okayu-Update-v0.1.0-alpha.4-windows.zip) | [Python 3.10+ con el lanzador `py`](https://www.python.org/downloads/windows/) y ZIP oficial de Pro 1.2.0 Windows x64. |
 
-**Python es necesario para ejecutar el gestor Okayu Update y para importar Showdown+ en Pro, en ambos sistemas.** Python es una dependencia externa: estos paquetes no lo incluyen. La extensión Showdown+ instalada directamente en Firefox no depende de Python; la dependencia corresponde a este gestor y a su proceso de importación. El XPI oficial de Showdown+ tampoco está incluido y se verifica al importarlo.
+**Solo escritorio requiere Python para ejecutar el gestor e importar Showdown+.** Los ZIP de Linux y Windows no incluyen Python ni el XPI oficial; este se verifica al importarlo. La extensión instalada directamente en Firefox no depende de Python. El gestor utiliza el Node incluido en Pro para recompilar Calcdex; la primera compilación necesita conexión.
 
-Se utiliza el Node incluido en Pro para recompilar Calcdex; no necesitas instalar Node aparte. La primera compilación necesita conexión. El archivo `.sha256` del release permite comprobar las descargas.
+Android incluye los componentes empaquetados en su APK. La release adjunta las fuentes y `SHA256SUMS.txt`; los paquetes de escritorio tienen sus propios archivos de comprobación. Consulta [todas las releases](https://github.com/kurialighieri-stack/pokemon-showdown-okayu-update/releases).
+
+## Inicio rápido (Android)
+
+1. Descarga el **APK de prueba** desde la release de Android enlazada arriba; no descargues el ZIP de Linux o Windows para el teléfono.
+2. Abre el archivo en Android y permite la instalación desde la aplicación que lo abre si el sistema lo solicita. Confirma la instalación con el instalador de Android.
+3. Abre **Okayu Update · Prototype**. El combate se utiliza en horizontal; no necesitas instalar Showdown Pro ni Showdown+ por separado.
+4. Abre **Opciones** para elegir idioma, sonido y tema. **Créditos y licencias** contiene el aviso de fans y las atribuciones.
+
+El APK está firmado con una **clave de depuración**, no con una firma definitiva de versión estable. No se promete una migración automática a una futura firma distinta. Antes de instalarlo, revisa [el alcance y los pendientes del prototipo](android/VALIDATION.md).
 
 ## Inicio rápido (Windows)
 
@@ -39,13 +49,22 @@ Se utiliza el Node incluido en Pro para recompilar Calcdex; no necesitas instala
 
 Windows incluye rendimiento, avisos, Okayu, Showdown+ e idiomas de Calcdex; **Glass se ofrece solo en Linux**. Los respaldos se guardan en `%LOCALAPPDATA%\pokemon-showdown-okayu-update`. Consulta [la guía completa de Windows](docs/WINDOWS.md).
 
-## Android: port experimental
+## Android: funciones y alcance del prototipo
 
-El código del port Android está en [`android/`](android/README.md), con Kotlin, AndroidX WebKit y un único WebView. Android 10+, horizontal, controles táctiles en píldoras, Showdex/Calcdex, Showdown+, narración, temas y rotación de los tres fondos importados por combate. No incorpora Glass ni streamer. Las interfaces Linux y Windows conservan sus módulos originales.
+El port utiliza Kotlin, AndroidX WebKit y un único WebView. Reutiliza el cliente y sus cálculos; adapta su distribución para uso táctil. La interfaz de escritorio conserva sus módulos y distribución originales.
 
-**Es un prototipo, no una versión con paridad completa ni un APK estable.** Consulta [compilación y procedencia](android/README.md), [validaciones y pendientes](android/VALIDATION.md) y el [plan de interfaz](android/spec/UI-plan.md). Los recursos externos y las claves de firma no se incluyen en Git; el APK de prueba lleva un [aviso de fans y créditos](android/FAN_PROJECT_NOTICE.md), con firma de depuración y limitaciones documentadas. El código conserva la declaración de asistencia de IA y las licencias correspondientes. Para feedback, abre una incidencia con la plantilla **Android prototype issue** e indica el commit y la versión de Android/WebView.
+- **Combate horizontal a pantalla completa:** menús contextuales en píldoras para luchar, cambiar Pokémon, elegir objetivos en dobles, consultar Calcdex y chat, o abrir la confirmación original de rendición.
+- **Calcdex y Opciones:** tarjetas claras, fondo de acento en Calcdex, colores del tema, controles adaptados y cierres revisados.
+- **Narración:** franja inferior de ancho completo con escritura progresiva y ocultación temporal del HUD. Los controles de replay/espectador permanecen accesibles durante los textos.
+- **Temporizador y ataques:** reloj con tiempo restante y activación/desactivación al tocar; eficacia localizada mediante el cálculo original, diferenciada por rival cuando corresponde en dobles.
+- **Temas:** Okayu, Raora, Ceci, Gura, Bae y Amelia, además de las opciones claro, oscuro y sistema.
+- **Showdown+ y fondos:** recursos importados al empaquetar; rotación entre `battle-stadium.png`, `final-stadium.png` y `new-save.png` por combate nuevo, con asignación guardada para sus repeticiones.
 
-## Módulos
+**No incluye Glass ni streamer. No es todavía una versión con paridad completa con Showdown Pro.** Siguen pendientes la matriz funcional completa, pruebas de cuenta/matchmaking real, reconexión y terminación de proceso, flujos completos de complementos, actualizador propio y pruebas térmicas prolongadas. Las funciones web heredadas no se consideran verificadas solo por estar presentes.
+
+Consulta [compilación y procedencia](android/README.md), [validaciones y pendientes](android/VALIDATION.md) y el [plan de interfaz](android/spec/UI-plan.md). Los recursos generados y las claves privadas no se guardan en Git. El APK de prueba incluye el [aviso de fans y créditos](android/FAN_PROJECT_NOTICE.md). Para feedback, utiliza **Issues → Android prototype issue** e indica versión, modelo, Android/WebView, tema y pasos, ocultando datos personales.
+
+## Módulos del gestor (Linux y Windows)
 
 | Módulo | Función |
 | --- | --- |
@@ -200,7 +219,10 @@ El diagnóstico contiene versiones, estado, nombres de archivos del programa y h
 ## Documentación técnica
 
 - [Arquitectura y transacciones](docs/ARCHITECTURE.md).
-- [Pruebas y alcance de validación](docs/VALIDATION.md).
+- [Pruebas y alcance de escritorio](docs/VALIDATION.md).
+- [Guía Android y compilación](android/README.md).
+- [Pruebas y pendientes de Android](android/VALIDATION.md).
+- [Notas de la pre-release Android](docs/releases/android-v0.1.0-prototype.1.md).
 - [Desarrollo con IA](AI_DISCLOSURE.md).
 - [Guía de contribución](CONTRIBUTING.md).
 
@@ -222,7 +244,13 @@ El código propio del gestor y las adaptaciones derivadas de Pro se distribuyen 
 
 Al redistribuir el código cubierto o sus versiones modificadas deben conservarse los avisos y proporcionarse el código fuente correspondiente bajo los términos de la AGPL. Su sección 13 también exige ofrecer el código fuente correspondiente a quienes interactúen remotamente por red con una versión modificada, cuando se dé ese supuesto. El texto de la licencia determina las obligaciones aplicables; no se imponen restricciones adicionales.
 
-Se conserva la licencia de Pro y las atribuciones de sus autores. Consulta [THIRD_PARTY_NOTICES.md](THIRD_PARTY_NOTICES.md) para los componentes y recursos externos. Los recursos de Showdown+ no se incluyen ni cambian de licencia: se importan localmente desde el paquete oficial. La AGPL del gestor no relicencia Showdown+, los sprites de Pokémon ni otros recursos de terceros. Los paquetes Linux y Windows de Releases incluyen `LICENSE` y los avisos de terceros.
+Se conserva la licencia de Pro y las atribuciones de sus autores. Consulta [THIRD_PARTY_NOTICES.md](THIRD_PARTY_NOTICES.md) para los componentes y recursos externos. Los recursos de Showdown+ no se guardan en Git ni cambian de licencia: el gestor de escritorio los importa desde el paquete oficial y el APK Android de prueba los incorpora al empaquetar, con sus avisos y atribuciones. La AGPL del gestor no relicencia Showdown+, los sprites de Pokémon ni otros recursos de terceros. Los paquetes Linux y Windows de Releases incluyen `LICENSE` y los avisos de terceros.
+
+## Proyecto de fans y créditos
+
+Proyecto independiente, **no oficial y sin ánimo de lucro**, sin afiliación, patrocinio ni respaldo de los titulares. Los créditos de fondos y escenarios de Pokémon corresponden a **GAME FREAK y The Pokémon Company**, y a Nintendo y Creatures en los derechos que les correspondan. Todos los derechos sobre sus materiales permanecen en sus respectivos titulares. Se conservan también los créditos de Showdown+, sus renders y los demás componentes.
+
+La atribución y el carácter no lucrativo no se presentan como autorización de los titulares. La licencia del código propio no concede derechos sobre gráficos, audio ni marcas ajenas. Consulta [el aviso incluido en Android](android/FAN_PROJECT_NOTICE.md) y [las atribuciones completas](THIRD_PARTY_NOTICES.md).
 
 ## Portabilidad
 
