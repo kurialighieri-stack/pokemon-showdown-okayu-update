@@ -79,6 +79,8 @@ Los fixtures y sus resultados no contienen cuentas reales. Las capturas del tel�
 - `native-tablet-ui.js` comprueba límites de las tarjetas/SVG, separación del HUD, movimientos y Volver, escala de sprites y salida de Calcdex. `native-tablet-menus.js` cubre menú principal, seis tarjetas, pie de confirmación, objetivos de dobles, Tera, filas y pie de opciones.
 - `native-phone-ui.js` comprueba que la media query de tableta no aumenta controles del teléfono: movimientos y barra superior de 48 dp. La tipografía conserva el ajuste de accesibilidad del sistema.
 - `CDP_VIEWPORT=WIDTHxHEIGHT` en `tools/cdp.cjs` permite comprobar otras áreas útiles dentro de una sesión de depuración; no equivale a probar otro dispositivo físico. Los fixtures deben ejecutarse únicamente sin partidas reales activas. Reiniciar la app al terminar restaura la conexión original.
-- Revisión preparada para la pre-release Android 0.1.0-prototype.2, sin cambios en los paquetes de escritorio.
+- Revisión preparada para la pre-release Android 0.1.0-beta.1, sin cambios en los paquetes de escritorio.
 - Se verificaron adicionalmente 1000 × 600, 1024 × 768 y 1280 × 800 dp mediante emulación de viewport sobre la tableta; no se presentan como dispositivos físicos distintos. En la altura menor los ataques se desplazan dentro de su columna, sin invadir el HUD inferior.
 - Por petición posterior, el ajuste de tablas de Calcdex también se aplica al teléfono, conservando su tipografía y los tamaños de combate. `native-calcdex-tables.js` comprueba separación de movimientos/estadísticas y contención del texto en 52 celdas de dos calculadores; pasó a 640 × 360, 800 × 360 y 960 × 540, además de tableta.
+
+- `native-phone-home.js`: cabecera horizontal, anchura completa de Inicio, formularios originales sin recortes y ninguna modificación de la preferencia `onepanel`, a 640 × 360, 800 × 360 y 960 × 540. La adaptación se limita a Inicio; no altera decisiones ni tamaños del combate.

@@ -1,4 +1,4 @@
-# Okayu Update Android — APK de prueba 0.1.0-prototype.2
+# Okayu Update Android — APK de prueba 0.1.0-beta.1
 
 Desarrollado con asistencia de IA; véase ../AI_DISCLOSURE.md. **No es todavía la versión completa del plan.** Glass y streamer se excluyen. Se publica el código y la documentación; el APK se publica como prueba con recursos y créditos de terceros.
 
@@ -63,10 +63,10 @@ Los tres recursos ya deben existir en el Showdown+ importado localmente: el empa
 
 La publicación de fuentes no implica que se haya completado la matriz funcional del port. Los APK locales son de depuración y prueba, no versiones estables firmadas con una clave definitiva. El workflow Android solo comprueba geometría, rotación y sintaxis, sin descargar componentes externos ni utilizar claves.
 
-## Interfaz de tableta y tablas de Calcdex (prototype.2)
+## Interfaz de tableta y tablas de Calcdex (beta.1)
 
 Las reglas de ampliación se activan desde 1000 CSS px. En tableta, controles de 72 dp y texto ampliado; tarjetas de nombre/vida completas y menú principal/final alineados con el HUD aliado cuando hay ancho suficiente. Volver permanece debajo de los ataques, en una franja reservada. El tamaño de los Pokémon no cambia. Las tabletas más estrechas desplazan las listas dentro de su columna para conservar separación.
 
-Calcdex apila movimientos y estadísticas en teléfono y tableta, con columnas propias para cada tamaño y salida accesible. Este ajuste de tablas es el único cambio visual nuevo aplicado al teléfono.
+Calcdex apila movimientos y estadísticas en teléfono y tableta, con columnas propias para cada tamaño y salida accesible. En el teléfono también se utiliza la cabecera horizontal de la tableta en Inicio, con el menú a ancho completo. Se conservan las preferencias y los controles originales.
 
 Pruebas específicas: `native-tablet-ui.js`, `native-tablet-menus.js`, `native-calcdex-tables.js` y `native-phone-ui.js`. Para emular otro viewport en el dispositivo de pruebas: `CDP_PORT=9224 CDP_VIEWPORT=800x360 node android/tools/cdp.cjs android/tests/native-calcdex-tables.js`. No ejecutar fixtures con una batalla real activa; reiniciar al finalizar.

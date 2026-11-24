@@ -1,6 +1,6 @@
-# Android 0.1.0-prototype.2 — Tableta y Calcdex
+# Android 0.1.0-beta.1 — Tableta y Calcdex
 
-APK experimental para Android 10 o posterior. Actualiza prototype.1 con la misma firma de depuración, conservando los datos privados de la app. No es una versión estable ni completa; Glass y streamer siguen excluidos.
+Beta pública para Android 10 o posterior. Actualiza prototype.1 con la misma firma de depuración, conservando los datos privados de la app. No es una versión estable ni completa; Glass y streamer siguen excluidos.
 
 ## Cambios
 
@@ -8,6 +8,7 @@ APK experimental para Android 10 o posterior. Actualiza prototype.1 con la misma
 - Amplía controles, iconos, textos y tarjetas de vida en tableta; mantiene el tamaño de los sprites. Barras completas y separadas en dobles.
 - Volver queda debajo de los ataques, en una franja propia. Los menús principal y de combate terminado se alinean con las tarjetas aliadas cuando cabe la columna lateral; en tabletas más estrechas se conserva separación mediante desplazamiento.
 - Calcdex apila movimientos y estadísticas y ajusta sus columnas tanto en teléfono como en tableta. Corrige textos montados y proporciona una salida Android cuando falta la X nativa.
+- Inicio en teléfono con pestañas horizontales y contenido a ancho completo, como en tableta, sin modificar la preferencia de distribución del usuario.
 - Mantiene los tamaños del combate en teléfono y los controles de reproducción accesibles durante los mensajes.
 
 ## Validación y límites
@@ -30,4 +31,4 @@ La licencia del código propio no concede derechos sobre recursos ajenos. Los cr
 
 Desarrollado con asistencia extensa de IA (OpenAI Codex), bajo la dirección del mantenedor: [declaración](../../AI_DISCLOSURE.md).
 
-Para reportar un fallo, utiliza la plantilla **Android prototype issue**, con el commit o versión, modelo, Android/WebView, tema y pasos; elimina datos personales de capturas y registros.
+Para reportar un fallo, utiliza la plantilla **Android beta issue**, con el commit o versión, modelo, Android/WebView, tema y pasos; elimina datos personales de capturas y registros.
